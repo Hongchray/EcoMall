@@ -74,6 +74,23 @@ Route::get('/refresh-csrf', function () {
     return csrf_token();
 });
 
+$serve_missing_upload = function ($file) {
+    if (!preg_match('/\.(jpe?g|png|webp|gif|svg)$/i', $file)) {
+        abort(404);
+    }
+
+    $uploaded_path = public_path('uploads/all/' . $file);
+
+    if (is_file($uploaded_path)) {
+        return response()->file($uploaded_path);
+    }
+
+    return response()->file(public_path('assets/img/placeholder.jpg'));
+};
+
+Route::get('/uploads/all/{file}', $serve_missing_upload)->where('file', '.*');
+Route::get('/public/uploads/all/{file}', $serve_missing_upload)->where('file', '.*');
+
 // AIZ Uploader
 Route::controller(AizUploadController::class)->group(function () {
     Route::post('/aiz-uploader', 'show_uploader');
