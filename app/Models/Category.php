@@ -45,9 +45,14 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    // public function childrenCategories()
+    // {
+    //     return $this->hasMany(Category::class, 'parent_id')->with('categories');
+    // }
+
     public function childrenCategories()
     {
-        return $this->hasMany(Category::class, 'parent_id')->with('categories');
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     public function parentCategory()
@@ -60,7 +65,11 @@ class Category extends Model
         return $this->belongsToMany(Attribute::class);
     }
     public function subcategories()
-        {
-            return $this->hasMany(Subcategory::class,'category_id');
-        }
+    {
+        return $this->hasMany(SubCategory::class,'category_id'); // matches your model name
+    }
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
 }
