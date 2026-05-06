@@ -630,9 +630,9 @@
 
 
 
-            if ($('#lang-change').length > 0) {
+            if ($('#lang-change').length > 0 || $('.js-language-change').length > 0) {
 
-                $('#lang-change .dropdown-menu a').each(function() {
+                $('#lang-change .dropdown-menu a, .js-language-change').each(function() {
 
                     $(this).on('click', function(e){
 

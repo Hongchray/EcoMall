@@ -1559,5 +1559,4 @@ $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
 </div>
 
 
-
 @endif
