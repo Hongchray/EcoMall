@@ -777,10 +777,11 @@
         $(document).on("click", function(event){
 
             var $trigger = $("#category-menu-bar");
+            var $menu = $("#click-category-menu");
 
-            if($trigger !== event.target && !$trigger.has(event.target).length){
+            if(!$trigger.is(event.target) && !$trigger.has(event.target).length && !$menu.is(event.target) && !$menu.has(event.target).length){
 
-                $("#click-category-menu").slideUp("fast");;
+                $menu.slideUp("fast");
 
                 $("#category-menu-bar-icon").removeClass('show');
 

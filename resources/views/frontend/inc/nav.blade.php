@@ -52,13 +52,17 @@
 
     <!-- -- address -->
 
+
+
+
     <div class="text-white text-center py-2" style="background-color: #2e86c1;">
         <p class="mb-0">
             🚚 Free delivery in Phnom Penh |
             <span>078 333 016</span> |
             Cambodia's #1 Online Construction Mall |
-            <span>Open 24/7</span>
+            <span class="">Open 24/7</span>
         </p>
+
     </div>
 
         <!-- Top Bar language -->
@@ -859,40 +863,6 @@
 
                     <div class="d-flex h-100">
 
-                        <!-- Categoty Menu Button -->
-
-                    <div class="d-none d-xl-block all-category has-transition bg-black-10" id="category-menu-bar">
-
-                            <div class="px-3 h-100"
-
-                                style="padding-top: 12px;padding-bottom: 12px; width:270px; cursor: pointer;">
-
-                                <div class="d-flex align-items-center justify-content-between">
-
-                                    <div>
-
-                                        <span class="fw-700 fs-16 text-white mr-3">{{ translate('Categories') }}</span>
-
-                                        <a href="{{ route('categories.all') }}" class="text-reset">
-
-                                            <span
-
-                                                class="d-none d-lg-inline-block text-white hov-opacity-80">({{ translate('See All') }})</span>
-
-                                        </a>
-
-                                    </div>
-
-                                    <i class="las la-angle-down text-white has-transition" id="category-menu-bar-icon"
-
-                                        style="font-size: 1.2rem !important"></i>
-
-                                </div>
-
-                            </div>
-
-                        </div> 
-
                         <!-- Header Menus -->
 
                         @php
@@ -909,23 +879,33 @@
 
                                     @if (get_setting('header_menu_labels') != null)
 
+                                            
                                         @php
                                             $header_menu_links = json_decode(get_setting('header_menu_links'), true) ?: [];
                                         @endphp
 
+
+                                        
                                         @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
 
-                                            @continue(!isset($header_menu_links[$key]))
+                                            @php
+                                                $is_category_menu = strtolower(trim($value)) == 'category';
+                                                $header_menu_link = $is_category_menu ? 'javascript:void(0);' : ($header_menu_links[$key] ?? '#');
+                                            @endphp
 
                                             <li class="list-inline-item mr-0 animate-underline-white">
 
-                                                <a href="{{ $header_menu_links[$key] }}"
+                                                <a href="{{ $header_menu_link }}"
+                                                    @if ($is_category_menu) id="category-menu-bar" @endif
 
-                                                    class="fs-13 px-3 py-3 d-inline-block fw-700 {{ $nav_txt_color }} header_menu_links hov-bg-black-10
+                                                    class="fs-16 px-3 py-3 d-inline-block fw-700 {{ $nav_txt_color }} header_menu_links hov-bg-black-10
 
-                                                @if (url()->current() == $header_menu_links[$key]) active @endif">
+                                                @if ($header_menu_link != '#' && url()->current() == $header_menu_link) active @endif">
 
                                                     {{ translate($value) }}
+                                                    @if ($is_category_menu)
+                                                        <i class="las la-angle-down ml-1 has-transition" id="category-menu-bar-icon"></i>
+                                                    @endif
 
                                                 </a>
 
@@ -1071,15 +1051,17 @@
 
                         @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
 
-                            @continue(!isset($header_menu_links[$key]))
+                            @php
+                                $header_menu_link = $header_menu_links[$key] ?? '#';
+                            @endphp
 
                             <li class="mr-0">
 
-                                <a href="{{ $header_menu_links[$key] }}"
+                                <a href="{{ $header_menu_link }}"
 
                                     class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
 
-                                @if (url()->current() == $header_menu_links[$key]) active @endif">
+                                @if ($header_menu_link != '#' && url()->current() == $header_menu_link) active @endif">
 
                                     {{ translate($value) }}
 
@@ -1098,17 +1080,11 @@
                             <hr>
 
                             <li class="mr-0">
-
                                 <a href="{{ route('admin.dashboard') }}"
-
                                     class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links">
-
                                     {{ translate('My Account') }}
-
                                 </a>
-
                             </li>
-
                         @else
 
                             <hr>
