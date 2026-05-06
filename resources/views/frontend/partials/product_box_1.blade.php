@@ -1,117 +1,282 @@
+<style>
+.ec-product-card {
+    position: relative;
+    height: 100%;
+    padding: 16px 14px 14px;
+    background: #f8fbfe;
+    border: 1.5px solid #E3F3FB; /* default light border */
+    border-radius: 14px;
+    overflow: hidden;
+    outline: 0;
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease; /* ✅ add border-color */
+    margin-top: 20px;
+}
+
+/* ✅ on hover: border turns strong blue like the selected card */
+.ec-product-card:hover {
+    box-shadow: 0 10px 36px rgba(60, 155, 211, 0.18);
+    transform: translateY(-4px);
+    border-color: #3c9bd3;
+}
+
+  .carousel-box:has(> .ec-product-card) { border: 0 !important; }
+  .carousel-box:has(> .ec-product-card)::before,
+  .carousel-box:has(> .ec-product-card)::after { display: none !important; }
+
+  .ec-product-card__top {
+    min-height: 30px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .ec-product-card__badge {
+    max-width: calc(100% - 40px);
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1 solid #E3F3FB;
+    background: #3c9bd3;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ec-product-card__wishlist {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #8193a3;
+    border-radius: 50%;
+    background: #fff;
+    color: #425b6f;
+    font-size: 20px;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+  }
+
+  .ec-product-card__wishlist:hover,
+  .ec-product-card__wishlist:focus {
+    background: #3c9bd3;
+    border-color: #3c9bd3;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .ec-product-card__image-wrap {
+    width: 72%;
+    max-width: 126px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    overflow: hidden; /* ✅ needed for image zoom */
+  }
+
+  .ec-product-card__image {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    object-fit: contain;
+    /* ✅ FIXED: smooth zoom transition */
+    transition: transform 0.3s ease;
+  }
+
+  /* ✅ FIXED: image zooms on card hover */
+  .ec-product-card:hover .ec-product-card__image {
+    transform: scale(1.08);
+  }
+
+  .ec-product-card__content {
+    margin: 0 -14px -14px;
+    padding: 16px 14px 14px;
+    background: #ffffff;
+    border-top: 1px solid #E3F3FB;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .ec-product-card__name {
+    min-height: 38px;
+    margin: 0 4px 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #111;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-decoration: none;
+  }
+
+  .ec-product-card__name:hover,
+  .ec-product-card__name:focus {
+    color: #227eb8;
+    text-decoration: none;
+  }
+
+  .ec-product-card__price-row {
+    min-height: 20px;
+    margin: 0 4px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    line-height: 1.2;
+  }
+
+  .ec-product-card__price {
+    color: #2d9add;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .ec-product-card__unit {
+    color: #222;
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .ec-product-card__action {
+    width: 100%;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 0;
+    border-radius: 5px;
+    background: #F0F8FD;
+    color: #3D98D1;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  .ec-product-card__action:hover,
+  .ec-product-card__action:focus {
+    background: #3D98D1;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .ec-product-card__action i {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+
+  @media (max-width: 575.98px) {
+    .ec-product-card { padding: 14px 12px 12px; }
+    .ec-product-card__image-wrap { width: 76%; margin-bottom: 14px; }
+    .ec-product-card__content { margin: 0 -12px -12px; padding: 14px 12px 12px; }
+    .ec-product-card__action { min-height: 38px; font-size: 12px; }
+  }
+
+  .bg{
+    background-color: #111;
+    width: 304px;
+    height: 34px;
+  }
+</style>
+
 @php
-    $cart_added = [];
+    $product_url = route('product', $product->slug);
+    if ($product->auction_product == 1) {
+        $product_url = route('auction-product', $product->slug);
+    }
+
+    $product_name = $product->getTranslation('name');
+    $product_image = $product->thumbnail != null
+        ? my_asset($product->thumbnail->file_name)
+        : static_asset('assets/img/placeholder.jpg');
+    $discount_percentage = discount_in_percentage($product);
 @endphp
-<div class="aiz-card-box h-auto bg-white py-3 hov-scale-img">
-    <div class="position-relative h-140px h-md-200px img-fit overflow-hidden">
-        @php
-            $product_url = route('product', $product->slug);
-            if ($product->auction_product == 1) {
-                $product_url = route('auction-product', $product->slug);
-            }
-        @endphp
-        <!-- Image -->
-        <a href="{{ $product_url }}" class="d-block h-100">
-            <img class="lazyload mx-auto img-fit has-transition"
-                src="{{ $product->thumbnail != null ? my_asset($product->thumbnail->file_name) : static_asset('assets/img/placeholder.jpg') }}"
-                alt="{{ $product->getTranslation('name') }}" title="{{ $product->getTranslation('name') }}"
-                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-        </a>
-        <!-- Discount percentage tag -->
-        @if (discount_in_percentage($product) > 0)
-            <span class="absolute-top-left bg-primary ml-1 mt-1 fs-11 fw-700 text-white w-35px text-center"
-                style="padding-top:2px;padding-bottom:2px;">-{{ discount_in_percentage($product) }}%</span>
-        @endif
-        <!-- Wholesale tag -->
-        @if ($product->wholesale_product)
-            <span class="absolute-top-left fs-11 text-white fw-700 px-2 lh-1-8 ml-1 mt-1"
-                style="background-color: #455a64; @if (discount_in_percentage($product) > 0) top:25px; @endif">
-                {{ translate('Wholesale') }}
+
+@once
+   
+@endonce
+
+<div class="ec-product-card">
+        <div class="ec-product-card__top">
+            <span class="ec-product-card__badge">
+                @if ($discount_percentage > 0)
+                    -{{ $discount_percentage }}%
+                @elseif ($product->wholesale_product)
+                    {{ translate('Wholesale') }}
+                @else
+                    {{ translate('Popular') }}
+                @endif
             </span>
-        @endif
+    
+            @if ($product->auction_product == 0)
+                <a href="javascript:void(0)" class="ec-product-card__wishlist"
+                    onclick="addToWishList({{ $product->id }})"
+                    data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left"
+                    aria-label="{{ translate('Add to wishlist') }}">
+                    <i class="las la-heart"></i>
+                </a>
+            @endif
+        </div>
+
+
+    <a href="{{ $product_url }}" class="ec-product-card__image-wrap" title="{{ $product_name }}">
+        <img class="lazyload ec-product-card__image"
+            src="{{ $product_image }}"
+            alt="{{ $product_name }}" title="{{ $product_name }}"
+            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+    </a>
+
+    <div class="ec-product-card__content">
+        <a href="{{ $product_url }}" class="ec-product-card__name" title="{{ $product_name }}">
+            {{ $product_name }}
+        </a>
+
+        <div class="ec-product-card__price-row">
+            @if ($product->auction_product == 0)
+                <span class="ec-product-card__price">{{ home_discounted_base_price($product) }}</span>
+                <span class="ec-product-card__unit">/ {{ translate('pc') }}</span>
+            @else
+                <span class="ec-product-card__price">{{ single_price($product->starting_bid) }}</span>
+            @endif
+        </div>
+
         @if ($product->auction_product == 0)
-            <!-- wishlisht & compare icons -->
-            <div class="absolute-top-right aiz-p-hov-icon">
-                <a href="javascript:void(0)" class="hov-svg-white" onclick="addToWishList({{ $product->id }})"
-                    data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.4" viewBox="0 0 16 14.4">
-                        <g id="_51a3dbe0e593ba390ac13cba118295e4" data-name="51a3dbe0e593ba390ac13cba118295e4"
-                            transform="translate(-3.05 -4.178)">
-                            <path id="Path_32649" data-name="Path 32649"
-                                d="M11.3,5.507l-.247.246L10.8,5.506A4.538,4.538,0,1,0,4.38,11.919l.247.247,6.422,6.412,6.422-6.412.247-.247A4.538,4.538,0,1,0,11.3,5.507Z"
-                                transform="translate(0 0)" fill="#919199" />
-                            <path id="Path_32650" data-name="Path 32650"
-                                d="M11.3,5.507l-.247.246L10.8,5.506A4.538,4.538,0,1,0,4.38,11.919l.247.247,6.422,6.412,6.422-6.412.247-.247A4.538,4.538,0,1,0,11.3,5.507Z"
-                                transform="translate(0 0)" fill="#919199" />
-                        </g>
-                    </svg>
-                </a>
-                <a href="javascript:void(0)" class="hov-svg-white" onclick="addToCompare({{ $product->id }})"
-                    data-toggle="tooltip" data-title="{{ translate('Add to compare') }}" data-placement="left">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                        <path id="_9f8e765afedd47ec9e49cea83c37dfea" data-name="9f8e765afedd47ec9e49cea83c37dfea"
-                            d="M18.037,5.547v.8a.8.8,0,0,1-.8.8H7.221a.4.4,0,0,0-.4.4V9.216a.642.642,0,0,1-1.1.454L2.456,6.4a.643.643,0,0,1,0-.909L5.723,2.227a.642.642,0,0,1,1.1.454V4.342a.4.4,0,0,0,.4.4H17.234a.8.8,0,0,1,.8.8Zm-3.685,4.86a.642.642,0,0,0-1.1.454v1.661a.4.4,0,0,1-.4.4H2.84a.8.8,0,0,0-.8.8v.8a.8.8,0,0,0,.8.8H12.854a.4.4,0,0,1,.4.4V17.4a.642.642,0,0,0,1.1.454l3.267-3.268a.643.643,0,0,0,0-.909Z"
-                            transform="translate(-2.037 -2.038)" fill="#919199" />
-                    </svg>
-                </a>
-            </div>
-            <!-- add to cart -->
-            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
-                href="javascript:void(0)"
+            <a class="ec-product-card__action" href="javascript:void(0)"
                 @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
-                <span class="cart-btn-text">
-                    {{ translate('Add to Cart') }}
-                </span>
-                <br>
-                <span><i class="las la-2x la-shopping-cart"></i></span>
+                   <img src="{{ asset('icons/cartBeforehover.png') }}" alt="Add to Cart"  class="w-20px" >
+                <span>{{ translate('Add to Cart') }}</span>
             </a>
-        @endif
-        @if (
-            $product->auction_product == 1 &&
-                $product->auction_start_date <= strtotime('now') &&
-                $product->auction_end_date >= strtotime('now'))
-            <!-- Place Bid -->
+        @elseif ($product->auction_start_date <= strtotime('now') && $product->auction_end_date >= strtotime('now'))
             @php
-                $carts = get_user_cart();
-                if (count($carts) > 0) {
-                    $cart_added = $carts->pluck('product_id')->toArray();
-                }
                 $highest_bid = $product->bids->max('amount');
                 $min_bid_amount = $highest_bid != null ? $highest_bid + 1 : $product->starting_bid;
             @endphp
-            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
-                href="javascript:void(0)" onclick="bid_single_modal({{ $product->id }}, {{ $min_bid_amount }})">
-                <span class="cart-btn-text">{{ translate('Place Bid') }}</span>
-                <br>
-                <span><i class="las la-2x la-gavel"></i></span>
+            <a class="ec-product-card__action" href="javascript:void(0)"
+                onclick="bid_single_modal({{ $product->id }}, {{ $min_bid_amount }})">
+                <i class="las la-gavel"></i>
+                <span>{{ translate('Place Bid') }}</span>
+            </a>
+        @else
+            <a class="ec-product-card__action" href="{{ $product_url }}">
+                <span>{{ translate('View Details') }}</span>
             </a>
         @endif
-    </div>
-
-    <div class="p-2 p-md-3 text-left">
-        <!-- Product name -->
-        <h3 class="fw-400 fs-13 text-truncate-2 lh-1-4 mb-0 h-35px text-center">
-            <a href="{{ $product_url }}" class="d-block text-reset hov-text-primary"
-                title="{{ $product->getTranslation('name') }}">{{ $product->getTranslation('name') }}</a>
-        </h3>
-        <div class="fs-14 d-flex justify-content-center mt-3">
-            @if ($product->auction_product == 0)
-                <!-- Previous price -->
-                @if (home_base_price($product) != home_discounted_base_price($product))
-                    <div class="disc-amount has-transition">
-                        <del class="fw-400 text-secondary mr-1">{{ home_base_price($product) }}</del>
-                    </div>
-                @endif
-                <!-- price -->
-                <div class="">
-                    <span class="fw-700 text-primary">{{ home_discounted_base_price($product) }}</span>
-                </div>
-            @endif
-            @if ($product->auction_product == 1)
-                <!-- Bid Amount -->
-                <div class="">
-                    <span class="fw-700 text-primary">{{ single_price($product->starting_bid) }}</span>
-                </div>
-            @endif
-        </div>
     </div>
 </div>
