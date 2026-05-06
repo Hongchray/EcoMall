@@ -39,17 +39,13 @@
         <!-- footer logo -->
 
         <div class="mt-3 mb-2">
-
             <a href="{{ route('home') }}" class="d-block">
-
                 @if(get_setting('footer_logo') != null)
 
                 <img class="lazyload h-70px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
 
                     data-src="{{ uploaded_asset(get_setting('footer_logo')) }}" alt="{{ env('APP_NAME') }}"
-
                     height="100">
-
                 @else
 
                 <img class="lazyload h-70px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
@@ -1214,7 +1210,6 @@ $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
                 <span class="d-block mt-1 fs-10 fw-600 text-reset {{ areActiveRoutes(['home'],'text-primary')}}">{{
 
                     translate('Home') }}</span>
-
             </a>
 
         </div>

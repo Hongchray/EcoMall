@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-
+x
         <!-- Product Info -->
         <div class="col-lg-6">
             <div class="text-left">

@@ -108,4 +108,10 @@ class Product extends Model
     {
         return $query->where('approved', '1')->where('published', 1);
     }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class, 'subcategory_id');
+    }
+
 }

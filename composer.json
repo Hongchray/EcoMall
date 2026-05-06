@@ -10,6 +10,7 @@
         "aiz-packages/combination-generate": "dev-main",
         "anandsiddharth/laravel-paytm-wallet": "^2.0",
         "authorizenet/authorizenet": "^2.0",
+        "blade-ui-kit/blade-icons": "^1.8",
         "enshrined/svg-sanitize": "*",
         "fideloper/proxy": "^4.4",
         "genealabs/laravel-sign-in-with-apple": "*",

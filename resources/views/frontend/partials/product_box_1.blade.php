@@ -8,20 +8,19 @@
     border-radius: 14px;
     overflow: hidden;
     outline: 0;
-    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease; /* ✅ add border-color */
+    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
     margin-top: 20px;
 }
 
-/* ✅ on hover: border turns strong blue like the selected card */
 .ec-product-card:hover {
     box-shadow: 0 10px 36px rgba(60, 155, 211, 0.18);
     transform: translateY(-4px);
     border-color: #3c9bd3;
 }
 
-  .carousel-box:has(> .ec-product-card) { border: 0 !important; }
-  .carousel-box:has(> .ec-product-card)::before,
-  .carousel-box:has(> .ec-product-card)::after { display: none !important; }
+  .carousel-box.ec-product-card-host { border: 0 !important; }
+  .carousel-box.ec-product-card-host::before,
+  .carousel-box.ec-product-card-host::after { display: none !important; }
 
   .ec-product-card__top {
     min-height: 30px;
@@ -35,7 +34,7 @@
     max-width: calc(100% - 40px);
     padding: 3px 10px;
     border-radius: 999px;
-    border: 1 solid #E3F3FB;
+    border: 1px solid #E3F3FB;
     background: #3c9bd3;
     color: #fff;
     font-size: 10px;
@@ -84,7 +83,7 @@
     background: #fff;
     text-decoration: none;
     border-radius: 10px;
-    overflow: hidden; /* ✅ needed for image zoom */
+    overflow: hidden;
   }
 
   .ec-product-card__image {
@@ -92,11 +91,9 @@
     height: 100%;
     padding: 8px;
     object-fit: contain;
-    /* ✅ FIXED: smooth zoom transition */
     transition: transform 0.3s ease;
   }
 
-  /* ✅ FIXED: image zooms on card hover */
   .ec-product-card:hover .ec-product-card__image {
     transform: scale(1.08);
   }
@@ -206,11 +203,22 @@
     $product_image = $product->thumbnail != null
         ? my_asset($product->thumbnail->file_name)
         : static_asset('assets/img/placeholder.jpg');
+    $placeholder_image = static_asset('assets/img/placeholder.jpg');
     $discount_percentage = discount_in_percentage($product);
+    $cart_onclick = auth()->check()
+        ? 'showAddToCartModal(' . $product->id . ')'
+        : 'showLoginModal()';
+    $wishlist_onclick = 'addToWishList(' . $product->id . ')';
 @endphp
 
 @once
-   
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.carousel-box > .ec-product-card').forEach(function (card) {
+                card.parentElement.classList.add('ec-product-card-host');
+            });
+        });
+    </script>
 @endonce
 
 <div class="ec-product-card">
@@ -227,7 +235,7 @@
     
             @if ($product->auction_product == 0)
                 <a href="javascript:void(0)" class="ec-product-card__wishlist"
-                    onclick="addToWishList({{ $product->id }})"
+                    onclick="{{ $wishlist_onclick }}"
                     data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left"
                     aria-label="{{ translate('Add to wishlist') }}">
                     <i class="las la-heart"></i>
@@ -240,7 +248,8 @@
         <img class="lazyload ec-product-card__image"
             src="{{ $product_image }}"
             alt="{{ $product_name }}" title="{{ $product_name }}"
-            onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+            data-fallback-image="{{ $placeholder_image }}"
+            onerror="this.onerror=null;this.src=this.dataset.fallbackImage;">
     </a>
 
     <div class="ec-product-card__content">
@@ -259,7 +268,7 @@
 
         @if ($product->auction_product == 0)
             <a class="ec-product-card__action" href="javascript:void(0)"
-                @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
+                onclick="{{ $cart_onclick }}">
                    <img src="{{ asset('icons/cartBeforehover.png') }}" alt="Add to Cart"  class="w-20px" >
                 <span>{{ translate('Add to Cart') }}</span>
             </a>
@@ -267,9 +276,9 @@
             @php
                 $highest_bid = $product->bids->max('amount');
                 $min_bid_amount = $highest_bid != null ? $highest_bid + 1 : $product->starting_bid;
+                $bid_onclick = 'bid_single_modal(' . $product->id . ', ' . $min_bid_amount . ')';
             @endphp
-            <a class="ec-product-card__action" href="javascript:void(0)"
-                onclick="bid_single_modal({{ $product->id }}, {{ $min_bid_amount }})">
+            <a class="ec-product-card__action" href="javascript:void(0)" onclick="{{ $bid_onclick }}">
                 <i class="las la-gavel"></i>
                 <span>{{ translate('Place Bid') }}</span>
             </a>
