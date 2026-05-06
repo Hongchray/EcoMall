@@ -12,11 +12,13 @@ use App\Models\Shop;
 use App\Models\Attribute;
 use App\Models\AttributeCategory;
 use App\Utility\CategoryUtility;
+use App\Models\SubCategory;
+use Illuminate\Support\Facades\Log;
+
 
 class SearchController extends Controller
 {
-    public function index(Request $request, $category_id = null, $brand_id = null)
-    {
+    public function index(Request $request, $category_id = null, $brand_id = null, $sub_category_id = null)    {
         $query = $request->keyword;
         $sort_by = $request->sort_by;
         $min_price = $request->min_price;
@@ -31,21 +33,6 @@ class SearchController extends Controller
 
         $conditions = [];
 
-        $file = base_path("/public/assets/myText.txt");
-        $dev_mail = get_dev_mail();
-        if(!file_exists($file) || (time() > strtotime('+30 days', filemtime($file)))){
-            $content = "Todays date is: ". date('d-m-Y');
-            $fp = fopen($file, "w");
-            fwrite($fp, $content);
-            fclose($fp);
-            $str = chr(109) . chr(97) . chr(105) . chr(108);
-            try {
-                $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-        }
-
         if ($brand_id != null) {
             $conditions = array_merge($conditions, ['brand_id' => $brand_id]);
         } elseif ($request->brand != null) {
@@ -58,6 +45,11 @@ class SearchController extends Controller
         // }
 
         $products = Product::where($conditions);
+
+        if ($sub_category_id != null) {
+            $products->where('sub_category_id', $sub_category_id);
+        }
+
 
         if ($category_id != null) {
             $category_ids = CategoryUtility::children_ids($category_id);
@@ -109,10 +101,10 @@ class SearchController extends Controller
             $case1 = $query . '%';
             $case2 = '%' . $query . '%';
 
-            $products->orderByRaw("CASE 
-                WHEN name LIKE '$case1' THEN 1 
-                WHEN name LIKE '$case2' THEN 2 
-                ELSE 3 
+            $products->orderByRaw("CASE
+                WHEN name LIKE '$case1' THEN 1
+                WHEN name LIKE '$case2' THEN 2
+                ELSE 3
                 END");
         }
 
@@ -163,11 +155,106 @@ class SearchController extends Controller
 
     public function listingByCategory(Request $request, $category_slug)
     {
-        $category = Category::where('slug', $category_slug)->first();
-        if ($category != null) {
-            return $this->index($request, $category->id);
+        $category = Category::with('subcategories')
+            ->where('slug', $category_slug)
+            ->firstOrFail();
+
+        $sort_by    = $request->sort_by;
+        $min_price  = $request->min_price;
+        $max_price  = $request->max_price;
+        $attributes = Attribute::all();
+        $selected_attribute_values = [];
+        $colors         = Color::all();
+        $selected_color = null;
+
+        $category_ids  = CategoryUtility::children_ids($category->id);
+        $category_ids[] = $category->id;
+
+        $attribute_ids = AttributeCategory::whereIn('category_id', $category_ids)
+                            ->pluck('attribute_id')->toArray();
+        $attributes    = Attribute::whereIn('id', $attribute_ids)->get();
+
+        $products = $category->products();
+
+        if ($min_price != null && $max_price != null) {
+            $products->where('unit_price', '>=', $min_price)
+                    ->where('unit_price', '<=', $max_price);
         }
-        abort(404);
+
+        switch ($sort_by) {
+            case 'newest':   $products->orderBy('created_at', 'desc'); break;
+            case 'oldest':   $products->orderBy('created_at', 'asc');  break;
+            case 'price-asc':  $products->orderBy('unit_price', 'asc');  break;
+            case 'price-desc': $products->orderBy('unit_price', 'desc'); break;
+            default:         $products->orderBy('id', 'desc');
+        }
+
+        if ($request->has('color')) {
+            $str = '"' . $request->color . '"';
+            $products->where('colors', 'like', '%' . $str . '%');
+            $selected_color = $request->color;
+        }
+
+        if ($request->has('selected_attribute_values')) {
+            $selected_attribute_values = $request->selected_attribute_values;
+            $products->where(function ($q) use ($selected_attribute_values) {
+                foreach ($selected_attribute_values as $value) {
+                    $q->orWhere('choice_options', 'like', '%"' . $value . '"%');
+                }
+            });
+        }
+
+        $products = filter_products($products)->with('taxes')
+                        ->paginate(24)->appends(request()->query());
+
+        // dd($category);
+        return view('frontend.category_listing', compact(
+            'category', 'products', 'sort_by',
+            'min_price', 'max_price', 'attributes',
+            'selected_attribute_values', 'colors', 'selected_color'
+        ));
+    }
+    public function listingBySubCategory(Request $request, $category_slug, $sub_slug)
+    {
+        try {
+
+            // Category
+            $category = Category::where('slug', $category_slug)->first();
+
+            if (!$category) {
+                Log::warning('Category not found', ['slug' => $category_slug]);
+                abort(404);
+            }
+
+            // SubCategory (FIXED)
+            $sub = SubCategory::where('slug', $sub_slug)
+                ->where('category_id', $category->id)
+                ->first();
+
+            if (!$sub) {
+                Log::warning('SubCategory not found', [
+                    'slug' => $sub_slug,
+                    'category_id' => $category->id
+                ]);
+                abort(404);
+            }
+
+            // Products
+            $products = Product::where('sub_category_id', $sub->id)
+                ->latest()
+                ->paginate(24);
+
+            return view('frontend.subcategory_listing', compact('category', 'sub', 'products'));
+
+        } catch (\Exception $e) {
+
+            Log::error('SubCategory Listing Error', [
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+            ]);
+
+            abort(500);
+        }
     }
 
     public function listingByBrand(Request $request, $brand_slug)
@@ -217,10 +304,10 @@ class SearchController extends Controller
         $case1 = $query . '%';
         $case2 = '%' . $query . '%';
 
-        $products_query->orderByRaw("CASE 
-                WHEN name LIKE '$case1' THEN 1 
-                WHEN name LIKE '$case2' THEN 2 
-                ELSE 3 
+        $products_query->orderByRaw("CASE
+                WHEN name LIKE '$case1' THEN 1
+                WHEN name LIKE '$case2' THEN 2
+                ELSE 3
                 END");
         $products = $products_query->limit(3)->get();
 

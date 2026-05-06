@@ -185,6 +185,7 @@ Route::controller(SearchController::class)->group(function () {
     Route::get('/search?keyword={search}', 'index')->name('suggestion.search');
     Route::post('/ajax-search', 'ajax_search')->name('search.ajax');
     Route::get('/category/{category_slug}', 'listingByCategory')->name('products.category');
+    Route::get('/category/{category_slug}/{sub_slug}', 'listingBySubCategory')->name('products.subcategory');
     Route::get('/brand/{brand_slug}', 'listingByBrand')->name('products.brand');
 });
 
@@ -207,7 +208,7 @@ Route::controller(MercadopagoController::class)->group(function () {
     Route::any('/mercadopago/payment/done', 'paymentstatus')->name('mercadopago.done');
     Route::any('/mercadopago/payment/cancel', 'callback')->name('mercadopago.cancel');
 });
-//Mercadopago 
+//Mercadopago
 
 // SSLCOMMERZ Start
 Route::controller(SslcommerzController::class)->group(function () {

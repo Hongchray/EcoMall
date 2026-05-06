@@ -6,7 +6,30 @@
 
     <!-- Sliders -->
 <style>
-    /* 🔵 Indicators (dots) */
+    /* Cross-fade: outgoing slides stay visible while incoming fades in */
+    #homeCarousel .carousel-item {
+        transition: none;
+    }
+
+    #homeCarousel .carousel-inner {
+        position: relative;
+    }
+
+    #homeCarousel .carousel-item {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        display: block !important; /* override Bootstrap's display:none */
+    }
+
+    #homeCarousel .carousel-item.active {
+        opacity: 1;
+        position: relative; /* active item holds the height */
+    }
+
+    /* Indicators */
     .carousel-indicators [data-bs-target] {
         width: 10px;
         height: 10px;
@@ -23,7 +46,7 @@
         background-color: #fff;
     }
 
-    /* ⬅️➡️ Controls (arrows) */
+    /* Nav arrows */
     .carousel-control-prev,
     .carousel-control-next {
         width: 40px;
@@ -36,13 +59,11 @@
         transition: 0.3s;
     }
 
-    /* show on hover */
     #homeCarousel:hover .carousel-control-prev,
     #homeCarousel:hover .carousel-control-next {
         opacity: 1;
     }
 
-    /* icon size */
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
         background-size: 60% 60%;
@@ -55,32 +76,89 @@
         transition: all 0.25s ease;
     }
 
-    /* Hover effect */
     .btn-glass:hover {
         background-color: #fff;
         color: #000;
         border-color: #fff;
     }
-</style>
-    <div class="home-banner-area mb-3">
+    .hero-wrapper {
+        height: 320px;
+        gap: 16px;
+    }
+
+    /* LEFT SIDE */
+    .hero-left {
+        width: 75%;
+        height: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    /* RIGHT SIDE */
+    .hero-right {
+        width: 25%;
+        height: 100%;
+        display: flex;
+        gap: 16px;
+        flex-direction: column;
+    }
+
+    /* RIGHT BOX */
+    .hero-box {
+        flex: 1;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .hero-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* ================= MOBILE ================= */
+    @media (max-width: 991px) {
+
+        .hero-wrapper {
+            height: auto;
+        }
+
+       .hero-left {
+            width: 100%;
+            height: 220px;
+        }
+        .hero-right {
+            width: 100%;
+            height: 140px;
+        }
+
+        /* right becomes horizontal */
+        .hero-right {
+            flex-direction: row;
+            gap: 12px;
+        }
+
+        .hero-box {
+            height: 140px;
+            flex: 1;
+        }
+    }
+    </style>
+    <div class="home-banner-area mb-3 " style="padding: 12px">
         <div class="container mt-4">
 
-            <div class="d-flex flex-column flex-lg-row"
-                style="height: 320px; gap: 20px;">
+            <div class="hero-wrapper d-flex flex-column flex-lg-row gap-4 ">
 
-
-
-                <!-- LEFT (70%) -->
-                <div class="bg-light shadow-sm"
-                    style="width: 75%; height: 100%; border-radius: 15px; overflow: hidden;">
+                <!-- LEFT -->
+                <div class="hero-left bg-light shadow-sm">
 
                     <div id="homeCarousel"
-                        class="carousel slide carousel-fade h-100"
+                        class="carousel slide h-100"
                         data-bs-ride="carousel"
                         data-bs-interval="3000"
                         data-bs-pause="hover"
                         data-bs-wrap="true">
-
 
                         <div class="carousel-indicators" style="bottom: 12px;">
                             @foreach ($banners as $key => $banner)
@@ -92,25 +170,14 @@
                             @endforeach
                         </div>
 
-
                         <div class="carousel-inner h-100">
 
                             @forelse ($banners as $key => $banner)
                                 <div class="carousel-item h-100 {{ $key == 0 ? 'active' : '' }}">
-
-                                    <img
-                                        src="{{ $banner->image }}"
+                                    <img src="{{ $banner->image }}"
                                         class="d-block w-100 h-100"
                                         style="object-fit: cover;"
                                         alt="banner">
-
-
-                                    {{-- @if (!empty($banner->title))
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <h5>{{ $banner->title }}</h5>
-                                        </div>
-                                    @endif --}}
-
                                 </div>
                             @empty
                                 <div class="carousel-item active h-100">
@@ -122,63 +189,51 @@
 
                         </div>
 
-                        {{-- ✅ Controls --}}
-                        <button class="carousel-control-prev"
-                            type="button"
-                            data-bs-target="#homeCarousel"
-                            data-bs-slide="prev"
-                            style="left: 12px;">
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#homeCarousel" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon"></span>
                         </button>
 
-                        <button class="carousel-control-next"
-                            type="button"
-                            data-bs-target="#homeCarousel"
-                            data-bs-slide="next"
-                            style="right: 12px;">
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#homeCarousel" data-bs-slide="next">
                             <span class="carousel-control-next-icon"></span>
                         </button>
 
                     </div>
+
                 </div>
 
-                <!-- RIGHT (30%) -->
-                <div class="d-flex flex-column"
-                    style="width: 25%; height: 100%; gap: 20px;">
+                <!-- RIGHT -->
+                <div class="hero-right d-flex">
 
-                   <div class="bg-warning shadow-sm flex-fill"
-                        style="border-radius: 15px; overflow: hidden;">
+                    <div class="hero-box bg-warning shadow-sm">
                         <a href="#">
-                            <img src="https://media.istockphoto.com/id/2009037625/vector/best-seller-banner-template-on-the-abstract-pop-art-sunburst-background-vector-illustration.jpg?s=612x612&w=0&k=20&c=P80VHilxM4FlyWF_Gpyi4peG7kJxZcWKLOsPbqHaA8o="
-                                                    alt="image 1"
-                                                    style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            <img src="https://media.istockphoto.com/id/2009037625/vector/best-seller-banner-template-on-the-abstract-pop-art-sunburst-background-vector-illustration.jpg"
+                                alt="image 1">
                         </a>
-
-
                     </div>
 
-                    <div class="bg-warning shadow-sm flex-fill"
-                        style="border-radius: 15px; overflow: hidden;">
+                    <div class="hero-box bg-warning shadow-sm">
                         <a href="#">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH2QSabe9ESh22w-_HPGk4j3KcnQWZO3Hc3Q&s"
-                                alt="image 2"
-                                style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                alt="image 2">
                         </a>
-
-
                     </div>
 
                 </div>
 
             </div>
-            <div class="container-fluid my-3 mt-4 p-0">
-                <div class="row g-0 gap-3">
+            <div class="container-fluid my-4 px-2">
+                <div class="row g-3">
 
                     <!-- Card 1 -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="d-flex align-items-center border rounded-2 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/truck.png" alt="Fast Delivery" class="me-3" style="width:45px;">
-                            <div class="ml-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="https://img.icons8.com/fluency/48/truck.png"
+                                alt="Fast Delivery"
+                                class="me-3 flex-shrink-0"
+                                style="width:45px;">
+                            <div>
                                 <h6 class="mb-1 fw-bold">Fast Delivery</h6>
                                 <small class="text-muted">Phnom Penh & nationwide</small>
                             </div>
@@ -186,10 +241,13 @@
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="d-flex align-items-center border rounded-2 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/verified-badge.png" alt="Quality Assured" class="me-3" style="width:45px;">
-                            <div class="ml-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="https://img.icons8.com/fluency/48/verified-badge.png"
+                                alt="Quality Assured"
+                                class="me-3 flex-shrink-0"
+                                style="width:45px;">
+                            <div>
                                 <h6 class="mb-1 fw-bold">Quality Assured</h6>
                                 <small class="text-muted">Certified products only</small>
                             </div>
@@ -197,10 +255,13 @@
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="d-flex align-items-center border rounded-2 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/price-tag.png" alt="Best Prices" class="me-3" style="width:45px;">
-                            <div class="ml-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="https://img.icons8.com/fluency/48/price-tag.png"
+                                alt="Best Prices"
+                                class="me-3 flex-shrink-0"
+                                style="width:45px;">
+                            <div>
                                 <h6 class="mb-1 fw-bold">Best Prices</h6>
                                 <small class="text-muted">Wholesale & retail rates</small>
                             </div>
@@ -208,10 +269,13 @@
                     </div>
 
                     <!-- Card 4 -->
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <div class="d-flex align-items-center border rounded-2 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/phone.png" alt="24/7 Support" class="me-3" style="width:45px;">
-                            <div class="ml-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="https://img.icons8.com/fluency/48/phone.png"
+                                alt="24/7 Support"
+                                class="me-3 flex-shrink-0"
+                                style="width:45px;">
+                            <div>
                                 <h6 class="mb-1 fw-bold">24/7 Support</h6>
                                 <small class="text-muted">078 333 016</small>
                             </div>
@@ -225,28 +289,29 @@
 
                     <div class="row g-0 ">
 
+
                         {{-- LEFT SIDE (Category Info) --}}
                         <div class="col-md-3 bg-dark text-white p-3 d-flex flex-column justify-content-between">
+                            {{-- <pre>{{ json_encode($category, JSON_PRETTY_PRINT) }}</pre> --}}
 
                             <div class="p-3">
-                                <img src="{{ $category->bannerImage?->image ?? 'https://via.placeholder.com/80' }}"
+                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/80' }}"
                                     class="mb-3 rounded"
                                     style="width: 60px; height: 60px; object-fit: cover;">
 
-                                <h5 class="fw-bold">{{ $category->name }}</h5>
-
+                                <h5 class="fw-bold">
+                                    {{ $category->getTranslation('name') }}
+                                </h5>
                                 <small class="text-light">
-                                    Core structural foundation materials
+                                   {{ $category->meta_description }}
                                 </small>
                             </div>
                            <div class="pl-3">
-                                <button class="btn btn-sm rounded-pill btn-glass">
+                                <a href="{{ url('/category/' . $category->slug) }}"
+                                class="btn btn-sm rounded-pill btn-glass">
                                     View All →
-                                </button>
+                                </a>
                             </div>
-
-
-
                         </div>
 
                         {{-- RIGHT SIDE (Subcategories Grid) --}}
@@ -256,19 +321,20 @@
                             <div class="d-flex flex-wrap gap-4 align-items-center">
 
                                 @forelse($category->subcategories as $sub)
-                                    <div class="text-center text-white" style="width: 120px;">
+                                    <div class="text-center text-white ml-4" style="width: 120px;">
 
                                         <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
                                             style="width: 60px; height: 60px;">
 
-                                            {{-- optional image --}}
-                                            <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
-                                                style="width: 35px; height: 35px; object-fit: contain;">
+                                            <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}">
+                                                <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
+                                                    style="width: 35px; height: 35px; object-fit: contain;">
+                                            </a>
                                         </div>
 
-                                        <small class="d-block fw-semibold">
+                                        <p class="d-block fw-semibold" style="font-size: 15px;">
                                             {{ $sub->name }}
-                                        </small>
+                                        </p>
 
                                     </div>
                                 @empty
