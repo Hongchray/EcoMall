@@ -2467,9 +2467,11 @@ if (!function_exists('getFileBaseURL')) {
 
     {
 
-        if (env('FILESYSTEM_DRIVER') != 'local') {
+        $filesystem_driver = env('FILESYSTEM_DRIVER', 'local');
 
-            return env(Str::upper(env('FILESYSTEM_DRIVER')).'_URL') . '/';
+        if ($filesystem_driver != 'local') {
+
+            return env(Str::upper($filesystem_driver).'_URL') . '/';
 
         }
 

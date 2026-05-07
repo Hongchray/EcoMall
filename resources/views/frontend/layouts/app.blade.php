@@ -789,6 +789,18 @@
 
         });
 
+        $(document).on('click', '.js-mobile-category-toggle', function(e) {
+
+            e.preventDefault();
+
+            var $toggle = $(this);
+            var $dropdown = $toggle.closest('li').find('.mobile-category-dropdown').first();
+
+            $toggle.toggleClass('active');
+            $dropdown.stop(true, true).slideToggle(220);
+
+        });
+
 
 
         function updateNavCart(view,count){
