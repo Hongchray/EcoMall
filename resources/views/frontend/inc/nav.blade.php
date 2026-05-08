@@ -14,6 +14,20 @@
                 ->pluck('value', 'type');
             $header_menu_labels = json_decode($header_menu_settings['header_menu_labels'] ?? '[]', true) ?: [];
             $header_menu_links = json_decode($header_menu_settings['header_menu_links'] ?? '[]', true) ?: [];
+            $resolve_header_menu_link = function ($label, $link) {
+                $label_slug = strtolower(trim($label));
+                $link = trim($link ?: '#');
+                $is_placeholder_link = $link == '#' || $link == '' || str_contains($link, 'domain.com');
+
+                if ($label_slug == 'about ecomall' || $label_slug == 'about eco mall' || $label_slug == 'about') {
+                    return route('custom-pages.show_custom_page', 'about-us');
+                }
+                if (($label_slug == 'blog' || $label_slug == 'blogs' || $label_slug == 'news' || $label_slug == 'new') && $is_placeholder_link) {
+                    return route('blog');
+                }
+
+                return $link;
+            };
 
         @endphp
 
@@ -882,7 +896,7 @@
 
                                             @php
                                                 $is_category_menu = strtolower(trim($value)) == 'category';
-                                                $header_menu_link = $is_category_menu ? 'javascript:void(0);' : ($header_menu_links[$key] ?? '#');
+                                                $header_menu_link = $is_category_menu ? 'javascript:void(0);' : $resolve_header_menu_link($value, $header_menu_links[$key] ?? '#');
                                             @endphp
 
                                             <li class="list-inline-item mr-0 animate-underline-white">
@@ -927,7 +941,7 @@
 
                         <div class="d-flex position-relative">
 
-                            <div class="position-static">
+                            <div class="position-static ecm-category-menu-panel">
 
                                 @include('frontend.'.get_setting("homepage_select").'.partials.category_menu')
 
@@ -980,10 +994,7 @@
                                 <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}">
                             @endif
                         </a>
-                        <div class="ecm-mobile-brand-copy">
-                            <strong>{{ env('APP_NAME', 'ECO MALL 24') }}</strong>
-                            <small>{{ translate('Cambodia Construction Mall') }}</small>
-                        </div>
+    
                     </div>
 
                     <div class="ecm-mobile-auth-actions">
@@ -1015,7 +1026,7 @@
                             $mobile_menu_label = trim($value);
                             $mobile_menu_slug = strtolower($mobile_menu_label);
                             $is_mobile_category_menu = $mobile_menu_slug == 'category' || $mobile_menu_slug == 'categories';
-                            $mobile_header_menu_link = $is_mobile_category_menu ? 'javascript:void(0);' : ($mobile_header_menu_links[$key] ?? '#');
+                            $mobile_header_menu_link = $is_mobile_category_menu ? 'javascript:void(0);' : $resolve_header_menu_link($mobile_menu_label, $mobile_header_menu_links[$key] ?? '#');
                             $mobile_menu_item_class = 'ecm-mobile-db-item';
 
                             if ($mobile_menu_slug == 'home') {

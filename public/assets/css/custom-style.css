@@ -462,6 +462,10 @@
     box-shadow: 0 16px 34px rgba(19, 64, 96, 0.16);
 }
 
+#click-category-menu.hover-category-menu .ecm-category-menu-panel {
+    margin-left: 105px;
+}
+
 .ecm-main-nav-wrap,
 .ecm-main-nav {
     overflow: visible !important;
@@ -949,24 +953,13 @@
         text-decoration: none !important;
     }
 
-    .aiz-top-menu-sidebar .ecm-mobile-brand-logo {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.18);
-        border-radius: 8px;
-    }
+
 
     .aiz-top-menu-sidebar .ecm-mobile-brand-logo img {
-        max-width: 30px;
+        max-width: 300px;
         max-height: 30px;
         object-fit: contain;
     }
-
     .aiz-top-menu-sidebar .ecm-mobile-brand-mark,
     .aiz-top-menu-sidebar .nav-user-img {
         width: 34px !important;
