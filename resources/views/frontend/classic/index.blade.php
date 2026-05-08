@@ -835,17 +835,14 @@
 
     @endif -->
 
+  <!-- New Products -->
+    <div id="section_newest"> </div>
 
+   <!-- Best Selling  -->
+    <div id="section_best_selling"></div>
 
     <!-- Featured Products -->
-
-    <div id="section_featured">
-
-
-
-    </div>
-
-
+    <div id="section_featured"></div>
 
     <!-- Banner Section 2 -->
 
@@ -902,28 +899,6 @@
         </div>
 
     @endif -->
-
-
-
-    <!-- Best Selling  -->
-
-    <div id="section_best_selling">
-
-
-
-    </div>
-
-
-
-    <!-- New Products -->
-
-    <div id="section_newest">
-
-
-
-    </div>
-
-
 
     <!-- Banner Section 3 -->
 

@@ -308,26 +308,11 @@
 
 
 
-    <!-- Featured Products -->
-
-    <div id="section_featured">
-
-
-
-    </div>
-
-
-
-
-
     <!-- Banner section 1 -->
 
     @if (get_setting('home_banner1_images') != null)
-
         <div class="mb-2 mb-md-3 mt-2 mt-md-3">
-
             <div class="container">
-
                 @php
 
                     $banner_1_imags = json_decode(get_setting('home_banner1_images'));
@@ -349,7 +334,6 @@
                         data-dots="false">
 
                         @foreach ($banner_1_imags as $key => $value)
-
                             <div class="carousel-box overflow-hidden hov-scale-img">
 
                                 <a href="{{ json_decode(get_setting('home_banner1_links'), true)[$key] }}"
@@ -546,6 +530,16 @@
     <!-- Best Selling  -->
 
     <div id="section_best_selling">
+
+
+
+    </div>
+
+
+
+    <!-- Featured Products -->
+
+    <div id="section_featured">
 
 
 

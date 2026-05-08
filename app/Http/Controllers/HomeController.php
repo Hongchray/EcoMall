@@ -132,6 +132,7 @@ class HomeController extends Controller
 
         return view('frontend.'.get_setting('homepage_select').'.partials.todays_deal', compact('todays_deal_products'));
 
+
     }
 
 
@@ -152,6 +153,16 @@ class HomeController extends Controller
 
     }
 
+    public function new_products(Request $request)
+    {
+        $products = filter_products(Product::latest())
+            ->with('taxes')
+            ->paginate(24)
+            ->appends(request()->query());
+
+        return $this->sectionProductListing($products, translate('New Products'), $request);
+    }
+
 
 
     public function load_featured_section()
@@ -162,6 +173,16 @@ class HomeController extends Controller
 
     }
 
+    public function featured_products(Request $request)
+    {
+        $products = filter_products(Product::where('featured', '1')->latest())
+            ->with('taxes')
+            ->paginate(24)
+            ->appends(request()->query());
+
+        return $this->sectionProductListing($products, translate('Featured Products'), $request);
+    }
+
 
 
     public function load_best_selling_section()
@@ -170,6 +191,34 @@ class HomeController extends Controller
 
         return view('frontend.'.get_setting('homepage_select').'.partials.best_selling_section');
 
+    }
+
+    public function best_price_products(Request $request)
+    {
+        $products = filter_products(Product::latest())
+            ->with('taxes')
+            ->paginate(24)
+            ->appends(request()->query());
+
+        return $this->sectionProductListing($products, translate('Best Price'), $request);
+    }
+
+    private function sectionProductListing($products, $query, Request $request)
+    {
+        $category = [];
+        $categories = [];
+        $category_id = null;
+        $brand_id = null;
+        $sort_by = $request->sort_by;
+        $seller_id = null;
+        $min_price = $request->min_price;
+        $max_price = $request->max_price;
+        $attributes = \App\Models\Attribute::all();
+        $selected_attribute_values = array();
+        $colors = \App\Models\Color::all();
+        $selected_color = null;
+
+        return view('frontend.product_listing', compact('products', 'query', 'category', 'categories', 'category_id', 'brand_id', 'sort_by', 'seller_id', 'min_price', 'max_price', 'attributes', 'selected_attribute_values', 'colors', 'selected_color'));
     }
 
 
@@ -982,7 +1031,21 @@ class HomeController extends Controller
 
         $product_stock = $product->stocks->where('variant', $str)->first();
 
+        if ($product_stock == null) {
+            $product_stock = $product->stocks->first();
+            $str = $product_stock ? $product_stock->variant : '';
+        }
 
+        if ($product_stock == null) {
+            return array(
+                'price' => single_price(0),
+                'quantity' => 0,
+                'digital' => $product->digital,
+                'variation' => $str,
+                'max_limit' => 0,
+                'in_stock' => 0
+            );
+        }
 
         $price = $product_stock->price;
 

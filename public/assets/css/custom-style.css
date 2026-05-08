@@ -1,6 +1,52 @@
 /*your custom css goes here*/
 
 /* EcoMall header search */
+.slide-arrow {
+    width: 36px;
+    height: 36px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #2f8fc8 !important;
+    background: #ffffff;
+    border: 1px solid #d7edf8;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(47, 143, 200, 0.14);
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.slide-arrow i {
+    color: inherit !important;
+    font-size: 22px !important;
+    line-height: 1;
+}
+
+.slide-arrow:hover,
+.slide-arrow:focus {
+    color: #ffffff !important;
+    background: #349bd4;
+    border-color: #349bd4;
+    box-shadow: 0 10px 24px rgba(47, 143, 200, 0.24);
+    transform: translateY(-1px);
+}
+
+.slide-arrow.link-disable {
+    color: #b6c4ce !important;
+    background: #f5f8fa;
+    border-color: #edf2f5;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.arrow-prev.slide-arrow,
+.arrow-next.slide-arrow {
+    margin-right: 0 !important;
+    margin-left: 8px !important;
+}
+
 .ecm-logo-bar {
     border-bottom: 3px solid #1394d2 !important;
     background: #ffffff;

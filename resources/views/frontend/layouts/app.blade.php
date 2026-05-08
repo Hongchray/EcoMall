@@ -70,10 +70,7 @@
         <link rel="stylesheet" href="{{ static_asset('assets/css/bootstrap-rtl.min.css') }}">
     @endif
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-</script>
 
 
 
@@ -908,7 +905,7 @@
 
             $('#addToCart-modal-body').html(null);
 
-            $('#addToCart').modal();
+            $('#addToCart').modal('show');
 
             $('.c-preloader').show();
 
@@ -1044,6 +1041,14 @@
 
         function addToCart(){
 
+            @if (!Auth::check())
+
+                showLoginModal();
+
+                return false;
+
+            @endif
+
             @if (Auth::check() && Auth::user()->user_type != 'customer')
 
                 AIZ.plugins.notify('warning', "{{ translate('Please Login as a customer to add products to the Cart.') }}");
@@ -1056,7 +1061,7 @@
 
             if(checkAddToCartValidity()) {
 
-                $('#addToCart').modal();
+                $('#addToCart').modal('show');
 
                 $('.c-preloader').show();
 
@@ -1116,7 +1121,7 @@
 
                 $('#addToCart-modal-body').html(null);
 
-                $('#addToCart').modal();
+                $('#addToCart').modal('show');
 
                 $('.c-preloader').show();
 

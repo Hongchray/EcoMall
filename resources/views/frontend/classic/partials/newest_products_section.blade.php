@@ -8,9 +8,9 @@
                     <span class="">{{ translate('New Products') }}</span>
                 </h3>
                 <!-- Links -->
-                <div class="d-flex">
+                <div class="d-flex align-items-center">
                     <a type="button" class="arrow-prev slide-arrow link-disable text-secondary mr-2" onclick="clickToSlide('slick-prev','section_newest')"><i class="las la-angle-left fs-20 fw-600"></i></a>
-                    <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary" href="{{ route('search',['sort_by'=>'newest']) }}">{{ translate('View All') }}</a>
+                    <a class="text-blue fs-12 fw-700 hov-text-primary mx-2" href="{{ route('products.new') }}">{{ translate('View All') }}</a>
                     <a type="button" class="arrow-next slide-arrow text-secondary ml-2" onclick="clickToSlide('slick-next','section_newest')"><i class="las la-angle-right fs-20 fw-600"></i></a>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                 <div class="aiz-carousel arrow-none sm-gutters-16" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='false'>
                     @foreach ($newest_products as $key => $new_product)
                     <div class="carousel-box px-3 position-relative has-transition">
-                        @include('frontend.partials.product_box_1',['product' => $new_product])
+                        @include('frontend.partials.product_box_1', ['product' => $new_product])
                     </div>
                     @endforeach
                 </div>

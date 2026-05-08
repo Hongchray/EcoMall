@@ -47,6 +47,23 @@
     text-overflow: ellipsis;
   }
 
+  .ec-product-card__badge--new {
+    background: #ff9f0a;
+    border-color: #ffb84a;
+  }
+
+  .ec-product-card__badge--popular,
+  .ec-product-card__badge--best-selling {
+    background: #e84b7a;
+    border-color: #f17a9c;
+  }
+
+  .ec-product-card__badge--in-stock,
+  .ec-product-card__badge--available {
+    background: #1fb66d;
+    border-color: #60d49b;
+  }
+
   .ec-product-card__wishlist {
     width: 32px;
     height: 32px;
@@ -200,14 +217,25 @@
     }
 
     $product_name = $product->getTranslation('name');
-    $product_image = $product->thumbnail != null
-        ? my_asset($product->thumbnail->file_name)
-        : static_asset('assets/img/placeholder.jpg');
+    $product_image = filter_var($product->thumbnail_img, FILTER_VALIDATE_URL)
+        ? $product->thumbnail_img
+        : uploaded_asset($product->thumbnail_img);
     $placeholder_image = static_asset('assets/img/placeholder.jpg');
-    $discount_percentage = discount_in_percentage($product);
-    $cart_onclick = auth()->check()
-        ? 'showAddToCartModal(' . $product->id . ')'
-        : 'showLoginModal()';
+    $is_new_product = $product->created_at != null && $product->created_at->gte(now()->subDays(30)->startOfDay());
+    // $is_new_product = $product->created_at != null && $product->created_at->gte(now()->subMinute());
+
+    $is_popular_product = (int) $product->num_of_sale > 10;
+    $product_badge = translate('Available');
+
+    if ($is_new_product) {
+        $product_badge = translate('New');
+    } elseif ($is_popular_product) {
+        $product_badge = translate('Best Selling');
+    }
+
+    $product_badge_key = strtolower(str_replace(' ', '-', $product_badge));
+
+    $cart_onclick = 'showAddToCartModal(' . $product->id . ')';
     $wishlist_onclick = 'addToWishList(' . $product->id . ')';
 @endphp
 
@@ -223,15 +251,9 @@
 
 <div class="ec-product-card">
         <div class="ec-product-card__top">
-            <span class="ec-product-card__badge">
-                @if ($discount_percentage > 0)
-                    -{{ $discount_percentage }}%
-                @elseif ($product->wholesale_product)
-                    {{ translate('Wholesale') }}
-                @else
-                    {{ translate('Popular') }}
-                @endif
-            </span>
+            @if ($product_badge != null)
+                <span class="ec-product-card__badge ec-product-card__badge--{{ $product_badge_key }}">{{ strtoupper($product_badge) }}</span>
+            @endif
 
             @if ($product->auction_product == 0)
                 <a href="javascript:void(0)" class="ec-product-card__wishlist"
@@ -242,7 +264,6 @@
                 </a>
             @endif
         </div>
-
 
     <a href="{{ $product_url }}" class="ec-product-card__image-wrap" title="{{ $product_name }}">
         <img class="lazyload ec-product-card__image"

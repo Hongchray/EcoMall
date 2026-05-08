@@ -295,11 +295,6 @@
         </div>
     @endif
 
-    <!-- Featured Products -->
-    <div id="section_featured" class="pt-2 pt-md-3" style="background: #f5f5fa;">
-
-    </div>
-
     <!-- Banner Section 2 -->
     @if (get_setting('home_banner2_images') != null)
         <div class="mb-2 mb-md-3 mt-2 mt-md-3">
@@ -329,13 +324,18 @@
         </div>
     @endif
 
+    <!-- New Products -->
+    <div id="section_newest">
+
+    </div>
+
     <!-- Best Selling  -->
     <div id="section_best_selling">
 
     </div>
 
-    <!-- New Products -->
-    <div id="section_newest">
+    <!-- Featured Products -->
+    <div id="section_featured" class="pt-2 pt-md-3" style="background: #f5f5fa;">
 
     </div>
 
