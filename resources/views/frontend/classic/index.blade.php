@@ -82,25 +82,36 @@
         border-color: #fff;
     }
     .hero-wrapper {
-        height: 320px;
-        gap: 16px;
+        height: 400px;
+        gap: 12px;
     }
 
     /* LEFT SIDE */
     .hero-left {
         width: 75%;
-        height: 100%;
+        height: 400px; /* desktop */
         border-radius: 15px;
         overflow: hidden;
     }
 
+    .hero-right img,
+    .hero-left img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-right .hero-box {
+        height: 195px; /* desktop (2 boxes stacked feel) */
+    }
     /* RIGHT SIDE */
     .hero-right {
         width: 25%;
         height: 100%;
         display: flex;
-        gap: 16px;
+        gap: 12px;
         flex-direction: column;
+        /* background-color: gray; */
     }
 
     /* RIGHT BOX */
@@ -110,12 +121,28 @@
         overflow: hidden;
     }
 
+
     .hero-box img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
     }
+
+    .scroll-cards {
+        scrollbar-width: none; /* Firefox */
+         gap: 12px; /* exact spacing */
+    }
+
+    .scroll-cards::-webkit-scrollbar {
+        display: none; /* Chrome */
+    }
+
+    .card-item {
+        min-width: 260px;
+        flex: 0 0 auto;
+    }
+
 
     /* ================= MOBILE ================= */
     @media (max-width: 991px) {
@@ -126,21 +153,21 @@
 
        .hero-left {
             width: 100%;
-            height: 220px;
+            height: 140px; /* smaller carousel */
         }
         .hero-right {
             width: 100%;
-            height: 140px;
+            height: 100%;
         }
 
         /* right becomes horizontal */
         .hero-right {
             flex-direction: row;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .hero-box {
-            height: 140px;
+        .hero-right .hero-box {
+            height: 100px; /* smaller boxes */
             flex: 1;
         }
     }
@@ -223,59 +250,50 @@
                 </div>
 
             </div>
-            <div class="container-fluid my-4 px-2">
-                <div class="row g-3">
+            <div class="container-fluid mt-3 p-0">
 
-                    <!-- Card 1 -->
-                    <div class="col-12 col-sm-6 col-lg-3">
+                <!-- scroll wrapper -->
+                <div class="scroll-cards d-flex d-lg-none overflow-auto pb-2">
+
+                    <!-- Card -->
+                    <div class="card-item">
                         <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/truck.png"
-                                alt="Fast Delivery"
-                                class="me-3 flex-shrink-0"
-                                style="width:45px;">
-                            <div>
+                            <img src="/icons/delivery-bike.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
                                 <h6 class="mb-1 fw-bold">Fast Delivery</h6>
                                 <small class="text-muted">Phnom Penh & nationwide</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 2 -->
-                    <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card-item">
                         <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/verified-badge.png"
-                                alt="Quality Assured"
-                                class="me-3 flex-shrink-0"
-                                style="width:45px;">
-                            <div>
+                            <img src="/icons/quality-assurance.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
                                 <h6 class="mb-1 fw-bold">Quality Assured</h6>
                                 <small class="text-muted">Certified products only</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card-item">
                         <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/price-tag.png"
-                                alt="Best Prices"
-                                class="me-3 flex-shrink-0"
-                                style="width:45px;">
-                            <div>
+                            <img src="/icons/best-price.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
                                 <h6 class="mb-1 fw-bold">Best Prices</h6>
                                 <small class="text-muted">Wholesale & retail rates</small>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 4 -->
-                    <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card-item">
                         <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
-                            <img src="https://img.icons8.com/fluency/48/phone.png"
-                                alt="24/7 Support"
-                                class="me-3 flex-shrink-0"
-                                style="width:45px;">
-                            <div>
+                            <img src="/icons/telephone.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
                                 <h6 class="mb-1 fw-bold">24/7 Support</h6>
                                 <small class="text-muted">078 333 016</small>
                             </div>
@@ -283,16 +301,138 @@
                     </div>
 
                 </div>
+
+                <!-- normal grid for desktop -->
+                <div class="row g-3 d-none d-lg-flex">
+
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center g-2 border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="/icons/delivery-bike.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
+                                <h6 class="mb-1 fw-bold">
+                                    Fast Delivery
+                                </h6>
+                                <small class="text-muted">Phnom Penh & nationwide</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="/icons/quality-assurance.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
+                                <h6 class="mb-1 fw-bold">Quality Assured</h6>
+                                <small class="text-muted">Certified products only</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="/icons/best-price.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
+                                <h6 class="mb-1 fw-bold">Best Prices</h6>
+                                <small class="text-muted">Wholesale & retail rates</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
+                            <img src="/icons/telephone.png"
+                                class="me-3 flex-shrink-0" style="width:45px;">
+                            <div class="ml-2">
+                                <h6 class="mb-1 fw-bold">24/7 Support</h6>
+                                <small class="text-muted">078 333 016</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
             @foreach($featured_categories as $category)
-                <div class="card mb-3 border-0 shadow-sm overflow-hidden mt-4 rounded-3">
 
-                    <div class="row g-0 ">
+                <!-- ================= MOBILE ================= -->
+                <div class="d-block d-md-none bg-light rounded-4 p-3 mt-3 shadow-sm">
+
+                    <!-- Title -->
+                    <p class="fw-bold mb-3" style="font-size: 15px">
+                        {{ $category->getTranslation('name') }}
+                    </p>
+
+                    <div class="d-flex gap-3 align-items-center">
+
+                        <!-- LEFT 30% -->
+                        <div style="width: 30%;" class="">
+                            <div class="position-relative">
+                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/200' }}"
+                                    class="rounded-3"
+                                    style="width: 60px; height: 60px; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <!-- RIGHT 70% -->
+                        <div style="width: 70%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+
+                            <div class="d-flex flex-column flex-wrap justify-content-start align-content-start"
+                                style="height: 170px; gap: 10px;">
+
+                                @foreach($category->subcategories as $index => $sub)
+
+                                    @if($index < 12)
+
+                                        <div style="min-width: 90px; text-align: center;">
+
+                                            <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
+                                            class="text-decoration-none text-dark d-block">
+
+                                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1"
+                                                    style="width: 50px; height: 50px;">
+
+                                                    <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
+                                                        style="width: 30px; height: 30px; object-fit: contain;">
+                                                </div>
+
+                                                <small class="fw-semibold d-block text-truncate">
+                                                    {{ $sub->name }}
+                                                </small>
+
+                                            </a>
+
+                                        </div>
+
+                                    @endif
+
+                                @endforeach
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- View all -->
+                    <div class="text-end mt-2">
+                        <a href="{{ url('/category/' . $category->slug) }}"
+                        class="small text-primary text-decoration-none">
+                            {{ translate('View All') }} →
+                        </a>
+                    </div>
+
+                </div>
 
 
-                        {{-- LEFT SIDE (Category Info) --}}
-                        <div class="col-md-3 bg-dark text-white p-3 d-flex flex-column justify-content-between">
-                            {{-- <pre>{{ json_encode($category, JSON_PRETTY_PRINT) }}</pre> --}}
+                <!-- ================= DESKTOP ================= -->
+                <div class="d-none d-md-block card mb-3 border-0 shadow-sm overflow-hidden mt-4 rounded-3">
+
+                    <div class="row g-3">
+
+                        <!-- LEFT SIDE -->
+                        <div class="col-md-3 bg-dark text-white d-flex flex-column justify-content-between">
 
                             <div class="p-3">
                                 <img src="{{ $category->icon ?? 'https://via.placeholder.com/80' }}"
@@ -302,39 +442,45 @@
                                 <h5 class="fw-bold">
                                     {{ $category->getTranslation('name') }}
                                 </h5>
+
                                 <small class="text-light">
-                                   {{ $category->meta_description }}
+                                    {{ $category->meta_description }}
                                 </small>
                             </div>
-                           <div class="pl-3">
+
+                            <div class="p-3 pt-0">
                                 <a href="{{ url('/category/' . $category->slug) }}"
-                                class="btn btn-sm rounded-pill btn-glass">
-                                    View All →
+                                class="btn btn-sm rounded-pill btn-light">
+                                 {{ translate('View All') }} →
                                 </a>
                             </div>
+
                         </div>
 
-                        {{-- RIGHT SIDE (Subcategories Grid) --}}
+                        <!-- RIGHT SIDE -->
                         <div class="col-md-9 p-3"
                             style="background: linear-gradient(90deg, #3aa0d8, #4fb3e6);">
 
-                            <div class="d-flex flex-wrap gap-4 align-items-center">
+                            <div class="d-flex flex-wrap gap-4">
 
                                 @forelse($category->subcategories as $sub)
-                                    <div class="text-center text-white ml-4" style="width: 120px;">
+                                    <div class="text-center text-white" style="width: 120px;">
 
-                                        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
-                                            style="width: 60px; height: 60px;">
+                                        <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
+                                        class="text-decoration-none text-white">
 
-                                            <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}">
+                                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
+                                                style="width: 60px; height: 60px;">
+
                                                 <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
                                                     style="width: 35px; height: 35px; object-fit: contain;">
-                                            </a>
-                                        </div>
+                                            </div>
 
-                                        <p class="d-block fw-semibold" style="font-size: 15px;">
-                                            {{ $sub->name }}
-                                        </p>
+                                            <p class="fw-semibold mb-0" style="font-size: 14px;">
+                                                {{ $sub->name }}
+                                            </p>
+
+                                        </a>
 
                                     </div>
                                 @empty
@@ -347,6 +493,7 @@
 
                     </div>
                 </div>
+
             @endforeach
 
         </div>

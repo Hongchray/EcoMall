@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
-@section('meta_title'){{ $sub->name }}@stop
-@section('meta_description'){{ $sub->name }} products@stop
+{{-- @section('meta_title'){{ $sub->name }}@stop
+@section('meta_description'){{ $sub->name }} products@stop --}}
 
 @section('content')
 <section class="mb-4 pt-4">

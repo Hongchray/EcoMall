@@ -232,7 +232,7 @@
                     {{ translate('Popular') }}
                 @endif
             </span>
-    
+
             @if ($product->auction_product == 0)
                 <a href="javascript:void(0)" class="ec-product-card__wishlist"
                     onclick="{{ $wishlist_onclick }}"

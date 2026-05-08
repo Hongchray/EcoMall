@@ -13,7 +13,14 @@
 @section('content')
 <section class="mb-4 pt-4">
     <div class="container sm-px-0 pt-2">
-        <form id="search-form" action="" method="GET">
+        <form id="search-form"
+            action="{{ route('products.category', $category->slug) }}"
+            method="GET">
+
+            {{-- Keep subcategory when form submits (price, sort, attributes) --}}
+            @if(request('subcategory'))
+                <input type="hidden" name="subcategory" value="{{ request('subcategory') }}">
+            @endif
             <div class="row">
 
                 {{-- SIDEBAR --}}
@@ -56,8 +63,11 @@
                                         </li>
                                         @foreach ($category->childrenCategories as $sub)
                                             <li class="ml-4 mb-3">
-                                                <a class="text-reset fs-14 hov-text-primary"
-                                                    href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}">
+                                                <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
+                                                    class="fs-14 hov-text-primary {{ request('subcategory') == $sub->slug ? 'text-primary fw-700' : 'text-reset' }}">
+                                                    @if(request('subcategory') == $sub->slug)
+                                                        <i class="las la-angle-right"></i>
+                                                    @endif
                                                     {{ $sub->getTranslation('name') }}
                                                 </a>
                                             </li>
@@ -204,9 +214,10 @@
 
                     <div class="row">
                         @foreach ($category->subcategories as $sub)
-                            <div class="col-md-3 mb-3">
-                                <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
-                                    class="d-block text-center p-3 bg-white border">
+                            <div class="col-6 col-md-3 mb-3">
+                                <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
+                                    class="d-block text-center p-3 border h-100 {{ request('subcategory') == $sub->slug ? 'bg-white text-primary border border-primary' : 'bg-white text-dark' }}">
+
 
                                     @if ($sub->image)
                                         <img src="{{ $sub->image }}"
@@ -229,7 +240,7 @@
 
                         {{-- LEFT --}}
                         <h1 class="mb-0 fs-20 fw-700">
-                            {{ translate('All') }}
+                            {{ translate('Products') }}
                         </h1>
 
                         {{-- RIGHT --}}
@@ -261,7 +272,6 @@
                     </div>
 
 
-
                     {{-- Subcategory Cards (shown above products) --}}
                     @if ($category->childrenCategories->isNotEmpty())
                         <div class="mb-4">
@@ -269,7 +279,7 @@
                             <div class="row gutters-10 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-3">
                                 @foreach ($category->childrenCategories as $sub)
                                     <div class="col mb-3">
-                                        <a href="{{ route('products.subcategory', [$category->slug, $sub->slug]) }}"
+                                        <a href="{{ route('products.category', $category->slug) }}?subcategory={{ $sub->slug }}"
                                             class="d-block text-center p-3 bg-white border hov-shadow-out has-transition">
                                             @if ($sub->icon)
                                                 <img src="{{ uploaded_asset($sub->icon) }}"
@@ -277,9 +287,8 @@
                                                     class="img-fluid mb-2"
                                                     style="max-height: 50px; object-fit: contain;">
                                             @endif
-                                            <div class="fs-13 fw-600 text-dark">
-                                                {{ $sub->getTranslation('name') }}
-                                            </div>
+                                            <a href="{{ route('products.category', $category->slug) }}?subcategory={{ $sub->slug }}"
+                                                class="d-block text-center p-3 bg-white border hov-shadow-out has-transition">
                                         </a>
                                     </div>
                                 @endforeach
@@ -310,7 +319,7 @@
             </div>
         </form>
     </div>
-</section>
+</section>bvnvbn
 @endsection
 
 @section('script')
