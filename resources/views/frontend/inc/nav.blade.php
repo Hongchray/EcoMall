@@ -10,6 +10,11 @@
 
             $topbar_banner_asset = uploaded_asset($topbar_banner);
 
+            $header_menu_settings = \App\Models\BusinessSetting::whereIn('type', ['header_menu_labels', 'header_menu_links'])
+                ->pluck('value', 'type');
+            $header_menu_labels = json_decode($header_menu_settings['header_menu_labels'] ?? '[]', true) ?: [];
+            $header_menu_links = json_decode($header_menu_settings['header_menu_links'] ?? '[]', true) ?: [];
+
         @endphp
 
         @if ($topbar_banner != null)
@@ -195,9 +200,6 @@
                                     </div>
 
                                     <div id="search-content" class="text-left">
-
-
-
                                     </div>
 
                                 </div>
@@ -875,16 +877,9 @@
 
                                 <ul class="list-inline mb-0 pl-0 hor-swipe c-scrollbar-light">
 
-                                    @if (get_setting('header_menu_labels') != null)
+                                    @if (!empty($header_menu_labels))
 
-                                            
-                                        @php
-                                            $header_menu_links = json_decode(get_setting('header_menu_links'), true) ?: [];
-                                        @endphp
-
-
-                                        
-                                        @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
+                                        @foreach ($header_menu_labels as $key => $value)
 
                                             @php
                                                 $is_category_menu = strtolower(trim($value)) == 'category';
@@ -900,7 +895,7 @@
 
                                                 @if ($header_menu_link != '#' && url()->current() == $header_menu_link) active @endif">
 
-                                                    {{ translate($value) }}
+                                                    {{ $value }}
                                                     @if ($is_category_menu)
                                                         <i class="las la-angle-down ml-1 has-transition" id="category-menu-bar-icon"></i>
                                                     @endif
@@ -962,8 +957,7 @@
                     <i class="las la-times la-2x text-primary"></i>
                 </button>
                 @auth
-                    <span class="d-flex align-items-center nav-user-info pl-4 ecm-mobile-sidebar-head">
-                        <!-- Image -->
+                    <a href="{{ isAdmin() ? route('admin.dashboard') : route('dashboard') }}" class="ecm-mobile-sidebar-head ecm-mobile-account-head">
                         <span class="size-40px rounded-circle overflow-hidden border border-transparent nav-user-img">
                             @if ($user->avatar_original != null)
                                 <img src="{{ $user_avatar }}" class="img-fit h-100" alt="{{ translate('avatar') }}"
@@ -973,22 +967,20 @@
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                             @endif
                         </span>
-                        <!-- Name -->
-                        <h4 class="h5 fs-14 fw-700 text-white ml-2 mb-0">{{ $user->name }}</h4>
-                    </span>
+                        <div class="ecm-mobile-brand-copy">
+                            <strong>{{ $user->name }}</strong>
+                            <small>{{ translate('My Account') }}</small>
+                        </div>
+                    </a>
                 @else
-                    <!--Login & Registration -->
                     <div class="ecm-mobile-sidebar-head">
-                        <!-- Image -->
-                        <span
-                            class="size-40px rounded-circle overflow-hidden border d-flex align-items-center justify-content-center nav-user-img ecm-mobile-brand-mark">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19.902" height="20.012"
-                                viewBox="0 0 19.902 20.012">
-                                <path id="fe2df171891038b33e9624c27e96e367"
-                                    d="M15.71,12.71a6,6,0,1,0-7.42,0,10,10,0,0,0-6.22,8.18,1.006,1.006,0,1,0,2,.22,8,8,0,0,1,15.9,0,1,1,0,0,0,1,.89h.11a1,1,0,0,0,.88-1.1,10,10,0,0,0-6.25-8.19ZM12,12a4,4,0,1,1,4-4A4,4,0,0,1,12,12Z"
-                                    transform="translate(-2.064 -1.995)" fill="#91919b" />
-                            </svg>
-                        </span>
+                        <a href="{{ route('home') }}" class="ecm-mobile-brand-logo">
+                            @if ($header_logo != null)
+                                <img src="{{ uploaded_asset($header_logo) }}" alt="{{ env('APP_NAME') }}">
+                            @else
+                                <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}">
+                            @endif
+                        </a>
                         <div class="ecm-mobile-brand-copy">
                             <strong>{{ env('APP_NAME', 'ECO MALL 24') }}</strong>
                             <small>{{ translate('Cambodia Construction Mall') }}</small>
@@ -1009,172 +1001,134 @@
 
                 <div class="ecm-mobile-section-title">{{ translate('Main Menu') }}</div>
 
-                <ul class="mb-0 pl-0 pb-3 h-100 ecm-mobile-menu-list">
-
-                    @if (get_setting('header_menu_labels') != null)
-
-                        @php
-                            $header_menu_links = json_decode(get_setting('header_menu_links'), true) ?: [];
-                        @endphp
-
-                        @foreach (json_decode(get_setting('header_menu_labels'), true) as $key => $value)
-
-                            @php
-                                $is_category_menu = strtolower(trim($value)) == 'category';
-                                $header_menu_link = $is_category_menu ? 'javascript:void(0);' : ($header_menu_links[$key] ?? '#');
-                                $mobile_menu_class = $is_category_menu
-                                    ? 'js-mobile-category-toggle fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links'
-                                    : 'fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links' . (($header_menu_link != '#' && url()->current() == $header_menu_link) ? ' active' : '');
-                            @endphp
-
-                            <li class="mr-0">
-
-                                <a href="{{ $header_menu_link }}" class="{{ $mobile_menu_class }}">
-
-                                    <span>{{ translate($value) }}</span>
-
-                                    @if ($is_category_menu)
-                                        <i class="las la-angle-down mobile-category-arrow has-transition"></i>
-                                    @endif
-
-                                </a>
-
-                                @if ($is_category_menu)
-                                    <ul class="list-unstyled mobile-category-dropdown mb-0" style="display: none;">
-                                        <li class="ecm-mobile-section-title ecm-mobile-category-title">{{ translate('Categories') }}</li>
-                                        @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $category)
-                                            @php
-                                                $category_icon = $category->icon ?: static_asset('assets/img/placeholder.jpg');
-                                            @endphp
-                                            <li>
-                                                <a href="{{ route('products.category', $category->slug) }}"
-                                                    class="mobile-category-parent d-flex align-items-center text-dark">
-                                                    <img src="{{ $category_icon }}" alt="{{ $category->getTranslation('name') }}"
-                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                    <span>{{ $category->getTranslation('name') }}</span>
-                                                </a>
-
-                                                @if ($category->subcategories->count())
-                                                    <ul class="list-unstyled mobile-subcategory-list mb-1">
-                                                        @foreach ($category->subcategories as $subcategory)
-                                                            @php
-                                                                $subcategory_image = $subcategory->image ?: static_asset('assets/img/placeholder.jpg');
-                                                            @endphp
-                                                            <li>
-                                                                <a href="{{ route('products.subcategory', [$category->slug, $subcategory->slug]) }}"
-                                                                    class="mobile-subcategory-link d-flex align-items-center text-dark">
-                                                                    <img src="{{ $subcategory_image }}" alt="{{ $subcategory->name }}"
-                                                                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                                    <span>{{ $subcategory->name }}</span>
-                                                                </a>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-
-                            </li>
-
-                        @endforeach
-
-                    @endif
+                <ul class="mb-0 pl-0 pb-2 ecm-mobile-menu-list">
 
                     @php
                         $mobile_notification_count = Auth::check() ? count(Auth::user()->unreadNotifications) : 0;
                         $mobile_wishlist_count = Auth::check() ? Auth::user()->wishlists()->count() : 0;
                         $mobile_cart_count = isset($carts) ? count($carts) : 0;
+                        $mobile_header_menu_labels = $header_menu_labels;
+                        $mobile_header_menu_links = $header_menu_links;
                     @endphp
 
-                    <li class="mr-0 ecm-mobile-utility-item ecm-mobile-notification-item">
-                        <a href="{{ Auth::check() ? route('all-notifications') : route('user.login') }}"
-                            class="fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links">
-                            <span>{{ translate('Notifications') }}</span>
-                            <span class="ecm-mobile-count-badge">{{ $mobile_notification_count }}</span>
-                        </a>
-                    </li>
+                    @foreach ($mobile_header_menu_labels as $key => $value)
+                        @php
+                            $mobile_menu_label = trim($value);
+                            $mobile_menu_slug = strtolower($mobile_menu_label);
+                            $is_mobile_category_menu = $mobile_menu_slug == 'category' || $mobile_menu_slug == 'categories';
+                            $mobile_header_menu_link = $is_mobile_category_menu ? 'javascript:void(0);' : ($mobile_header_menu_links[$key] ?? '#');
+                            $mobile_menu_item_class = 'ecm-mobile-db-item';
 
-                    <li class="mr-0 ecm-mobile-utility-item ecm-mobile-wishlist-item">
+                            if ($mobile_menu_slug == 'home') {
+                                $mobile_menu_item_class .= ' ecm-mobile-home-item';
+                            } elseif ($is_mobile_category_menu) {
+                                $mobile_menu_item_class .= ' ecm-mobile-category-item';
+                            } elseif (str_contains($mobile_menu_slug, 'ecomall')) {
+                                $mobile_menu_item_class .= ' ecm-mobile-about-ecomall-item';
+                            } elseif (str_contains($mobile_menu_slug, 'about')) {
+                                $mobile_menu_item_class .= ' ecm-mobile-about-item';
+                            } elseif ($mobile_menu_slug == 'new' || $mobile_menu_slug == 'news') {
+                                $mobile_menu_item_class .= ' ecm-mobile-news-item';
+                            }
+                        @endphp
+
+                        <li class="mr-0 {{ $mobile_menu_item_class }}">
+                            <a href="{{ $mobile_header_menu_link }}"
+                                class="@if ($is_mobile_category_menu) js-mobile-category-toggle @endif fs-13 px-3 py-3 w-100 d-flex align-items-center @if ($is_mobile_category_menu) justify-content-between @endif fw-700 text-dark header_menu_links @if (!$is_mobile_category_menu && $mobile_header_menu_link != '#' && url()->current() == $mobile_header_menu_link) active @endif">
+                                <span class="@if ($is_mobile_category_menu) ecm-mobile-link-label @endif">{{ $value }}</span>
+                                @if ($is_mobile_category_menu)
+                                    <i class="las la-angle-down mobile-category-arrow has-transition"></i>
+                                @endif
+                            </a>
+
+                            @if ($is_mobile_category_menu)
+                                <ul class="list-unstyled mobile-category-dropdown mb-0" style="display: none;">
+                                    @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->take(8)->get() as $category)
+                                        @php
+                                            $category_icon = $category->icon ?: static_asset('assets/img/placeholder.jpg');
+                                        @endphp
+                                        <li>
+                                            <a href="{{ route('products.category', $category->slug) }}"
+                                                class="mobile-category-parent d-flex align-items-center text-dark">
+                                                <img src="{{ $category_icon }}" alt="{{ $category->getTranslation('name') }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                                <span>{{ $category->getTranslation('name') }}</span>
+                                            </a>
+
+                                            @if ($category->subcategories->count())
+                                                <ul class="list-unstyled mobile-subcategory-list mb-1">
+                                                    @foreach ($category->subcategories as $subcategory)
+                                                        @php
+                                                            $subcategory_image = $subcategory->image ?: static_asset('assets/img/placeholder.jpg');
+                                                        @endphp
+                                                        <li>
+                                                            <a href="{{ route('products.subcategory', [$category->slug, $subcategory->slug]) }}"
+                                                                class="mobile-subcategory-link d-flex align-items-center text-dark">
+                                                                <img src="{{ $subcategory_image }}" alt="{{ $subcategory->name }}"
+                                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                                                <span>{{ $subcategory->name }}</span>
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </li>
+                    @endforeach
+
+                </ul>
+
+                <div class="ecm-mobile-section-title">{{ translate('Models') }}</div>
+
+                <ul class="mb-0 pl-0 pb-2 ecm-mobile-menu-list ecm-mobile-model-list">
+                    <li class="mr-0 ecm-mobile-wishlist-item">
                         <a href="{{ Auth::check() ? route('wishlists.index') : route('user.login') }}"
                             class="fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links">
-                            <span>{{ translate('Wishlist') }}</span>
+                            <span class="ecm-mobile-row-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14.4" viewBox="0 0 16 14.4">
+                                    <g transform="translate(-3.05 -4.178)">
+                                        <path d="M11.3,5.507l-.247.246L10.8,5.506A4.538,4.538,0,1,0,4.38,11.919l.247.247,6.422,6.412,6.422-6.412.247-.247A4.538,4.538,0,1,0,11.3,5.507Z" fill="#919199"/>
+                                    </g>
+                                </svg>
+                            </span>
+                            <span class="ecm-mobile-link-label">{{ translate('Favorite') }}</span>
                             <span class="ecm-mobile-count-badge">{{ $mobile_wishlist_count }}</span>
                         </a>
                     </li>
 
-                    <li class="mr-0 ecm-mobile-utility-item ecm-mobile-cart-item">
-                        <a href="{{ route('cart') }}"
+                    <li class="mr-0 ecm-mobile-notification-item">
+                        <a href="{{ Auth::check() ? route('all-notifications') : route('user.login') }}"
                             class="fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links">
-                            <span>{{ translate('My Cart') }}</span>
-                            <span class="ecm-mobile-count-badge">{{ $mobile_cart_count }}</span>
+                            <span class="ecm-mobile-row-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14.668" height="16" viewBox="0 0 14.668 16">
+                                    <path d="M8.333,16A3.34,3.34,0,0,0,11,14.667H5.666A3.34,3.34,0,0,0,8.333,16ZM15.06,9.78a2.457,2.457,0,0,1-.727-1.747V6a6,6,0,1,0-12,0V8.033A2.457,2.457,0,0,1,1.606,9.78,2.083,2.083,0,0,0,3.08,13.333H13.586A2.083,2.083,0,0,0,15.06,9.78Z" transform="translate(-0.999)" fill="#91919b" />
+                                </svg>
+                            </span>
+                            <span class="ecm-mobile-link-label">{{ translate('Notification') }}</span>
+                            <span class="ecm-mobile-count-badge">{{ $mobile_notification_count }}</span>
                         </a>
                     </li>
 
-                    @auth
-
-                        @if (isAdmin())
-
-                            <hr>
-
-                            <li class="mr-0">
-                                <a href="{{ route('admin.dashboard') }}"
-                                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links">
-                                    {{ translate('My Account') }}
-                                </a>
-                            </li>
-                        @else
-                            <hr>
-                            <li class="mr-0">
-                                <a href="{{ route('dashboard') }}"
-
-                                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
-
-                                    {{ areActiveRoutes(['dashboard'], ' active') }}">
-
-                                    {{ translate('My Account') }}
-
-                                </a>
-
-                            </li>
-
-                        @endif
-
-                        @if (isCustomer())
-
-                            <li class="mr-0">
-
-                                <a href="{{ route('compare') }}"
-
-                                    class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-dark header_menu_links
-
-                                    {{ areActiveRoutes(['compare'], ' active') }}">
-
-                                    {{ translate('Compare') }}
-
-                                </a>
-
-                            </li>
-
-                        @endif
-
-                        <hr>
-
-                        <li class="mr-0">
-
-                            <a href="{{ route('logout') }}"
-
-                                class="fs-13 px-3 py-3 w-100 d-inline-block fw-700 text-primary header_menu_links">
-
-                                {{ translate('Logout') }}
-
-                            </a>
-
-                        </li>
-
-                    @endauth
-
+                    <li class="mr-0 ecm-mobile-cart-item">
+                        <a href="{{ route('cart') }}"
+                            class="fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links">
+                            <span class="ecm-mobile-row-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="18.8" viewBox="0 0 24 20.562">
+                                    <g transform="translate(-33.276 -101)">
+                                        <path d="M34.034,102.519H38.2l-.732-.557c.122.37.243.739.365,1.112q.441,1.333.879,2.666.528,1.6,1.058,3.211.46,1.394.917,2.788c.149.451.291.9.446,1.352l.008.02a.76.76,0,0,0,1.466-.4c-.122-.37-.243-.739-.365-1.112q-.441-1.333-.879-2.666-.528-1.607-1.058-3.213-.46-1.394-.917-2.788c-.149-.451-.289-.9-.446-1.352l-.008-.02a.783.783,0,0,0-.732-.557H34.037a.76.76,0,0,0,0,1.519Z" fill="#919199"/>
+                                        <circle cx="1.724" cy="1.724" r="1.724" transform="translate(49.612 117.606)" fill="#919199"/>
+                                        <circle cx="1.724" cy="1.724" r="1.724" transform="translate(40.884 117.606)" fill="#919199"/>
+                                        <path d="M287.2,258l-3.074,7.926H272.313L269.7,258Z" transform="translate(-230.437 -153.024)" fill="#919199"/>
+                                    </g>
+                                </svg>
+                            </span>
+                            <span class="ecm-mobile-link-label">{{ translate('Cart') }}</span>
+                            <span class="ecm-mobile-count-badge">{{ $mobile_cart_count }}</span>
+                        </a>
+                    </li>
                 </ul>
 
                 @php
@@ -1209,6 +1163,14 @@
                         </div>
                     </div>
                 @endif
+
+                @auth
+                    <div class="ecm-mobile-logout-wrap">
+                        <a href="{{ route('logout') }}" class="ecm-mobile-logout-btn">
+                            <i class="las la-sign-out-alt"></i> {{ translate('Logout') }}
+                        </a>
+                    </div>
+                @endauth
 
                 <br>
 
@@ -1271,16 +1233,9 @@
 
                 }
 
-                $(document).on('click', '.js-mobile-category-toggle', function(e) {
-                    e.preventDefault();
-                    var $toggle = $(this);
-                    var $dropdown = $toggle.closest('li').find('.mobile-category-dropdown').first();
-
-                    $toggle.toggleClass('active');
-                    $dropdown.stop(true, true).slideToggle(220);
-                });
-
             </script>
 
         @endsection
 
+<!-- ================================================ -->
+ 
