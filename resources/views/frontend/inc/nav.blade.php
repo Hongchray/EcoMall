@@ -78,7 +78,7 @@
                 <div class="container">
                     <div class="d-flex align-items-center">
                         <!-- top menu sidebar button -->
-                        <button type="button" class="btn d-lg-none mr-3 mr-sm-4 p-0 active" data-toggle="class-toggle"
+                        <button type="button" class="btn d-xl-none mr-3 mr-sm-4 p-0 active" data-toggle="class-toggle"
 
                             data-target=".aiz-top-menu-sidebar">
 
@@ -134,13 +134,13 @@
                         <!-- Search field -->
                         <div class="flex-grow-1 front-header-search ecm-header-search d-flex align-items-center bg-white mx-xl-5">
 
-                            <div class="position-relative flex-grow-1 px-3 px-lg-0 ecm-header-search-inner">
+                            <div class="position-relative flex-grow-1 px-3 px-xl-0 ecm-header-search-inner">
 
                                 <form action="{{ route('search') }}" method="GET" class="stop-propagation">
 
                                     <div class="d-flex position-relative align-items-center">
 
-                                        <div class="d-lg-none" data-toggle="class-toggle"
+                                        <div class="d-xl-none" data-toggle="class-toggle"
 
                                             data-target=".front-header-search">
 
@@ -176,7 +176,6 @@
                                 </form>
 
                                 <div class="typed-search-box stop-propagation document-click-d-none d-none bg-white rounded shadow-lg position-absolute left-0 top-100 w-100"
-
                                     style="min-height: 200px">
 
                                     <div class="search-preloader absolute-top-center">
@@ -349,7 +348,7 @@
 
 
 
-                        <div class="ecm-header-actions d-none d-lg-flex align-items-center">
+                        <div class="ecm-header-actions d-none d-xl-flex align-items-center">
                             <div class="ecm-header-action ecm-header-wishlist" id="wishlist">
                                 @include('frontend.'.get_setting('homepage_select').'.partials.wishlist')
                             </div>
@@ -433,7 +432,7 @@
                         </div>
                         
                             <!-- button login and logout -->
-                        <div class="ecm-header-auth d-none d-lg-flex align-items-center">
+                        <div class="ecm-header-auth d-none d-xl-flex align-items-center">
                             @auth
                                 <a href="{{ route('dashboard') }}" class="ecm-auth-login">
                                     <span class="ecm-auth-login-icon">
@@ -857,7 +856,7 @@
 
             <!-- Menu Bar -->
 
-            <div class="d-none d-lg-block position-relative bg-primary h-50px">
+            <div class="d-none d-xl-block position-relative bg-primary h-50px">
 
                 <div class="container h-100">
 
@@ -948,7 +947,7 @@
 
         <!-- Top Menu Sidebar -->
 
-    <div class="aiz-top-menu-sidebar collapse-sidebar-wrap sidebar-xl sidebar-left d-lg-none z-1035">
+    <div class="aiz-top-menu-sidebar collapse-sidebar-wrap sidebar-xl sidebar-left d-xl-none z-1035">
             <div class="overlay overlay-fixed dark c-pointer" data-toggle="class-toggle"
                 data-target=".aiz-top-menu-sidebar" data-same=".hide-top-menu-bar"></div>
             <div class="collapse-sidebar c-scrollbar-light text-left ecm-mobile-sidebar">
