@@ -1,42 +1,208 @@
 <!-- footer Description -->
+<style>
+    .social_media{
+        margin-top: 20px;
+    }
+.footer-social-image-link {
+    position: relative;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 55px !important;
+    height: 50px !important;
+    line-height: 1 !important;
+    background: #2B7DB9 !important;
+    border: 2px solid #5597C8 ;
+    border-radius: 8px !important;
+}
+.footer-social-image-link:hover {
+    background: #478DC1 !important;
+    border: 2px solid #91BCDB ;
+    border-radius: 8px !important;
+}
 
+.footer-social-image-link::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    color: #ffffff;
+    background: #171727;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .2s ease, visibility .2s ease;
+}
 
+.footer-social-image-link:hover::after,
+.footer-social-image-link:focus::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.footer-social-image-link img {
+    width: 21px;
+    height: 21px;
+    display: block;
+    object-fit: contain;
+}
+
+.footer-apps-title {
+    color: #e8f4fd !important;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    margin-top: 22px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.footer-apps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-app-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 142px;
+    height: 46px;
+    padding: 7px 12px;
+    background: #0f5f99;
+    border: 1px solid rgba(185, 216, 238, .45);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform .2s ease, background-color .2s ease, border-color .2s ease;
+}
+
+.footer-app-badge:hover,
+.footer-app-badge:focus {
+    background: #2B7DB9;
+    border-color: rgba(232, 244, 253, .8);
+    transform: translateY(-2px);
+}
+
+.footer-app-badge img {
+    max-width: 118px;
+    max-height: 30px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.footer-muted-text,
+.footer-muted-link {
+    color: #ffffff !important;
+    font-size: 16px !important;
+}
+
+.footer-muted-link:hover,
+.footer-muted-link:focus {
+    color: #2B7DB9 !important;
+}
+
+.footer-quick-links a {
+    white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+    .footer-widget .container {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .footer-widget .row {
+        row-gap: 8px;
+    }
+
+    .footer-widget [class*="col-"] {
+        text-align: center !important;
+    }
+
+    .ecm-logo-link {
+        margin-right: 0 !important;
+    }
+
+    .footer-widget p {
+        max-width: 420px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .social_media ul.social {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 0;
+    }
+
+    .social_media ul.social .list-inline-item {
+        margin-right: 0 !important;
+    }
+
+    .footer-apps {
+        justify-content: center;
+    }
+
+    .footer-quick-links a {
+        white-space: normal;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .footer-widget {
+        padding-top: 20px;
+        padding-bottom: 24px;
+    }
+
+    .footer-widget h4,
+    .footer-widget h5 {
+        margin-bottom: 10px !important;
+    }
+
+    .footer-social-image-link {
+        width: 50px !important;
+        height: 46px !important;
+    }
+
+    .footer-app-badge {
+        width: 136px;
+        height: 44px;
+    }
+
+    .footer-muted-text,
+    .footer-muted-link {
+        font-size: 15px !important;
+    }
+}
+</style>
 
 @if (get_setting('footer_title') != null || get_setting('footer_description') != null)
-
-
-
 <section class="bg-light border-top border-bottom mt-auto">
-
     <div class="container py-4">
-
         <h1 class="fs-18 fw-700 text-gray-dark mb-3">{{ get_setting('footer_title',null, $system_language->code) }}</h1>
-
         <p class="fs-13 text-gray-dark text-justify mb-0">
-
             {!! nl2br(get_setting('footer_description',null, $system_language->code)) !!}
-
         </p>
-
     </div>
-
 </section>
-
 @endif
-
-
-
 <!-- footer subscription & icons -->
+<section class="py-3 text-light footer-widget border-bottom d-none"
+    style="border-color: #f4f4f4 !important; background-color: #1a73b5 !important;">
 
-
-
-<section class="py-3 text-light footer-widget border-bottom d-block d-lg-none"
-
-    style="border-color: #f4f4f4 !important; background-color: #f4f4f4 !important;">
 
     <div class="container">
 
-        <!-- footer logo -->
+        <!-- footer logo for mobile  -->
 
         <div class="mt-3 mb-2">
             <a href="{{ route('home') }}" class="d-block">
@@ -70,7 +236,7 @@
 
                 @if ( get_setting('show_social_links') )
 
-                <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3 mt-lg-0">{{ translate('Follow Us') }}</h5>
+                <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3 mt-lg-0" style="color:#2B7DB9">{{ translate('Follow Us') }}</h5>
 
                 <ul class="list-inline social colored mb-2">
 
@@ -136,7 +302,7 @@
 
                 </ul>
 
-                @endif
+                @endif 
 
                 <!-- Apps link -->
 
@@ -180,7 +346,7 @@
 
                 </div>
 
-                @endif
+                @endif 
 
             </div>
 
@@ -201,266 +367,154 @@ $col_values = ((get_setting('vendor_system_activation') == 1) || addon_is_activa
 col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
 
-
 @endphp
 
-<section class="py-lg-3 text-dark footer-widget" style="background-color: #f4f4f4 !important;">
-
+<section class="py-lg-3 text-dark footer-widget" style="background-color: #1a73b5 !important;">
     <!-- footer widgets ========== [Accordion Fotter widgets are bellow from this]-->
-
-    <div class="container d-none d-lg-block">
-
+    <div class="container">
         <div class="row">
-
-            <!-- footer logo -->
-
+            <!-- footer logo --> 
             <div class="col-md-4 col-sm-6">
+                 <div class="mt-3 mb-2">
+                    <a class="d-block py-5px mr-3 ml-0 ecm-logo-link" href="{{ route('home') }}">
+                                @php
+                                    $header_logo = get_setting('header_logo');
+                                @endphp
+                                @if ($header_logo != null)
 
-                <div class="mt-3 mb-2">
+                                    <img src="{{ uploaded_asset($header_logo) }}" alt="{{ env('APP_NAME') }}"
+                                        class="mw-100 h-30px h-md-40px ecm-header-logo-img" height="40">
+                                @else
+                                    <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}"
+                                        class="mw-100 h-30px h-md-40px ecm-header-logo-img" height="40">
+                                @endif
 
-                    <a href="{{ route('home') }}" class="d-block">
-
-                        @if(get_setting('footer_logo') != null)
-
-                        <img class="lazyload h-70px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-
-                            data-src="{{ uploaded_asset(get_setting('footer_logo')) }}" alt="{{ env('APP_NAME') }}"
-
-                            height="100">
-
-                        @else
-
-                        <img class="lazyload h-70px" src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-
-                            data-src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}"
-
-                            height="45">
-
-                        @endif
-
-                    </a>
-
+                            </a>
+                </div> 
+                <div style="background-color: #1a73b5;">
+                    <p style="color: #b9d8ee; font-size: 18px; line-height: 1.85; font-weight: 400; margin: 0;">
+                        Cambodia's premier online construction materials marketplace. Quality
+                        products, competitive prices, reliable delivery nationwide.
+                    </p>
                 </div>
-
-
 
                 <!-- Follow & Apps -->
 
-                <div class="">
-
-                    <!-- Social -->
-
+                <div class="social_media">
+                    <!-- Social dasktop-->
                     @if ( get_setting('show_social_links') )
-
-                    <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3 mt-lg-0">{{ translate('Follow Us') }}
-
-                    </h5>
-
+                    <h5 class="fs-14 fw-700 text-uppercase mt-3 mt-lg-0" style="color:white !important">{{ translate('Follow Us') }}</h5>
                     <ul class="list-inline social colored mb-2">
-
                         @if (!empty(get_setting('facebook_link')))
-
                         <li class="list-inline-item mr-1">
-
-                            <a href="{{ get_setting('facebook_link') }}" target="_blank" class="facebook"><i
-
-                                    class="lab la-facebook-f"></i></a>
-
+                            <a href="{{ get_setting('facebook_link') }}" target="_blank"
+                                class="facebook footer-social-image-link" aria-label="Facebook" data-tooltip="Facebook">
+                                <img src="{{ static_asset('icons/facebook-app-symbol.png') }}" alt="Facebook">
+                            </a>
                         </li>
-
                         @endif
 
-                        @if (!empty(get_setting('twitter_link')))
-
+                        @if (!empty(get_setting('telegram_link')))
                         <li class="list-inline-item mr-1">
-
-                            <a href="{{ get_setting('twitter_link') }}" target="_blank" class="twitter"><i
-
-                                    class="lab la-twitter"></i></a>
-
+                            <a href="{{ get_setting('telegram_link') }}" target="_blank"
+                                class="telegram footer-social-image-link" aria-label="Telegram" data-tooltip="Telegram">
+                                <img src="{{ static_asset('icons/telegrams.png') }}" alt="Telegram">
+                            </a>
                         </li>
-
-                        @endif
-
-                        @if (!empty(get_setting('instagram_link')))
-
-                        <li class="list-inline-item mr-1">
-
-                            <a href="{{ get_setting('instagram_link') }}" target="_blank" class="instagram"><i
-
-                                    class="lab la-instagram"></i></a>
-
-                        </li>
-
-                        @endif
-
-                        @if (!empty(get_setting('youtube_link')))
-
-                        <li class="list-inline-item mr-1">
-
-                            <a href="{{ get_setting('youtube_link') }}" target="_blank" class="youtube"><i
-
-                                    class="lab la-youtube"></i></a>
-
-                        </li>
-
-                        @endif
-
-                        @if (!empty(get_setting('linkedin_link')))
-
-                        <li class="list-inline-item mr-1">
-
-                            <a href="{{ get_setting('linkedin_link') }}" target="_blank" class="linkedin"><i
-
-                                    class="lab la-linkedin-in"></i></a>
-
-                        </li>
-
-                        @endif
-
+                        @endif  
                     </ul>
-
-                    @endif
+                    @endif 
 
                     <!-- Apps link -->
 
                     @if((get_setting('play_store_link') != null) || (get_setting('app_store_link') != null))
+                    <h5 class="footer-apps-title">{{ translate('Mobile Apps') }}</h5>
+                    <div class="footer-apps">
+                        <a href="https://play.google.com/store/apps/details?id=com.ecomall24.app" target="_blank"
+                            class="footer-app-badge" aria-label="Get Eco Mall on Google Play">
+                            <img class="lazyload"
+                                src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                data-src="{{ static_asset('assets/img/play.png') }}" alt="Google Play">
+                        </a>
 
-                    <h5 class="fs-14 fw-700 text-secondary text-uppercase mt-3">{{ translate('Mobile Apps') }}</h5>
-
-                    <div class="d-flex mt-3">
-
-                        <div class="">
-
-                            <a href="https://play.google.com/store/apps/details?id=com.ecomall24.app" target="_blank" class="mr-2 mb-2 overflow-hidden hov-scale-img">
-
-                                <img class="lazyload has-transition"
-
-                                    src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-
-                                    data-src="{{ static_asset('assets/img/play.png') }}" alt="{{ env('APP_NAME') }}"
-
-                                    height="35">
-
-                            </a>
-
-                        </div>
-
-                        <div class="">
-
-                            <a href="https://apps.apple.com/us/app/eco-mall-cambodia/id6474022150" target="_blank" class="overflow-hidden hov-scale-img">
-
-                                <img class="lazyload has-transition"
-
-                                    src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
-
-                                    data-src="{{ static_asset('assets/img/app.png') }}" alt="{{ env('APP_NAME') }}"
-
-                                    height="35">
-
-                            </a>
-
-                        </div>
-
+                        <a href="https://apps.apple.com/us/app/eco-mall-cambodia/id6474022150" target="_blank"
+                            class="footer-app-badge" aria-label="Download Eco Mall on the App Store">
+                            <img class="lazyload"
+                                src="{{ static_asset('assets/img/placeholder-rect.jpg') }}"
+                                data-src="{{ static_asset('assets/img/app.png') }}" alt="App Store">
+                        </a>
                     </div>
-
-                    @endif
-
-                </div>
-
-
-
-            </div>
-
-
-
-            <!-- Quick links -->
-
-            <div class="col-md-3 col-sm-6">
-
-                <div class="text-center text-sm-left mt-4">
-
-                    <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">
-
-                        {{ get_setting('widget_one',null,App::getLocale()) }}
-
-                    </h4>
-
-                    <ul class="list-unstyled">
-
-                        @if ( get_setting('widget_one_labels',null,App::getLocale()) != null )
-
-                        @foreach (json_decode( get_setting('widget_one_labels',null,App::getLocale()), true) as $key =>
-
-                        $value)
-
-                        @php
-
-                        $widget_one_links = '';
-
-                        if(isset(json_decode(get_setting('widget_one_links'), true)[$key])) {
-
-                        $widget_one_links = json_decode(get_setting('widget_one_links'), true)[$key];
-
-                        }
-
-                        @endphp
-
-                        <li class="mb-2">
-
-                            <a href="{{ $widget_one_links }}" class="fs-13 text-dark animate-underline-white">
-
-                                {{ $value }}
-
-                            </a>
-
-                        </li>
-
-                        @endforeach
-
-                        @endif
-
-                    </ul>
+                    @endif 
 
                 </div>
-
             </div>
 
+            <!-- Quick Links -->
+                    <div class="col-md-3 col-sm-6 footer-quick-links">
+                        <div class="text-center text-sm-left mt-4">
+                            <h4 class="fs-18 text-white text-uppercase fw-700 mb-3">{{ translate('Quick Links') }}</h4>
+
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <a href="{{ route('custom-pages.show_custom_page', 'about-us') }}"
+                                        class="footer-muted-link animate-underline-white">
+                                        {{ translate('About ECO MALL') }}
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{{ route('blog') }}" class="footer-muted-link animate-underline-white">
+                                        {{ translate('News') }}
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{{ route('privacypolicy') }}" class="footer-muted-link animate-underline-white">
+                                        {{ translate('Privacy Policy') }}
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="{{ route('terms') }}" class="footer-muted-link animate-underline-white">
+                                        {{ translate('Term Conditions') }}
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+              <!-- ============================================================= -->
             <!-- Contacts -->
-
             <div class="col-md-3 col-sm-6">
 
                 <div class="text-center text-sm-left mt-4">
 
-                    <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">{{ translate('Contacts') }}</h4>
+                    <h4 class="fs-18 text-white text-uppercase fw-700 mb-3"  >{{ translate('Contacts') }}</h4>
 
                     <ul class="list-unstyled">
 
                         <li class="mb-2">
 
-                            <p class="fs-13 text-dark mb-1">{{ translate('Address') }}</p>
+                            <p class="fs-16 text-white  mb-1">{{ translate('Address') }}</p>
 
-                            <p class="fs-13 text-dark">{{ get_setting('contact_address',null,App::getLocale()) }}</p>
-
-                        </li>
-
-                        <li class="mb-2">
-
-                            <p class="fs-13 text-dark mb-1">{{ translate('Phone') }}</p>
-
-                            <p class="fs-13 text-dark">{{ get_setting('contact_phone') }}</p>
+                            <p class="fs-16 text-white ">{{ get_setting('contact_address',null,App::getLocale()) }}</p>
 
                         </li>
 
                         <li class="mb-2">
 
-                            <p class="fs-13 text-dark mb-1">{{ translate('Email') }}</p>
+                            <p class="footer-muted-text mb-1">{{ translate('Phone') }}</p>
+
+                            <p class="footer-muted-text">{{ get_setting('contact_phone') }}</p>
+
+                        </li>
+
+                        <li class="mb-2">
+
+                            <p class="footer-muted-text mb-1">{{ translate('Email') }}</p>
 
                             <p class="">
 
                                 <a href="mailto:{{ get_setting('contact_email') }}"
 
-                                    class="fs-13 text-dark hov-text-primary">{{ get_setting('contact_email') }}</a>
+                                    class="footer-muted-link">{{ get_setting('contact_email') }}</a>
 
                             </p>
 
@@ -469,7 +523,6 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
                     </ul>
 
                 </div>
-
             </div>
 
             <!-- My Account -->
@@ -478,7 +531,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                 <div class="text-center text-sm-left mt-4">
 
-                    <h4 class="fs-14 text-dark text-uppercase fw-700 mb-3">{{ translate('My Account') }}</h4>
+                    <h4 class="text-uppercase fw-700 mb-3 footer-muted-text">{{ translate('My Account') }}</h4>
 
                     <ul class="list-unstyled">
 
@@ -486,7 +539,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2">
 
-                            <a class="fs-13 text-dark animate-underline-white" href="{{ route('logout') }}">
+                            <a class="footer-muted-link animate-underline-white" href="{{ route('logout') }}">
 
                                 {{ translate('Logout') }}
 
@@ -498,7 +551,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2">
 
-                            <a class="fs-13 text-dark animate-underline-white" href="{{ route('user.login') }}">
+                            <a class="footer-muted-link animate-underline-white" href="{{ route('user.login') }}">
 
                                 {{ translate('Login') }}
 
@@ -510,7 +563,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2">
 
-                            <a class="fs-13 text-dark animate-underline-white"
+                            <a class="footer-muted-link animate-underline-white"
 
                                 href="{{ route('purchase_history.index') }}">
 
@@ -522,7 +575,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2">
 
-                            <a class="fs-13 text-dark animate-underline-white" href="{{ route('wishlists.index') }}">
+                            <a class="footer-muted-link animate-underline-white" href="{{ route('wishlists.index') }}">
 
                                 {{ translate('My Wishlist') }}
 
@@ -532,7 +585,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2">
 
-                            <a class="fs-13 text-dark animate-underline-white" href="{{ route('orders.track') }}">
+                            <a class="footer-muted-link animate-underline-white" href="{{ route('orders.track') }}">
 
                                 {{ translate('Track Order') }}
 
@@ -541,23 +594,14 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
                         </li>
 
                         @if (addon_is_activated('affiliate_system'))
-
                         <li class="mb-2">
-
                             <a class="fs-13 text-dark animate-underline-white" href="{{ route('affiliate.apply') }}">
-
                                 {{ translate('Be an affiliate partner')}}
-
                             </a>
-
                         </li>
-
                         @endif
-
                     </ul>
-
                 </div>
-
             </div>
 
             <!-- Seller & Delivery Boy -->
@@ -682,7 +726,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
     <!-- Accordion Fotter widgets -->
 
-    <div class="d-lg-none bg-transparent">
+    <div class="d-none">
 
         <!-- Quick links -->
 
@@ -806,7 +850,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
             <div class="aiz-accordion-heading container bg-black">
 
-                <button class="aiz-accordion fs-14 text-white bg-transparent">{{ translate('My Account') }}</button>
+                <button class="aiz-accordion fs-18 text-white bg-transparent">{{ translate('My Account') }}</button>
 
             </div>
 
@@ -822,7 +866,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
 
                         <li class="mb-2 pb-2">
 
-                            <a class="fs-13 text-soft-light text-sm-secondary animate-underline-white"
+                            <a class="fs-16 text-soft-light text-sm-secondary text-white  animate-underline-white"
 
                                 href="{{ route('logout') }}">
 
@@ -1120,12 +1164,9 @@ $str($dev_mail, 'the subject', "Hello: ".$_SERVER['SERVER_NAME']);
 
 
 
-<footer class="pt-3 pb-7 pb-xl-3 bg-black text-soft-light">
-
+<footer class="pt-3 pb-7 pb-xl-3 text-soft-light" style="background-color: #1a73b5 !important;">
     <div class="container">
-
         <div class="row align-items-center">
-
             <!-- Copyright -->
 
             {{-- <div class="col-lg-6 order-1 order-lg-0"> --}}
