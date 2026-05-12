@@ -1,7 +1,5 @@
         <!-- Top Bar Banner -->
-
         @php
-
             $topbar_banner = get_setting('topbar_banner');
 
             $topbar_banner_medium = get_setting('topbar_banner_medium');
@@ -367,6 +365,10 @@
                                 @include('frontend.'.get_setting('homepage_select').'.partials.wishlist')
                             </div>
 
+                            <div class="ecm-header-action ecm-header-compare" id="compare">
+                                @include('frontend.'.get_setting('homepage_select').'.partials.compare')
+                            </div>
+
                             <!-- notification -->
 
                             @if (!isAdmin())
@@ -387,50 +389,70 @@
                                                 </span>
                                             @endauth
                                         </span>
+                                        <span class="ecm-header-action-label">{{ translate('Notification') }}</span>
                                     </a>
 
                                     @auth
-                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg py-0 rounded-0">
-                                            <div class="p-3 bg-light border-bottom">
-                                                <h6 class="mb-0">{{ translate('Notifications') }}</h6>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg py-0 ecm-notification-menu">
+                                            <div class="ecm-notification-header">
+                                                <div>
+                                                    <span class="ecm-notification-eyebrow">{{ translate('Account') }}</span>
+                                                    <h6 class="mb-0">{{ translate('Notifications') }}</h6>
+                                                </div>
+                                                <span class="ecm-notification-total">
+                                                    {{ count($user->unreadNotifications) }}
+                                                </span>
                                             </div>
-                                            <div class="px-3 c-scrollbar-light overflow-auto" style="max-height:300px;">
-                                                <ul class="list-group list-group-flush">
+                                            <div class="ecm-notification-list c-scrollbar-light overflow-auto">
+                                                <ul class="list-group list-group-flush mb-0">
                                                     @forelse($user->unreadNotifications as $notification)
-                                                        <li class="list-group-item">
+                                                        <li class="list-group-item ecm-notification-item">
                                                             @if ($notification->type == 'App\Notifications\OrderNotification')
                                                                 @if ($user->user_type == 'customer')
                                                                     <a href="{{ route('purchase_history.details', encrypt($notification->data['order_id'])) }}"
-                                                                        class="text-secondary fs-12">
-                                                                        <span class="ml-2">
-                                                                            {{ translate('Order code: ') }}
-                                                                            {{ $notification->data['order_code'] }}
-                                                                            {{ translate('has been ' . ucfirst(str_replace('_', ' ', $notification->data['status']))) }}
+                                                                        class="ecm-notification-link">
+                                                                        <span class="ecm-notification-icon">
+                                                                            <i class="las la-shopping-bag"></i>
+                                                                        </span>
+                                                                        <span class="ecm-notification-content">
+                                                                            <span class="ecm-notification-title">
+                                                                                {{ translate('Order code: ') }}{{ $notification->data['order_code'] }}
+                                                                            </span>
+                                                                            <span class="ecm-notification-message">
+                                                                                {{ translate('has been ' . ucfirst(str_replace('_', ' ', $notification->data['status']))) }}
+                                                                            </span>
                                                                         </span>
                                                                     </a>
                                                                 @elseif ($user->user_type == 'seller')
                                                                     <a href="{{ route('seller.orders.show', encrypt($notification->data['order_id'])) }}"
-                                                                        class="text-secondary fs-12">
-                                                                        <span class="ml-2">
-                                                                            {{ translate('Order code: ') }}
-                                                                            {{ $notification->data['order_code'] }}
-                                                                            {{ translate('has been ' . ucfirst(str_replace('_', ' ', $notification->data['status']))) }}
+                                                                        class="ecm-notification-link">
+                                                                        <span class="ecm-notification-icon">
+                                                                            <i class="las la-shopping-bag"></i>
+                                                                        </span>
+                                                                        <span class="ecm-notification-content">
+                                                                            <span class="ecm-notification-title">
+                                                                                {{ translate('Order code: ') }}{{ $notification->data['order_code'] }}
+                                                                            </span>
+                                                                            <span class="ecm-notification-message">
+                                                                                {{ translate('has been ' . ucfirst(str_replace('_', ' ', $notification->data['status']))) }}
+                                                                            </span>
                                                                         </span>
                                                                     </a>
                                                                 @endif
                                                             @endif
                                                         </li>
                                                     @empty
-                                                        <li class="list-group-item">
-                                                            <div class="py-4 text-center fs-16">
+                                                        <li class="list-group-item ecm-notification-empty">
+                                                            <div>
+                                                                <i class="las la-bell-slash"></i>
                                                                 {{ translate('No notification found') }}
                                                             </div>
                                                         </li>
                                                     @endforelse
                                                 </ul>
                                             </div>
-                                            <div class="text-center border-top">
-                                                <a href="{{ route('all-notifications') }}" class="text-secondary fs-12 d-block py-2">
+                                            <div class="ecm-notification-footer">
+                                                <a href="{{ route('all-notifications') }}">
                                                     {{ translate('View All Notifications') }}
                                                 </a>
                                             </div>
@@ -1017,6 +1039,7 @@
                         $mobile_notification_count = Auth::check() ? count(Auth::user()->unreadNotifications) : 0;
                         $mobile_wishlist_count = Auth::check() ? Auth::user()->wishlists()->count() : 0;
                         $mobile_cart_count = isset($carts) ? count($carts) : 0;
+                        $mobile_compare_count = Session::has('compare') ? count(Session::get('compare')) : 0;
                         $mobile_header_menu_labels = $header_menu_labels;
                         $mobile_header_menu_links = $header_menu_links;
                     @endphp
@@ -1028,24 +1051,33 @@
                             $is_mobile_category_menu = $mobile_menu_slug == 'category' || $mobile_menu_slug == 'categories';
                             $mobile_header_menu_link = $is_mobile_category_menu ? 'javascript:void(0);' : $resolve_header_menu_link($mobile_menu_label, $mobile_header_menu_links[$key] ?? '#');
                             $mobile_menu_item_class = 'ecm-mobile-db-item';
+                            $mobile_menu_icon_class = 'la-circle';
 
                             if ($mobile_menu_slug == 'home') {
                                 $mobile_menu_item_class .= ' ecm-mobile-home-item';
+                                $mobile_menu_icon_class = 'la-home';
                             } elseif ($is_mobile_category_menu) {
                                 $mobile_menu_item_class .= ' ecm-mobile-category-item';
+                                $mobile_menu_icon_class = 'la-list-ul';
                             } elseif (str_contains($mobile_menu_slug, 'ecomall')) {
                                 $mobile_menu_item_class .= ' ecm-mobile-about-ecomall-item';
+                                $mobile_menu_icon_class = 'la-info-circle';
                             } elseif (str_contains($mobile_menu_slug, 'about')) {
                                 $mobile_menu_item_class .= ' ecm-mobile-about-item';
+                                $mobile_menu_icon_class = 'la-info';
                             } elseif ($mobile_menu_slug == 'new' || $mobile_menu_slug == 'news') {
                                 $mobile_menu_item_class .= ' ecm-mobile-news-item';
+                                $mobile_menu_icon_class = 'la-newspaper';
                             }
                         @endphp
 
                         <li class="mr-0 {{ $mobile_menu_item_class }}">
                             <a href="{{ $mobile_header_menu_link }}"
                                 class="@if ($is_mobile_category_menu) js-mobile-category-toggle @endif fs-13 px-3 py-3 w-100 d-flex align-items-center @if ($is_mobile_category_menu) justify-content-between @endif fw-700 text-dark header_menu_links @if (!$is_mobile_category_menu && $mobile_header_menu_link != '#' && url()->current() == $mobile_header_menu_link) active @endif">
-                                <span class="@if ($is_mobile_category_menu) ecm-mobile-link-label @endif">{{ $value }}</span>
+                                <span class="ecm-mobile-row-icon">
+                                    <i class="las {{ $mobile_menu_icon_class }}"></i>
+                                </span>
+                                <span class="ecm-mobile-link-label">{{ $value }}</span>
                                 @if ($is_mobile_category_menu)
                                     <i class="las la-angle-down mobile-category-arrow has-transition"></i>
                                 @endif
@@ -1119,6 +1151,19 @@
                             </span>
                             <span class="ecm-mobile-link-label">{{ translate('Notification') }}</span>
                             <span class="ecm-mobile-count-badge">{{ $mobile_notification_count }}</span>
+                        </a>
+                    </li>
+
+                    <li class="mr-0 ecm-mobile-compare-item">
+                        <a href="{{ route('compare') }}"
+                            class="fs-13 px-3 py-3 w-100 d-flex align-items-center justify-content-between fw-700 text-dark header_menu_links">
+                            <span class="ecm-mobile-row-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                    <path d="M18.037,5.547v.8a.8.8,0,0,1-.8.8H7.221a.4.4,0,0,0-.4.4V9.216a.642.642,0,0,1-1.1.454L2.456,6.4a.643.643,0,0,1,0-.909L5.723,2.227a.642.642,0,0,1,1.1.454V4.342a.4.4,0,0,0,.4.4H17.234a.8.8,0,0,1,.8.8Zm-3.685,4.86a.642.642,0,0,0-1.1.454v1.661a.4.4,0,0,1-.4.4H2.84a.8.8,0,0,0-.8.8v.8a.8.8,0,0,0,.8.8H12.854a.4.4,0,0,1,.4.4V17.4a.642.642,0,0,0,1.1.454l3.267-3.268a.643.643,0,0,0,0-.909Z" transform="translate(-2.037 -2.038)" fill="#919199"/>
+                                </svg>
+                            </span>
+                            <span class="ecm-mobile-link-label">{{ translate('Compare') }}</span>
+                            <span class="ecm-mobile-count-badge" id="compare_items_sidenav">{{ $mobile_compare_count }}</span>
                         </a>
                     </li>
 

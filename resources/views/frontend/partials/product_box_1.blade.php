@@ -148,11 +148,23 @@
     margin: 0 4px 16px;
     display: flex;
     align-items: baseline;
+    justify-content: space-between;
     gap: 4px;
     line-height: 1.2;
   }
 
   .ec-product-card__price {
+    min-width: 0;
+  }
+
+  .ec-product-card__price-meta {
+    min-width: 0;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+
+  .ec-product-card__price-value {
     color: #2d9add;
     font-size: 14px;
     font-weight: 700;
@@ -162,6 +174,33 @@
     color: #222;
     font-size: 11px;
     font-weight: 400;
+  }
+
+  .ec-product-card__compare {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #111;
+    font-size: 20px;
+    line-height: 1;
+    text-decoration: none;
+    box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+  }
+
+  .ec-product-card__compare:hover,
+  .ec-product-card__compare:focus {
+    background: #3D98D1;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(61, 152, 209, 0.28);
+    transform: translateY(-1px);
   }
 
   .ec-product-card__action {
@@ -237,6 +276,7 @@
 
     $cart_onclick = 'showAddToCartModal(' . $product->id . ')';
     $wishlist_onclick = 'addToWishList(' . $product->id . ')';
+    $compare_onclick = 'addToCompare(' . $product->id . ')';
 @endphp
 
 @once
@@ -280,10 +320,18 @@
 
         <div class="ec-product-card__price-row">
             @if ($product->auction_product == 0)
-                <span class="ec-product-card__price">{{ home_discounted_base_price($product) }}</span>
-                <span class="ec-product-card__unit">/ {{ translate('pc') }}</span>
+                <span class="ec-product-card__price-meta">
+                    <span class="ec-product-card__price-value">{{ home_discounted_base_price($product) }}</span>
+                    <span class="ec-product-card__unit">/ {{ translate('pc') }}</span>
+                </span>
+                <a href="javascript:void(0)" class="ec-product-card__compare"
+                    onclick="{{ $compare_onclick }}"
+                    data-toggle="tooltip" data-title="{{ translate('Add to compare') }}" data-placement="left"
+                    aria-label="{{ translate('Add to compare') }}">
+                    <i class="las la-exchange-alt"></i>
+                </a>
             @else
-                <span class="ec-product-card__price">{{ single_price($product->starting_bid) }}</span>
+                <span class="ec-product-card__price-value">{{ single_price($product->starting_bid) }}</span>
             @endif
         </div>
 

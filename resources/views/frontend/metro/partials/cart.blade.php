@@ -32,39 +32,46 @@
 </a>
 
 <!-- Cart Items -->
-<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg p-0 stop-propagation rounded-0">
+<div class="dropdown-menu dropdown-menu-right dropdown-menu-lg p-0 stop-propagation ecm-cart-menu">
     @if (isset($carts) && count($carts) > 0)
-        <div class="fs-16 fw-700 text-soft-dark pt-4 pb-2 mx-4 border-bottom" style="border-color: #e5e5e5 !important;">
-            {{ translate('Cart Items') }}
+        <div class="ecm-cart-header">
+            <div>
+                <span class="ecm-notification-eyebrow">{{ translate('Shopping') }}</span>
+                <h6 class="mb-0">{{ translate('Cart Items') }}</h6>
+            </div>
+            <span class="ecm-cart-total-items">
+                <span class="cart-count">{{ count($carts) }}</span>
+            </span>
         </div>
         <!-- Cart Products -->
-        <ul class="h-360px overflow-auto c-scrollbar-light list-group list-group-flush mx-1">
+        <ul class="ecm-cart-list overflow-auto c-scrollbar-light list-group list-group-flush">
             @foreach ($carts as $key => $cartItem)
                 @php
                     $product = get_single_product($cartItem['product_id']);
                 @endphp
                 @if ($product != null)
-                    <li class="list-group-item border-0 hov-scale-img">
+                    <li class="list-group-item border-0 ecm-cart-item hov-scale-img">
                         <span class="d-flex align-items-center">
                             <a href="{{ route('product', $product->slug) }}"
-                                class="text-reset d-flex align-items-center flex-grow-1">
+                                class="ecm-cart-product text-reset d-flex align-items-center flex-grow-1">
                                 <img src="{{ static_asset('assets/img/placeholder.jpg') }}"
                                     data-src="{{ uploaded_asset($product->thumbnail_img) }}"
-                                    class="img-fit lazyload size-60px has-transition"
+                                    class="img-fit lazyload has-transition ecm-cart-product-img"
                                     alt="{{ $product->getTranslation('name') }}"
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                <span class="minw-0 pl-2 flex-grow-1">
-                                    <span class="fw-700 fs-13 text-dark mb-2 text-truncate-2" title="{{ $product->getTranslation('name') }}">
+                                <span class="ecm-cart-product-info minw-0 flex-grow-1">
+                                    <span class="ecm-cart-product-name text-truncate-2" title="{{ $product->getTranslation('name') }}">
                                         {{ $product->getTranslation('name') }}
                                     </span>
-                                    <span class="fs-14 fw-400 text-secondary">{{ $cartItem['quantity'] }}x</span>
-                                    <span class="fs-14 fw-400 text-secondary">{{ cart_product_price($cartItem, $product) }}</span>
+                                    <span class="ecm-cart-product-meta">
+                                        {{ $cartItem['quantity'] }}x <strong>{{ cart_product_price($cartItem, $product) }}</strong>
+                                    </span>
                                 </span>
                             </a>
-                            <span class="">
+                            <span>
                                 <button onclick="removeFromCart({{ $cartItem['id'] }})"
-                                    class="btn btn-sm btn-icon stop-propagation">
-                                    <i class="la la-close fs-18 fw-600 text-secondary"></i>
+                                    class="btn btn-sm btn-icon stop-propagation ecm-cart-remove">
+                                    <i class="la la-close"></i>
                                 </button>
                             </span>
                         </span>
@@ -73,21 +80,21 @@
             @endforeach
         </ul>
         <!-- Subtotal -->
-        <div class="px-3 py-2 fs-15 border-top d-flex justify-content-between mx-4" style="border-color: #e5e5e5 !important;">
-            <span class="fs-14 fw-400 text-secondary">{{ translate('Subtotal') }}</span>
-            <span class="fs-16 fw-700 text-dark">{{ single_price($total) }}</span>
+        <div class="ecm-cart-subtotal">
+            <span>{{ translate('Subtotal') }}</span>
+            <strong>{{ single_price($total) }}</strong>
         </div>
         <!-- View cart & Checkout Buttons -->
-        <div class="py-3 text-center border-top mx-4" style="border-color: #e5e5e5 !important;">
+        <div class="ecm-cart-actions">
             <div class="row gutters-10 justify-content-center">
                 <div class="col-sm-6 mb-2">
-                    <a href="{{ route('cart') }}" class="btn btn-secondary-base btn-sm btn-block rounded-4 text-white">
+                    <a href="{{ route('cart') }}" class="btn btn-sm btn-block ecm-cart-btn ecm-cart-btn-secondary">
                         {{ translate('View cart') }}
                     </a>
                 </div>
                 @if (Auth::check())
                 <div class="col-sm-6">
-                    <a href="{{ route('checkout.shipping_info') }}" class="btn btn-primary btn-sm btn-block rounded-4">
+                    <a href="{{ route('checkout.shipping_info') }}" class="btn btn-sm btn-block ecm-cart-btn ecm-cart-btn-primary">
                         {{ translate('Checkout') }}
                     </a>
                 </div>
@@ -95,9 +102,9 @@
             </div>
         </div>
     @else
-        <div class="text-center p-3">
-            <i class="las la-frown la-3x opacity-60 mb-3"></i>
-            <h3 class="h6 fw-700">{{ translate('Your Cart is empty') }}</h3>
+        <div class="ecm-cart-empty">
+            <i class="las la-shopping-cart"></i>
+            <h3>{{ translate('Your Cart is empty') }}</h3>
         </div>
     @endif
 </div>
