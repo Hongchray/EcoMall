@@ -30,9 +30,9 @@
                 <h1 class="fs-20 fs-md-24 fw-700 text-dark mb-4">{{ $sub->name }}</h1>
 
                 {{-- Products Grid --}}
-                <div class="row gutters-16 row-cols-xxl-5 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-2 border-top border-left">
+                <div class="row gutters-16 row-cols-xxl-5 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-2">
                     @forelse ($products as $product)
-                        <div class="col border-right border-bottom has-transition hov-shadow-out z-1">
+                        <div class="col mt-4 z-1">
                             @include('frontend.'.get_setting('homepage_select').'.partials.product_box_1', ['product' => $product])
                         </div>
                     @empty

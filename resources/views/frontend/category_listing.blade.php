@@ -12,6 +12,78 @@
 
 @section('content')
 <section class="mb-4 pt-4">
+
+    <style>
+    .sub-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+        padding: 16px 0;
+    }
+    @media (max-width: 992px) { .sub-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 576px)  { .sub-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .sub-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        text-decoration: none;
+        padding: 14px;
+        border-radius: 16px;
+        background: #fff;
+        border: 1.5px solid #e8e8e8;
+        min-height: 110px;
+
+        transition:
+            transform 0.35s cubic-bezier(.22,1,.36,1),
+            box-shadow 0.35s ease,
+            border-color 0.35s ease;
+    }
+
+    .sub-card:hover {
+        border-color: #b0c8e8;
+        box-shadow: 0 18px 35px rgba(0,0,0,.10);
+        transform: translateY(-5px);
+    }
+    .sub-card.active {
+        background: #EBF4FF;
+        border-color: #378ADD;
+    }
+    .sub-card.active .sub-name  { color: #185FA5; }
+    .sub-card.active .sub-count { color: #378ADD; }
+
+    .icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    .sub-text    { margin-top: 10px; }
+    .sub-name    { font-size: 13px; font-weight: 600; color: #1a1a1a; line-height: 1.3; margin-bottom: 1px; }
+    .sub-count   { font-size: 11px; color: #888; }
+
+    .badge-popular {
+        position: absolute;
+        top: -9px; left: 12px;
+        background: #378ADD;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        padding: 2px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+        text-transform: uppercase;
+    }
+    </style>
+
+
     <div class="container sm-px-0 pt-2">
         <form id="search-form"
             action="{{ route('products.category', $category->slug) }}"
@@ -221,28 +293,40 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="sub-grid">
                         @foreach ($category->subcategories as $sub)
-                            <div class="col-6 col-md-3 mb-3">
-                                {{-- <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}" --}}
+                            @php
+                                $isActive = request('subcategory') == $sub->slug;
+                                $url = route('products.category', $category->slug)
+                                    . '?' . http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug]));
+                            @endphp
+                            <a href="{{ $url }}" class="sub-card {{ $isActive ? 'active' : '' }}">
 
-                                    <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
-                                    class="d-block text-center p-3 border h-100 {{ request('subcategory') == $sub->slug ? 'bg-white text-primary border border-primary' : 'bg-white text-dark' }}">
+                                @if ($sub->is_popular)
+                                    <span class="badge-popular">Popular</span>
+                                @endif
 
-
+                                <div class="icon-wrap" style="background: {{ $sub->icon_bg ?? '#F3F3F3' }}">
                                     @if ($sub->image)
-                                        <img src="{{ $sub->image }}"
-                                            class="img-fluid mb-2"
-                                            style="max-height: 60px;">
+                                        <img src="{{ $sub->image }}" alt="{{ $sub->name }}"
+                                            style="width:24px;height:24px;object-fit:contain;">
+                                    @else
+                                        <i class="ti ti-package" style="color:#888;font-size:20px" aria-hidden="true"></i>
                                     @endif
+                                </div>
 
-                                    <div class="fw-semibold">
-                                        {{ $sub->name }}
-                                    </div>
-                                </a>
-                            </div>
+                                <div class="sub-text">
+                                    <div class="sub-name">{{ $sub->name }}</div>
+                                    <div class="sub-count">{{ $sub->products_count }} {{ translate('products') }}</div>
+                                </div>
+                            </a>
                         @endforeach
                     </div>
+
+                    <p class="text-muted small mt-2">
+                        {{ translate("showing") }} {{ $category->subcategories->count() }} {{ translate("of") }} {{ $category->subcategories->count() }} {{ translate("categories") }}
+                    </p>
+
 
                     <div id="products-section" style="border-top: 1px solid #e9e9e9; margin-bottom: 16px">
 

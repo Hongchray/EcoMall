@@ -1,8 +1,761 @@
-<div class="text-left">
+<style>
+    /* ══════════════════════════════════════════════════════
+   PRODUCT PAGE — Buttons & Seller Bar
+   ══════════════════════════════════════════════════════ */
+
+/* ── Shared tokens ───────────────────────────────────── */
+:root {
+    --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out:     cubic-bezier(0.65, 0, 0.35, 1);
+    --amber:           #f3af3d;
+    --amber-dark:      #e8a030;
+    --amber-text:      #412402;
+    --amber-glow:      rgba(243, 175, 61, 0.28);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   PRODUCT INQUIRY BUTTON
+   ══════════════════════════════════════════════════════ */
+
+.btn-inquiry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px 9px 14px;
+    border-radius: 999px;
+    background: var(--amber);
+    color: var(--amber-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    will-change: transform, box-shadow;
+    transform: translateY(0) scale(1);
+    box-shadow: 0 2px 8px rgba(243, 175, 61, 0.28), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition:
+        background  0.25s var(--ease-out-smooth),
+        box-shadow  0.25s var(--ease-out-smooth),
+        color       0.20s var(--ease-out-smooth),
+        transform   0.35s var(--ease-spring);
+}
+
+.btn-inquiry:hover {
+    background: var(--amber-dark);
+    box-shadow: 0 6px 20px rgba(243, 175, 61, 0.42), 0 2px 6px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px) scale(1.01);
+    color: var(--amber-text);
+    text-decoration: none;
+}
+
+.btn-inquiry:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 1px 4px rgba(243, 175, 61, 0.22);
+    transition:
+        transform   0.12s var(--ease-in-out),
+        box-shadow  0.12s var(--ease-in-out);
+}
+
+.btn-inquiry__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(65, 36, 2, 0.12);
+    flex-shrink: 0;
+    will-change: transform;
+    transition: transform 0.35s var(--ease-spring);
+}
+
+.btn-inquiry:hover .btn-inquiry__icon {
+    transform: rotate(-12deg) scale(1.1);
+}
+
+.btn-inquiry:active .btn-inquiry__icon {
+    transform: scale(0.92);
+    transition: transform 0.1s var(--ease-in-out);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   WISHLIST & COMPARE BUTTONS
+   ══════════════════════════════════════════════════════ */
+
+.product-action-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #555;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    will-change: transform, background, border-color;
+    transform: translateY(0) scale(1);
+    transition:
+        background    0.25s var(--ease-out-smooth),
+        border-color  0.25s var(--ease-out-smooth),
+        color         0.25s var(--ease-out-smooth),
+        box-shadow    0.25s var(--ease-out-smooth),
+        transform     0.35s var(--ease-spring);
+}
+
+.btn-action:hover {
+    background: #fff7ec;
+    border-color: var(--amber);
+    color: #7a4a00;
+    text-decoration: none;
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 4px 12px rgba(243, 175, 61, 0.18);
+}
+
+.btn-action:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+    transition:
+        transform   0.1s var(--ease-in-out),
+        box-shadow  0.1s var(--ease-in-out);
+}
+
+.btn-action__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    opacity: 0.65;
+    will-change: transform, opacity;
+    transform: scale(1);
+    transition:
+        opacity   0.25s var(--ease-out-smooth),
+        transform 0.35s var(--ease-spring);
+}
+
+.btn-action:hover .btn-action__icon {
+    opacity: 1;
+    transform: scale(1.18);
+}
+
+.btn-action:active .btn-action__icon {
+    transform: scale(0.9);
+    transition: transform 0.1s var(--ease-in-out);
+}
+
+.btn-action-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.12);
+    margin: 0 6px;
+    flex-shrink: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   SELLER BAR
+   ══════════════════════════════════════════════════════ */
+
+.seller-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 14px 0;
+}
+
+.seller-bar__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.seller-bar__label {
+    font-size: 13px;
+    font-weight: 400;
+    color: #999;
+    white-space: nowrap;
+}
+
+.seller-bar__name {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    text-decoration: none;
+    will-change: color, transform;
+    transform: translateX(0);
+    transition:
+        color     0.25s var(--ease-out-smooth),
+        transform 0.35s var(--ease-spring);
+}
+
+.seller-bar__name:hover {
+    color: var(--amber-dark);
+    text-decoration: none;
+    transform: translateX(2px);
+}
+
+.seller-bar__name--inhouse {
+    cursor: default;
+    pointer-events: none;
+    color: #444;
+}
+
+.seller-bar__avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(243, 175, 61, 0.15);
+    color: #a06800;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+    will-change: transform, background;
+    transition:
+        background 0.25s var(--ease-out-smooth),
+        transform  0.35s var(--ease-spring);
+}
+
+.seller-bar__name:hover .seller-bar__avatar {
+    background: rgba(243, 175, 61, 0.28);
+    transform: scale(1.12);
+}
+
+.seller-bar__avatar--inhouse {
+    background: rgba(100, 100, 100, 0.10);
+    color: #777;
+}
+
+.seller-bar__chevron {
+    opacity: 0;
+    will-change: opacity, transform;
+    transform: translateX(-4px);
+    transition:
+        opacity   0.22s var(--ease-out-smooth),
+        transform 0.35s var(--ease-spring);
+}
+
+.seller-bar__name:hover .seller-bar__chevron {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.seller-bar__divider {
+    height: 1px;
+    background: linear-gradient(to right, rgba(243, 175, 61, 0.18), rgba(0, 0, 0, 0.06), transparent);
+    margin: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   MESSAGE SELLER BUTTON
+   ══════════════════════════════════════════════════════ */
+
+.btn-message {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px 8px 12px;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid rgba(243, 175, 61, 0.45);
+    color: #666;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    will-change: transform, background, border-color, box-shadow;
+    transform: translateY(0) scale(1);
+    transition:
+        background    0.25s var(--ease-out-smooth),
+        border-color  0.25s var(--ease-out-smooth),
+        color         0.25s var(--ease-out-smooth),
+        box-shadow    0.25s var(--ease-out-smooth),
+        transform     0.35s var(--ease-spring);
+}
+
+.btn-message:hover {
+    background: #fff8ed;
+    border-color: var(--amber);
+    color: #7a4a00;
+    box-shadow: 0 4px 14px var(--amber-glow);
+    transform: translateY(-2px) scale(1.01);
+}
+
+.btn-message:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: none;
+    transition:
+        transform   0.1s var(--ease-in-out),
+        box-shadow  0.1s var(--ease-in-out);
+}
+
+.btn-message__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(243, 175, 61, 0.12);
+    flex-shrink: 0;
+    will-change: transform, background;
+    transition:
+        background 0.25s var(--ease-out-smooth),
+        transform  0.35s var(--ease-spring);
+}
+
+.btn-message:hover .btn-message__icon {
+    background: rgba(243, 175, 61, 0.22);
+    transform: scale(1.15) rotate(-8deg);
+}
+
+.btn-message:active .btn-message__icon {
+    transform: scale(0.9);
+    transition: transform 0.1s var(--ease-in-out);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+
+    .btn-inquiry {
+        box-shadow: 0 2px 12px rgba(243, 175, 61, 0.22), 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-inquiry:hover {
+        box-shadow: 0 6px 22px rgba(243, 175, 61, 0.35), 0 2px 8px rgba(0, 0, 0, 0.35);
+    }
+
+    .btn-action {
+        border-color: rgba(255, 255, 255, 0.18);
+        color: #ccc;
+    }
+
+    .btn-action:hover {
+        background: rgba(243, 175, 61, 0.10);
+        border-color: var(--amber);
+        color: var(--amber);
+        box-shadow: 0 4px 14px rgba(243, 175, 61, 0.12);
+    }
+
+    .btn-action-divider {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .seller-bar__label {
+        color: #666;
+    }
+
+    .seller-bar__name {
+        color: #e0e0e0;
+    }
+
+    .seller-bar__name:hover {
+        color: var(--amber);
+    }
+
+    .seller-bar__avatar {
+        color: var(--amber);
+    }
+
+    .seller-bar__divider {
+        background: linear-gradient(to right, rgba(243, 175, 61, 0.12), rgba(255, 255, 255, 0.05), transparent);
+    }
+
+    .btn-message {
+        border-color: rgba(243, 175, 61, 0.3);
+        color: #aaa;
+    }
+
+    .btn-message:hover {
+        background: rgba(243, 175, 61, 0.08);
+        border-color: var(--amber);
+        color: var(--amber);
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   REDUCED MOTION
+   ══════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    .btn-inquiry,
+    .btn-inquiry__icon,
+    .btn-action,
+    .btn-action__icon,
+    .seller-bar__name,
+    .seller-bar__avatar,
+    .seller-bar__chevron,
+    .btn-message,
+    .btn-message__icon {
+        transition:
+            background    0.15s ease,
+            border-color  0.15s ease,
+            color         0.15s ease,
+            opacity       0.15s ease !important;
+        transform: none !important;
+        will-change: auto !important;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════ */
+
+@media (max-width: 576px) {
+
+    .btn-inquiry {
+        font-size: 13px;
+        padding: 8px 16px 8px 12px;
+    }
+
+    .btn-action {
+        font-size: 12.5px;
+        padding: 7px 13px;
+    }
+
+    .product-action-group {
+        gap: 6px;
+    }
+
+    .btn-action-divider {
+        display: none;
+    }
+
+    .seller-bar {
+        gap: 12px;
+    }
+
+    .seller-bar__name {
+        font-size: 13.5px;
+    }
+
+    .btn-message {
+        font-size: 13px;
+        padding: 7px 14px 7px 10px;
+    }
+}
+
+.ec-detail-panel {
+    --ec-blue: #3c9bd3;
+    --ec-blue-dark: #217fb8;
+    --ec-blue-soft: #eef8fd;
+    --ec-border: #dceef8;
+    --ec-text: #17212b;
+    --ec-muted: #6f7d89;
+    position: relative;
+    padding: 26px;
+    border: 1px solid var(--ec-border);
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(60, 155, 211, 0.08), rgba(255, 255, 255, 0) 42%),
+        #ffffff;
+    box-shadow: 0 16px 46px rgba(34, 126, 184, 0.1);
+}
+
+.ec-detail-title {
+    margin: 0 0 14px;
+    color: var(--ec-text) !important;
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0;
+}
+
+.ec-detail-meta {
+    gap: 8px 14px;
+    margin-bottom: 16px !important;
+}
+
+.ec-detail-meta small,
+.ec-detail-meta span {
+    color: var(--ec-muted);
+}
+
+.ec-detail-actions-row {
+    gap: 10px 0;
+    margin-bottom: 14px;
+}
+
+.ec-detail-actions-row .col,
+.ec-detail-actions-row [class*="col-"] {
+    padding-left: 0;
+    padding-right: 10px;
+}
+
+.ec-detail-panel .btn-inquiry {
+    background: var(--ec-blue);
+    color: #fff;
+    box-shadow: 0 9px 20px rgba(60, 155, 211, 0.24);
+}
+
+.ec-detail-panel .btn-inquiry:hover {
+    background: var(--ec-blue-dark);
+    color: #fff;
+    box-shadow: 0 12px 28px rgba(60, 155, 211, 0.3);
+}
+
+.ec-detail-panel .btn-inquiry__icon {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.ec-detail-panel .btn-action,
+.ec-detail-panel .btn-message {
+    border-color: var(--ec-border);
+    background: #fff;
+    color: #44515d;
+}
+
+.ec-detail-panel .btn-action:hover,
+.ec-detail-panel .btn-message:hover {
+    border-color: var(--ec-blue);
+    background: var(--ec-blue-soft);
+    color: var(--ec-blue-dark);
+    box-shadow: 0 8px 18px rgba(60, 155, 211, 0.16);
+}
+
+.ec-brand-line,
+.seller-bar,
+.ec-detail-panel > .row.no-gutters,
+.ec-buy-form > .row.no-gutters,
+.ec-share-row {
+    padding: 14px 0;
+    margin-bottom: 0 !important;
+    border-top: 1px solid #edf5f9;
+}
+
+.ec-brand-line {
+    gap: 10px;
+}
+
+.ec-brand-line .text-secondary,
+.seller-bar__label,
+.ec-detail-panel > .row.no-gutters .text-secondary,
+.ec-buy-form > .row.no-gutters .text-secondary,
+.ec-share-row .text-secondary {
+    width: auto !important;
+    min-width: 112px;
+    color: var(--ec-muted) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+.ec-brand-line a,
+.seller-bar__name {
+    color: var(--ec-text);
+}
+
+.seller-bar {
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.seller-bar__divider {
+    display: none;
+}
+
+.ec-detail-panel .fs-16.fw-700,
+.ec-detail-panel .h3.fw-600 {
+    color: var(--ec-blue) !important;
+    font-size: 28px !important;
+    line-height: 1.15;
+}
+
+.ec-detail-panel del {
+    color: #9aa7b2;
+    font-size: 15px !important;
+}
+
+.ec-detail-panel .bg-danger.fs-11,
+.ec-detail-panel .bg-secondary-base {
+    border-radius: 999px;
+}
+
+.ec-buy-form {
+    padding-top: 2px;
+}
+
+.ec-buy-form .aiz-megabox-elem {
+    min-height: 40px;
+    border: 1px solid var(--ec-border) !important;
+    border-radius: 8px !important;
+    background: #fff;
+    color: var(--ec-text);
+    font-weight: 700;
+    transition: border-color .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.ec-buy-form .aiz-megabox input:checked + .aiz-megabox-elem {
+    border-color: var(--ec-blue) !important;
+    background: var(--ec-blue-soft);
+    color: var(--ec-blue-dark);
+    box-shadow: 0 0 0 3px rgba(60, 155, 211, 0.12);
+}
+
+.ec-buy-form .aiz-plus-minus {
+    width: 142px !important;
+    overflow: hidden;
+    border: 1px solid var(--ec-border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.ec-buy-form .aiz-plus-minus .btn {
+    height: 42px;
+    border: 0;
+    background: var(--ec-blue-soft) !important;
+    color: var(--ec-blue-dark);
+}
+
+.ec-buy-form .input-number {
+    height: 42px;
+    color: var(--ec-text);
+    font-weight: 800;
+}
+
+.ec-contact-card {
+    margin-top: 16px;
+    padding: 15px 16px;
+    border: 1px solid var(--ec-border);
+    border-radius: 14px;
+    background: #f8fbfe;
+}
+
+.ec-contact-card__title {
+    margin-bottom: 8px;
+    color: var(--ec-text);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.ec-contact-card__phone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+}
+
+.ec-contact-card__phone span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ec-blue-dark);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.ec-purchase-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ec-purchase-actions .btn {
+    min-height: 46px;
+    border: 0;
+    border-radius: 8px !important;
+    padding: 12px 22px;
+    box-shadow: 0 10px 22px rgba(23, 33, 43, 0.1);
+}
+
+.ec-btn-cart {
+    background: var(--ec-blue) !important;
+}
+
+.ec-btn-cart:hover {
+    background: var(--ec-blue-dark) !important;
+}
+
+.ec-btn-buy {
+    background: #f3af3d !important;
+    color: #2d1a00 !important;
+}
+
+.ec-btn-buy:hover {
+    background: #e7a02d !important;
+}
+
+.ec-share-row {
+    align-items: center;
+    margin-top: 18px !important;
+}
+
+@media (max-width: 767.98px) {
+    .ec-detail-panel {
+        padding: 20px 16px;
+        border-radius: 14px;
+    }
+
+    .ec-detail-title {
+        font-size: 22px;
+    }
+
+    .ec-detail-actions-row .col,
+    .ec-detail-actions-row [class*="col-"] {
+        padding-right: 0;
+    }
+
+    .ec-brand-line .text-secondary,
+    .seller-bar__label,
+    .ec-detail-panel > .row.no-gutters .text-secondary,
+    .ec-buy-form > .row.no-gutters .text-secondary,
+    .ec-share-row .text-secondary {
+        min-width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .ec-detail-panel .fs-16.fw-700,
+    .ec-detail-panel .h3.fw-600 {
+        font-size: 24px !important;
+    }
+
+    .ec-purchase-actions .btn {
+        width: 100%;
+        margin-right: 0 !important;
+    }
+}
+</style>
+<div class="text-left ec-detail-panel">
 
     <!-- Product Name -->
 
-    <h2 class="fs-16 fw-700 text-dark">
+    <h2 class="fs20 fw-700 text-dark ec-detail-title">
 
         {{ $detailedProduct->getTranslation('name') }}
 
@@ -10,7 +763,7 @@
 
 
 
-    <div class="row align-items-center mb-1">
+    <div class="row align-items-center mb-1 ec-detail-meta">
 
         <!-- Review -->
 
@@ -66,101 +819,67 @@
 
     </div>
 
-    <div class="row align-items-center">
-
-        @if(get_setting('product_query_activation') == 1)
-
-            <!-- Ask about this product -->
-
-            <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mb-3">
-
-                <a href="javascript:void();" onclick="goToView('product_query')" class="text-primary fs-14 fw-600 d-flex">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
-
-                        <g id="Group_25571" data-name="Group 25571" transform="translate(-975 -411)">
-
-                            <g id="Path_32843" data-name="Path 32843" transform="translate(975 411)" fill="#fff">
-
-                                <path
-
-                                    d="M 16 31 C 11.9933500289917 31 8.226519584655762 29.43972969055176 5.393400192260742 26.60659980773926 C 2.560270071029663 23.77347946166992 1 20.00665092468262 1 16 C 1 11.9933500289917 2.560270071029663 8.226519584655762 5.393400192260742 5.393400192260742 C 8.226519584655762 2.560270071029663 11.9933500289917 1 16 1 C 20.00665092468262 1 23.77347946166992 2.560270071029663 26.60659980773926 5.393400192260742 C 29.43972969055176 8.226519584655762 31 11.9933500289917 31 16 C 31 20.00665092468262 29.43972969055176 23.77347946166992 26.60659980773926 26.60659980773926 C 23.77347946166992 29.43972969055176 20.00665092468262 31 16 31 Z"
-
-                                    stroke="none" />
-
-                                <path
-
-                                    d="M 16 2 C 12.26045989990234 2 8.744749069213867 3.456249237060547 6.100500106811523 6.100500106811523 C 3.456249237060547 8.744749069213867 2 12.26045989990234 2 16 C 2 19.73954010009766 3.456249237060547 23.2552490234375 6.100500106811523 25.89949989318848 C 8.744749069213867 28.54375076293945 12.26045989990234 30 16 30 C 19.73954010009766 30 23.2552490234375 28.54375076293945 25.89949989318848 25.89949989318848 C 28.54375076293945 23.2552490234375 30 19.73954010009766 30 16 C 30 12.26045989990234 28.54375076293945 8.744749069213867 25.89949989318848 6.100500106811523 C 23.2552490234375 3.456249237060547 19.73954010009766 2 16 2 M 16 0 C 24.8365592956543 0 32 7.163440704345703 32 16 C 32 24.8365592956543 24.8365592956543 32 16 32 C 7.163440704345703 32 0 24.8365592956543 0 16 C 0 7.163440704345703 7.163440704345703 0 16 0 Z"
-
-                                    stroke="none" fill="#f3af3d" />
-
-                            </g>
-
-                            <path id="Path_32842" data-name="Path 32842"
-
-                                d="M28.738,30.935a1.185,1.185,0,0,1-1.185-1.185,3.964,3.964,0,0,1,.942-2.613c.089-.095.213-.207.361-.344.735-.658,2.252-2.032,2.252-3.555a2.228,2.228,0,0,0-2.37-2.37,2.228,2.228,0,0,0-2.37,2.37,1.185,1.185,0,1,1-2.37,0,4.592,4.592,0,0,1,4.74-4.74,4.592,4.592,0,0,1,4.74,4.74c0,2.577-2.044,4.432-3.028,5.333l-.284.255a1.89,1.89,0,0,0-.243.948A1.185,1.185,0,0,1,28.738,30.935Zm0,3.561a1.185,1.185,0,0,1-.835-2.026,1.226,1.226,0,0,1,1.671,0,1.061,1.061,0,0,1,.148.184,1.345,1.345,0,0,1,.113.2,1.41,1.41,0,0,1,.065.225,1.138,1.138,0,0,1,0,.462,1.338,1.338,0,0,1-.065.219,1.185,1.185,0,0,1-.113.207,1.06,1.06,0,0,1-.148.184A1.185,1.185,0,0,1,28.738,34.5Z"
-
-                                transform="translate(962.004 400.504)" fill="#f3af3d" />
-
-                        </g>
-
+  <div class="row align-items-center ec-detail-actions-row">
+ 
+    @if(get_setting('product_query_activation') == 1)
+        <!-- Ask about this product -->
+        <div class="col-xl-3 col-lg-4 col-md-3 col-sm-4 mb-3">
+            <a href="javascript:void(0);" onclick="goToView('product_query')" class="btn-inquiry">
+                <span class="btn-inquiry__icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 32 32" aria-hidden="true">
+                        <circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M13.5,12.5 C13.5,10.567 14.567,9.5 16,9.5 C17.433,9.5 18.5,10.567 18.5,12 C18.5,13.8 17,15 16.2,15.8 L16,16 C15.724,16.276 15.5,16.724 15.5,17.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="16" cy="21.5" r="1.4" fill="currentColor"/>
                     </svg>
-
-                    <span class="ml-2 text-primary animate-underline-blue">{{ translate('Product Inquiry') }}</span>
-
-                </a>
-
-            </div>
-
-        @endif
-
-        <div class="col mb-2">
-
-            @if ($detailedProduct->auction_product != 1)
-
-                <div class="d-flex">
-
-                    <!-- Add to wishlist button -->
-
-                    <a href="javascript:void(0)" onclick="addToWishList({{ $detailedProduct->id }})"
-
-                        class="mr-3 fs-14 text-dark opacity-60 has-transitiuon hov-opacity-100">
-
-                        <i class="la la-heart-o mr-1"></i>
-
-                        {{ translate('Add to Wishlist') }}
-
-                    </a>
-
-                    <!-- Add to compare button -->
-
-                    <a href="javascript:void(0)" onclick="addToCompare({{ $detailedProduct->id }})"
-
-                        class="fs-14 text-dark opacity-60 has-transitiuon hov-opacity-100">
-
-                        <i class="las la-sync mr-1"></i>
-
-                        {{ translate('Add to Compare') }}
-
-                    </a>
-
-                </div>
-
-            @endif
-
+                </span>
+                <span>{{ translate('Product Inquiry') }}</span>
+            </a>
         </div>
-
+    @endif
+ 
+    <div class="col mb-2">
+        @if ($detailedProduct->auction_product != 1)
+            <div class="product-action-group">
+                <!-- Add to wishlist button -->
+                <a href="javascript:void(0)"
+                   onclick="addToWishList({{ $detailedProduct->id }})"
+                   class="btn-action"
+                   aria-label="{{ translate('Add to Wishlist') }}">
+                    <span class="btn-action__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </span>
+                    <span>{{ translate('Add to Wishlist') }}</span>
+                </a>
+ 
+                <div class="btn-action-divider" aria-hidden="true"></div>
+ 
+                <!-- Add to compare button -->
+                <a href="javascript:void(0)"
+                   onclick="addToCompare({{ $detailedProduct->id }})"
+                   class="btn-action"
+                   aria-label="{{ translate('Add to Compare') }}">
+                    <span class="btn-action__icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="16 3 21 3 21 8"/>
+                            <line x1="4" y1="20" x2="21" y2="3"/>
+                            <polyline points="21 16 21 21 16 21"/>
+                            <line x1="15" y1="15" x2="21" y2="21"/>
+                        </svg>
+                    </span>
+                    <span>{{ translate('Add to Compare') }}</span>
+                </a>
+            </div>
+        @endif
     </div>
 
-
-
-
-
+</div>
     <!-- Brand Logo & Name -->
 
     @if ($detailedProduct->brand != null)
 
-        <div class="d-flex flex-wrap align-items-center mb-2">
+        <div class="d-flex flex-wrap align-items-center mb-2 ec-brand-line">
 
             <span class="text-secondary fs-14 fw-400 mr-4 w-50px">{{ translate('Brand') }}</span><br>
 
@@ -172,91 +891,56 @@
 
     @endif
 
-
-
     <!-- Seller Info -->
 
-    <div class="d-flex flex-wrap align-items-center">
-
-        <div class="d-flex align-items-center mr-4">
-
-            <!-- Shop Name -->
-
-            @if ($detailedProduct->added_by == 'seller' && get_setting('vendor_system_activation') == 1)
-
-                <span class="text-secondary fs-14 fw-400 mr-4 w-50px">{{ translate('Sold by') }}</span>
-
-                <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}"
-
-                    class="text-reset hov-text-primary fs-14 fw-700">{{ $detailedProduct->user->shop->name }}</a>
-
-            @else
-
-                <p class="mb-0 fs-14 fw-700">{{ translate('Inhouse product') }}</p>
-
-            @endif
-
-        </div>
-
-        <!-- Messase to seller -->
-
-        @if (get_setting('conversation_system') == 1)
-
-            <div class="">
-
-                <button class="btn btn-sm btn-soft-secondary-base btn-outline-secondary-base hov-svg-white hov-text-white rounded-4"
-
-                    onclick="show_chat_modal()">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-
-                        class="mr-2 has-transition">
-
-                        <g id="Group_23918" data-name="Group 23918" transform="translate(1053.151 256.688)">
-
-                            <path id="Path_3012" data-name="Path 3012"
-
-                                d="M134.849,88.312h-8a2,2,0,0,0-2,2v5a2,2,0,0,0,2,2v3l2.4-3h5.6a2,2,0,0,0,2-2v-5a2,2,0,0,0-2-2m1,7a1,1,0,0,1-1,1h-8a1,1,0,0,1-1-1v-5a1,1,0,0,1,1-1h8a1,1,0,0,1,1,1Z"
-
-                                transform="translate(-1178 -341)" fill="#f4b650" />
-
-                            <path id="Path_3013" data-name="Path 3013"
-
-                                d="M134.849,81.312h8a1,1,0,0,1,1,1v5a1,1,0,0,1-1,1h-.5a.5.5,0,0,0,0,1h.5a2,2,0,0,0,2-2v-5a2,2,0,0,0-2-2h-8a2,2,0,0,0-2,2v.5a.5.5,0,0,0,1,0v-.5a1,1,0,0,1,1-1"
-
-                                transform="translate(-1182 -337)" fill="#f4b650" />
-
-                            <path id="Path_3014" data-name="Path 3014"
-
-                                d="M131.349,93.312h5a.5.5,0,0,1,0,1h-5a.5.5,0,0,1,0-1"
-
-                                transform="translate(-1181 -343.5)" fill="#f4b650" />
-
-                            <path id="Path_3015" data-name="Path 3015"
-
-                                d="M131.349,99.312h5a.5.5,0,1,1,0,1h-5a.5.5,0,1,1,0-1"
-
-                                transform="translate(-1181 -346.5)" fill="#f4b650" />
-
-                        </g>
-
+    <div class="seller-bar">
+ 
+    <div class="seller-bar__info">
+ 
+        <!-- Shop Name -->
+        @if ($detailedProduct->added_by == 'seller' && get_setting('vendor_system_activation') == 1)
+            <span class="seller-bar__label">{{ translate('Sold by') }}</span>
+            <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}"
+               class="seller-bar__name">
+                <span class="seller-bar__avatar">
+                    {{ strtoupper(substr($detailedProduct->user->shop->name, 0, 1)) }}
+                </span>
+                {{ $detailedProduct->user->shop->name }}
+                <svg class="seller-bar__chevron" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </a>
+        @else
+            <span class="seller-bar__label">{{ translate('Sold by') }}</span>
+            <span class="seller-bar__name seller-bar__name--inhouse">
+                <span class="seller-bar__avatar seller-bar__avatar--inhouse">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
                     </svg>
-
-
-
-                    {{ translate('Message Seller') }}
-
-                </button>
-
-            </div>
-
+                </span>
+                {{ translate('Inhouse Product') }}
+            </span>
         @endif
-
+ 
     </div>
-
-
-
-    <hr>
+ 
+    <!-- Message Seller -->
+    @if (get_setting('conversation_system') == 1)
+        <button class="btn-message" onclick="show_chat_modal()" aria-label="{{ translate('Message Seller') }}">
+            <span class="btn-message__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2 2.5A1.5 1.5 0 0 1 3.5 1h9A1.5 1.5 0 0 1 14 2.5v7A1.5 1.5 0 0 1 12.5 11H9.6l-2.4 3v-3H3.5A1.5 1.5 0 0 1 2 9.5v-7Z" stroke="#f3af3d" stroke-width="1.2" stroke-linejoin="round"/>
+                    <line x1="5" y1="5.5" x2="11" y2="5.5" stroke="#f3af3d" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="5" y1="8" x2="9" y2="8" stroke="#f3af3d" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span>{{ translate('Message Seller') }}</span>
+        </button>
+    @endif
+ 
+</div>
+ 
+<div class="seller-bar__divider" role="separator"></div>
 
 
 
@@ -638,7 +1322,7 @@
 
     @if ($detailedProduct->auction_product != 1)
 
-        <form id="option-choice-form">
+        <form id="option-choice-form" class="ec-buy-form">
 
             @csrf
 
@@ -867,10 +1551,13 @@
                 </div>
 
             </div>
-            {{-- phone number --}}
-            <p class="mb-1 fs-14 fw-700">Contact Information</p>
-            <p>(+855) 78 333 016<br/>
-               (+855) 70 333 013</p>    
+            <div class="ec-contact-card">
+                <div class="ec-contact-card__title">{{ translate('Contact Information') }}</div>
+                <p class="ec-contact-card__phone">
+                    <span>(+855) 78 333 016</span>
+                    <span>(+855) 70 333 013</span>
+                </p>
+            </div>
 
 
         </form>
@@ -891,7 +1578,7 @@
 
         @if ($detailedProduct->auction_end_date >= strtotime('now'))
 
-            <div class="mt-4">
+            <div class="mt-4 ec-purchase-actions">
 
                 @if (Auth::check() && $detailedProduct->user_id == Auth::user()->id)
 
@@ -901,7 +1588,7 @@
 
                 @else
 
-                    <button type="button" class="btn btn-primary buy-now  fw-600 min-w-150px rounded-0"
+                    <button type="button" class="btn btn-primary buy-now fw-600 min-w-150px rounded-0 ec-btn-cart"
 
                         onclick="bid_modal()">
 
@@ -931,13 +1618,13 @@
 
         <!-- Add to cart & Buy now Buttons -->
 
-        <div class="mt-3">
+        <div class="mt-3 ec-purchase-actions">
 
             @if ($detailedProduct->digital == 0)
 
                 @if ($detailedProduct->external_link != null)
 
-                    <a type="button" class="btn btn-primary buy-now fw-600 add-to-cart px-4 rounded-0"
+                    <a type="button" class="btn btn-primary buy-now fw-600 add-to-cart px-4 rounded-0 ec-btn-cart"
 
                         href="{{ $detailedProduct->external_link }}">
 
@@ -949,7 +1636,7 @@
 
                     <button type="button"
 
-                        class="btn bg-warning mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white"
+                        class="btn bg-warning mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white ec-btn-cart"
 
                         @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
 
@@ -957,7 +1644,7 @@
 
                     </button>
 
-                    <button type="button" class="btn bg-danger text-white buy-now fw-600 add-to-cart min-w-150px rounded-0"
+                    <button type="button" class="btn bg-danger text-white buy-now fw-600 add-to-cart min-w-150px rounded-0 ec-btn-buy"
 
                         @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
 
@@ -977,7 +1664,7 @@
 
                 <button type="button"
 
-                    class="btn btn-secondary-base mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white"
+                    class="btn btn-secondary-base mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white ec-btn-cart"
 
                     @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
 
@@ -985,7 +1672,7 @@
 
                 </button>
 
-                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0"
+                <button type="button" class="btn btn-primary buy-now fw-600 add-to-cart min-w-150px rounded-0 ec-btn-buy"
 
                     @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
 
@@ -1050,8 +1737,6 @@
             </div>
 
         </div>
-
-
 
         <!-- Refund -->
 
@@ -1147,7 +1832,7 @@
 
     <!-- Share -->
 
-    <div class="row no-gutters mt-4">
+    <div class="row no-gutters mt-4 ec-share-row">
 
         <div class="col-sm-2">
 

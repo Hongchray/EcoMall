@@ -157,9 +157,15 @@ class SearchController extends Controller
         try {
 
             // CATEGORY
-            $category = Category::with(['subcategories', 'childrenCategories', 'parentCategory'])
-                ->where('slug', $category_slug)
-                ->firstOrFail();
+            $category = Category::with([
+                'subcategories' => function ($query) {
+                    $query->withCount('products');
+                },
+                'childrenCategories',
+                'parentCategory'
+            ])
+            ->where('slug', $category_slug)
+            ->firstOrFail();
 
             // SUBCATEGORY (from query)
             $subCategorySlug = $request->get('subcategory');
