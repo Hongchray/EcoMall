@@ -413,7 +413,7 @@
 
                     @if($product->digital !=1)
                         @php
-                            $choice_options = get_product_choice_options($product);
+                            $choice_options = json_decode($product->choice_options ?? '[]') ?: [];
                         @endphp
                         <!-- Product Choice options -->
                         @if (count($choice_options) > 0)

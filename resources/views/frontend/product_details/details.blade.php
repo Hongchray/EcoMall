@@ -1813,40 +1813,21 @@
                             <span class="text-success fs-14 fw-700">{{ translate('Verified seller') }}</span>
 
                         @else
-
                             <span class="text-danger fs-14 fw-700">{{ translate('Non verified seller') }}</span>
-
                         @endif
-
                     </div>
-
-                </div>
-
+              </div>
             @endif
-
         @endif
-
     @endif
-
-
-
     <!-- Share -->
-
     <div class="row no-gutters mt-4 ec-share-row">
-
         <div class="col-sm-2">
-
             <div class="text-secondary fs-14 fw-400 mt-2">{{ translate('Share') }}</div>
-
         </div>
-
         <div class="col-sm-10">
-
             <div class="aiz-share"></div>
-
         </div>
-
     </div>
-
 </div>
 
