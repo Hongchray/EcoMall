@@ -81,6 +81,19 @@ class CartController extends Controller
         $str = CartUtility::create_cart_variant($product, $request->all());
         $product_stock = $product->stocks->where('variant', $str)->first();
 
+        if ($product_stock == null) {
+            $product_stock = $product->stocks->first();
+        }
+
+        if ($product_stock == null || ($product->digital == 0 && $product_stock->qty < $quantity)) {
+            return array(
+                'status' => 0,
+                'cart_count' => count($carts),
+                'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.outOfStockCart')->render(),
+                'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
+            );
+        }
+
         $cart = Cart::firstOrNew([
             'variation' => $str,
             'user_id' => auth()->user()->id,
