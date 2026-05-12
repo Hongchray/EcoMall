@@ -50,28 +50,37 @@
                                         {{ translate('Subcategories') }}
                                     </a>
                                 </div>
-                                <div class="collapse show" id="collapse_sub">
+                               <div class="collapse show" id="collapse_sub">
                                     <ul class="p-3 mb-0 list-unstyled">
+
                                         <li class="mb-3">
                                             <a class="text-reset fs-14 fw-600 hov-text-primary"
                                                 href="{{ route('search') }}">
-                                                <i class="las la-angle-left"></i> {{ translate('All Categories') }}
+                                                <i class="las la-angle-left"></i>
+                                                {{ translate('All Categories') }}
                                             </a>
                                         </li>
+
                                         <li class="mb-3 fw-600 text-dark fs-14">
                                             {{ $category->getTranslation('name') }}
                                         </li>
-                                        @foreach ($category->childrenCategories as $sub)
+
+                                        @foreach ($category->subcategories as $sub)
                                             <li class="ml-4 mb-3">
+
                                                 <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
                                                     class="fs-14 hov-text-primary {{ request('subcategory') == $sub->slug ? 'text-primary fw-700' : 'text-reset' }}">
+
                                                     @if(request('subcategory') == $sub->slug)
                                                         <i class="las la-angle-right"></i>
                                                     @endif
-                                                    {{ $sub->getTranslation('name') }}
+
+                                                    {{ $sub->name }}
                                                 </a>
+
                                             </li>
                                         @endforeach
+
                                     </ul>
                                 </div>
                             </div>
@@ -215,7 +224,9 @@
                     <div class="row">
                         @foreach ($category->subcategories as $sub)
                             <div class="col-6 col-md-3 mb-3">
-                                <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
+                                {{-- <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}" --}}
+
+                                    <a href="{{ route('products.category', $category->slug) }}?{{ http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug])) }}"
                                     class="d-block text-center p-3 border h-100 {{ request('subcategory') == $sub->slug ? 'bg-white text-primary border border-primary' : 'bg-white text-dark' }}">
 
 
@@ -233,7 +244,7 @@
                         @endforeach
                     </div>
 
-                    <div style="border-top: 1px solid #e9e9e9; margin-bottom: 16px">
+                    <div id="products-section" style="border-top: 1px solid #e9e9e9; margin-bottom: 16px">
 
                     </div>
                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
@@ -247,13 +258,15 @@
                         <div class="d-flex align-items-center gap-2">
 
                             {{-- FILTER BUTTON (mobile) --}}
-                            <div class="d-xl-none">
+                            <div class="d-xl-none mr-4">
+
                                 <button type="button"
                                     class="btn btn-icon p-0"
                                     data-toggle="class-toggle"
                                     data-target=".aiz-filter-sidebar">
                                     <i class="la la-filter la-2x"></i>
                                 </button>
+                                {{ translate('or') }}
                             </div>
 
                             {{-- SORT --}}
@@ -298,9 +311,9 @@
 
                     {{-- Products Grid --}}
                     <div class="px-3">
-                        <div class="row gutters-16 row-cols-xxl-4 row-cols-xl-3 row-cols-lg-4 row-cols-md-3 row-cols-2 border-top border-left">
+                        <div class="row gutters-16 row-cols-xxl-4 row-cols-xl-3 row-cols-lg-4 row-cols-md-3 row-cols-2 ">
                             @forelse ($products as $product)
-                                <div class="col border-right border-bottom has-transition hov-shadow-out z-1">
+                                <div class="col has-transition z-1 mt-4">
                                     @include('frontend.'.get_setting('homepage_select').'.partials.product_box_1', ['product' => $product])
                                 </div>
                             @empty
@@ -319,16 +332,36 @@
             </div>
         </form>
     </div>
-</section>bvnvbn
+</section>
 @endsection
 
 @section('script')
 <script>
-    function filter() { $('#search-form').submit(); }
+    function filter() {
+        $('#search-form').submit();
+    }
+
     function rangefilter(arg) {
         $('input[name=min_price]').val(arg[0]);
         $('input[name=max_price]').val(arg[1]);
         filter();
     }
+
+    // Mobile only scroll to products
+    $(document).ready(function () {
+
+        if (window.innerWidth < 768) {
+
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.get('subcategory')) {
+
+                $('html, body').animate({
+                    scrollTop: $('#products-section').offset().top - 10
+                }, 400);
+
+            }
+        }
+    });
 </script>
 @endsection

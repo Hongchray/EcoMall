@@ -152,131 +152,131 @@ class SearchController extends Controller
     {
         return $this->index($request);
     }
-public function listingByCategory(Request $request, $category_slug, $sub_slug = null)
-{
-    try {
+    public function listingByCategory(Request $request, $category_slug, $sub_slug = null)
+    {
+        try {
 
-        // CATEGORY
-        $category = Category::with(['subcategories', 'childrenCategories', 'parentCategory'])
-            ->where('slug', $category_slug)
-            ->firstOrFail();
+            // CATEGORY
+            $category = Category::with(['subcategories', 'childrenCategories', 'parentCategory'])
+                ->where('slug', $category_slug)
+                ->firstOrFail();
 
-        // SUBCATEGORY (from query)
-        $subCategorySlug = $request->get('subcategory');
-        $subCategory = null;
+            // SUBCATEGORY (from query)
+            $subCategorySlug = $request->get('subcategory');
+            $subCategory = null;
 
-        if ($subCategorySlug) {
+            if ($subCategorySlug) {
 
-            // only SubCategory model
-            $subCategory = SubCategory::where('slug', $subCategorySlug)
-                ->where('category_id', $category->id)
-                ->first();
-
-            // fallback Category child
-            if (!$subCategory) {
-                $subCategory = Category::where('slug', $subCategorySlug)
-                    ->where('parent_id', $category->id)
+                // only SubCategory model
+                $subCategory = SubCategory::where('slug', $subCategorySlug)
+                    ->where('category_id', $category->id)
                     ->first();
-            }
-        }
 
-        $sort_by   = $request->sort_by;
-        $min_price = $request->min_price;
-        $max_price = $request->max_price;
-
-        $selected_attribute_values = $request->selected_attribute_values ?? [];
-        $selected_color = $request->color ?? null;
-
-        $colors = Color::all();
-
-        // ATTRIBUTES
-        $category_ids = CategoryUtility::children_ids($category->id);
-        $category_ids[] = $category->id;
-
-        $attribute_ids = AttributeCategory::whereIn('category_id', $category_ids)
-            ->pluck('attribute_id')
-            ->toArray();
-
-        $attributes = Attribute::whereIn('id', $attribute_ids)->get();
-
-        // PRODUCTS
-        $products = Product::query();
-
-        // SUBCATEGORY FILTER (SAFE FIX)
-        if ($subCategory) {
-
-            if ($subCategory instanceof SubCategory) {
-                $products->where('subcategory_id', $subCategory->id);
-            } else {
-                $products->where('category_id', $subCategory->id);
-            }
-
-        } else {
-            $products->where('category_id', $category->id);
-        }
-
-        // PRICE
-        if ($min_price !== null && $max_price !== null && $min_price !== '' && $max_price !== '') {
-            $products->whereBetween('unit_price', [(float)$min_price, (float)$max_price]);
-        }
-
-        // COLOR
-        if ($selected_color) {
-            $products->where('colors', 'like', '%"' . $selected_color . '"%');
-        }
-
-        // ATTRIBUTES
-        if (!empty($selected_attribute_values)) {
-            $products->where(function ($q) use ($selected_attribute_values) {
-                foreach ($selected_attribute_values as $value) {
-                    $q->orWhere('choice_options', 'like', '%"' . $value . '"%');
+                // fallback Category child
+                if (!$subCategory) {
+                    $subCategory = Category::where('slug', $subCategorySlug)
+                        ->where('parent_id', $category->id)
+                        ->first();
                 }
-            });
+            }
+
+            $sort_by   = $request->sort_by;
+            $min_price = $request->min_price;
+            $max_price = $request->max_price;
+
+            $selected_attribute_values = $request->selected_attribute_values ?? [];
+            $selected_color = $request->color ?? null;
+
+            $colors = Color::all();
+
+            // ATTRIBUTES
+            $category_ids = CategoryUtility::children_ids($category->id);
+            $category_ids[] = $category->id;
+
+            $attribute_ids = AttributeCategory::whereIn('category_id', $category_ids)
+                ->pluck('attribute_id')
+                ->toArray();
+
+            $attributes = Attribute::whereIn('id', $attribute_ids)->get();
+
+            // PRODUCTS
+            $products = Product::query();
+
+            // SUBCATEGORY FILTER (SAFE FIX)
+            if ($subCategory) {
+
+                if ($subCategory instanceof SubCategory) {
+                    $products->where('subcategory_id', $subCategory->id);
+                } else {
+                    $products->where('category_id', $subCategory->id);
+                }
+
+            } else {
+                $products->where('category_id', $category->id);
+            }
+
+            // PRICE
+            if ($min_price !== null && $max_price !== null && $min_price !== '' && $max_price !== '') {
+                $products->whereBetween('unit_price', [(float)$min_price, (float)$max_price]);
+            }
+
+            // COLOR
+            if ($selected_color) {
+                $products->where('colors', 'like', '%"' . $selected_color . '"%');
+            }
+
+            // ATTRIBUTES
+            if (!empty($selected_attribute_values)) {
+                $products->where(function ($q) use ($selected_attribute_values) {
+                    foreach ($selected_attribute_values as $value) {
+                        $q->orWhere('choice_options', 'like', '%"' . $value . '"%');
+                    }
+                });
+            }
+
+            // SORT
+            switch ($sort_by) {
+                case 'newest':
+                    $products->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $products->orderBy('created_at', 'asc');
+                    break;
+                case 'price-asc':
+                    $products->orderBy('unit_price', 'asc');
+                    break;
+                case 'price-desc':
+                    $products->orderBy('unit_price', 'desc');
+                    break;
+                default:
+                    $products->orderBy('id', 'desc');
+            }
+
+            $products = filter_products($products)
+                ->with('taxes')
+                ->paginate(24)
+                ->appends($request->query());
+
+            return view('frontend.category_listing', compact(
+                'category',
+                'products',
+                'sort_by',
+                'min_price',
+                'max_price',
+                'attributes',
+                'selected_attribute_values',
+                'colors',
+                'selected_color',
+                'subCategory'
+            ));
+
+        } catch (\Exception $e) {
+
+            \Log::error('Category Listing Error: ' . $e->getMessage());
+
+            abort(500, 'Something went wrong. Please check logs.');
         }
-
-        // SORT
-        switch ($sort_by) {
-            case 'newest':
-                $products->orderBy('created_at', 'desc');
-                break;
-            case 'oldest':
-                $products->orderBy('created_at', 'asc');
-                break;
-            case 'price-asc':
-                $products->orderBy('unit_price', 'asc');
-                break;
-            case 'price-desc':
-                $products->orderBy('unit_price', 'desc');
-                break;
-            default:
-                $products->orderBy('id', 'desc');
-        }
-
-        $products = filter_products($products)
-            ->with('taxes')
-            ->paginate(24)
-            ->appends($request->query());
-
-        return view('frontend.category_listing', compact(
-            'category',
-            'products',
-            'sort_by',
-            'min_price',
-            'max_price',
-            'attributes',
-            'selected_attribute_values',
-            'colors',
-            'selected_color',
-            'subCategory'
-        ));
-
-    } catch (\Exception $e) {
-
-        \Log::error('Category Listing Error: ' . $e->getMessage());
-
-        abort(500, 'Something went wrong. Please check logs.');
     }
-}
     public function listingBySubCategory(Request $request, $category_slug, $sub_slug)
     {
         try {

@@ -160,13 +160,13 @@
 
                 {{-- @include('frontend.product_details.review_section') --}}
 
-                
+
 
                 <!-- Description, Video, Downloads -->
 
                 @include('frontend.product_details.description')
 
-                
+
 
                 <!-- Product Query -->
 
@@ -202,7 +202,7 @@
 
                     <div class="col-lg-9">
 
-                        
+
 
                         <!-- Reviews & Ratings -->
 
@@ -214,7 +214,7 @@
 
                         @include('frontend.product_details.description')
 
-                        
+
 
                         <!-- Related products -->
 
@@ -226,7 +226,7 @@
 
                         @include('frontend.product_details.product_queries')
 
-                        
+
 
                         <!-- Top Selling Products -->
 
@@ -410,11 +410,11 @@
 
     @if($detailedProduct->auction_product == 1)
 
-        @php 
+        @php
 
             $highest_bid = $detailedProduct->bids->max('amount');
 
-            $min_bid_amount = $highest_bid != null ? $highest_bid+1 : $detailedProduct->starting_bid; 
+            $min_bid_amount = $highest_bid != null ? $highest_bid+1 : $detailedProduct->starting_bid;
 
         @endphp
 
@@ -478,7 +478,7 @@
 
     @endif
 
-    
+
 
     <!-- Product Review Modal -->
 

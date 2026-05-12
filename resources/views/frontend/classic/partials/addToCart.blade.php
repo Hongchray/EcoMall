@@ -12,6 +12,7 @@
 
                     $photos = explode(',',$product->photos);
 
+
                 @endphp
 
                 <div class="col">
@@ -24,7 +25,7 @@
 
                             <img class="img-fluid lazyload"
 
-                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                src="{{ uploaded_asset($photo) }}"
 
                                 data-src="{{ uploaded_asset($photo) }}"
 
@@ -42,7 +43,7 @@
 
                                     <img class="img-fluid lazyload"
 
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        src="{{ uploaded_asset($stock->image) }}"
 
                                         data-src="{{ uploaded_asset($stock->image) }}"
 
@@ -68,7 +69,7 @@
 
                             <img class="lazyload mw-100 size-60px mx-auto"
 
-                                src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                     src="{{ uploaded_asset($photo) }}"
 
                                 data-src="{{ uploaded_asset($photo) }}"
 
@@ -86,7 +87,8 @@
 
                                     <img class="lazyload mw-100 size-50px mx-auto"
 
-                                        src="{{ static_asset('assets/img/placeholder.jpg') }}"
+                                        src="{{ uploaded_asset($stock->image) }}"
+
 
                                         data-src="{{ uploaded_asset($stock->image) }}"
 
@@ -262,7 +264,7 @@
 
                     <input type="hidden" name="id" value="{{ $product->id }}">
 
-                    
+
 
                     @if($product->digital !=1)
 
@@ -438,7 +440,7 @@
 
                     @endif
 
-                    
+
 
                     <!-- Total Price -->
 
