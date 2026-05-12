@@ -751,10 +751,6 @@
     }
 }
 </style>
-
-
-
-
 <div class="text-left ec-detail-panel">
 
     <!-- Product Name -->

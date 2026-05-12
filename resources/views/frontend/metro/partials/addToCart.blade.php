@@ -132,13 +132,16 @@ x
                     <input type="hidden" name="id" value="{{ $product->id }}">
                     
                     @if($product->digital !=1)
+                        @php
+                            $choice_options = get_product_choice_options($product);
+                        @endphp
                         <!-- Product Choice options -->
-                        @if ($product->choice_options != null)
-                            @foreach (json_decode($product->choice_options) as $key => $choice)
+                        @if (count($choice_options) > 0)
+                            @foreach ($choice_options as $key => $choice)
 
                                 <div class="row no-gutters mt-3">
                                     <div class="col-3">
-                                        <div class="text-secondary fs-14 fw-400 mt-2 ">{{ get_single_attribute_name($choice->attribute_id) }}</div>
+                                        <div class="text-secondary fs-14 fw-400 mt-2 ">{{ $choice->attribute_id ? get_single_attribute_name($choice->attribute_id) : translate('Option') }}</div>
                                     </div>
                                     <div class="col-9">
                                         <div class="aiz-radio-inline">
@@ -146,7 +149,7 @@ x
                                             <label class="aiz-megabox pl-0 mr-2 mb-0">
                                                 <input
                                                     type="radio"
-                                                    name="attribute_id_{{ $choice->attribute_id }}"
+                                                    name="attribute_id_{{ $choice->attribute_id ?? $key }}"
                                                     value="{{ $value }}"
                                                     @if($key == 0) checked @endif
                                                 >

@@ -227,10 +227,10 @@
     $is_popular_product = (int) $product->num_of_sale > 10;
     $product_badge = translate('Available');
 
-    if ($is_new_product) {
-        $product_badge = translate('New');
-    } elseif ($is_popular_product) {
+    if ($is_popular_product) {
         $product_badge = translate('Best Selling');
+    } elseif ($is_new_product) {
+        $product_badge = translate('New');
     }
 
     $product_badge_key = strtolower(str_replace(' ', '-', $product_badge));

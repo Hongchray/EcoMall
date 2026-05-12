@@ -141,11 +141,11 @@ class HomeController extends Controller
 
     {
 
-        $newest_products = Cache::remember('newest_products', 3600, function () {
-
-            return filter_products(Product::latest())->limit(12)->get();
-
-        });
+        $newest_products = filter_products(Product::where('num_of_sale', '<=', 10)
+                ->where('created_at', '>=', now()->subDays(30)->startOfDay())
+                ->latest())
+            ->limit(12)
+            ->get();
 
 
 
@@ -155,7 +155,9 @@ class HomeController extends Controller
 
     public function new_products(Request $request)
     {
-        $products = filter_products(Product::latest())
+        $products = filter_products(Product::where('num_of_sale', '<=', 10)
+                ->where('created_at', '>=', now()->subDays(30)->startOfDay())
+                ->latest())
             ->with('taxes')
             ->paginate(24)
             ->appends(request()->query());

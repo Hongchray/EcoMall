@@ -1,4 +1,34 @@
 <style>
+    #addToCart .modal-dialog {
+        max-width: 940px;
+    }
+
+    #addToCart .modal-content {
+        overflow: hidden;
+        border: 0;
+        border-radius: 18px;
+        box-shadow: 0 26px 70px rgba(15, 34, 48, 0.28);
+    }
+
+    #addToCart .close {
+        top: 18px !important;
+        right: 18px !important;
+        width: 38px !important;
+        height: 38px !important;
+        margin: 0 !important;
+        background: #eef3f7 !important;
+        color: #50616f;
+        opacity: 1;
+        transition: background-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    #addToCart .close:hover,
+    #addToCart .close:focus {
+        background: #3c9bd3 !important;
+        color: #fff;
+        transform: rotate(90deg);
+    }
+
     .ec-cart-modal {
         padding: 24px;
         background: #ffffff;
@@ -244,7 +274,11 @@
         <div class="col-lg-6">
             <div class="ec-cart-gallery row gutters-10 flex-row-reverse">
                 @php
-                    $photos = explode(',',$product->photos);
+                    $photos = array_filter(explode(',', $product->photos ?? ''));
+
+                    if (count($photos) == 0 && $product->thumbnail_img != null) {
+                        $photos = [$product->thumbnail_img];
+                    }
                 @endphp
                 <div class="col">
                     <div class="aiz-carousel product-gallery ec-cart-gallery__main" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
@@ -376,13 +410,16 @@
                     <input type="hidden" name="id" value="{{ $product->id }}">
                     
                     @if($product->digital !=1)
+                        @php
+                            $choice_options = get_product_choice_options($product);
+                        @endphp
                         <!-- Product Choice options -->
-                        @if ($product->choice_options != null)
-                            @foreach (json_decode($product->choice_options) as $key => $choice)
+                        @if (count($choice_options) > 0)
+                            @foreach ($choice_options as $key => $choice)
 
                                 <div class="ec-cart-row row no-gutters mt-3">
                                     <div class="col-3">
-                                        <div class="ec-cart-label text-secondary fs-14 fw-400 mt-2 ">{{ get_single_attribute_name($choice->attribute_id) }}</div>
+                                        <div class="ec-cart-label text-secondary fs-14 fw-400 mt-2 ">{{ $choice->attribute_id ? get_single_attribute_name($choice->attribute_id) : translate('Option') }}</div>
                                     </div>
                                     <div class="col-9">
                                         <div class="aiz-radio-inline">
@@ -390,7 +427,7 @@
                                             <label class="aiz-megabox pl-0 mr-2 mb-0">
                                                 <input
                                                     type="radio"
-                                                    name="attribute_id_{{ $choice->attribute_id }}"
+                                                    name="attribute_id_{{ $choice->attribute_id ?? $key }}"
                                                     value="{{ $value }}"
                                                     @if($key == 0) checked @endif
                                                 >
