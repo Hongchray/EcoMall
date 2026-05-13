@@ -75,7 +75,8 @@
 }
 
 .ec-product-card__wishlist:hover,
-.ec-product-card__wishlist:focus {
+.ec-product-card__wishlist:focus,
+.ec-product-card__wishlist.is-active {
     background: #3c9bd3;
     border-color: #3c9bd3;
     color: #fff;
@@ -235,6 +236,9 @@
     if ($product->auction_product == 1) {
         $product_url = route('auction-product', $product->slug);
     }
+    $is_in_wishlist = Auth::check()
+        && Auth::user()->user_type == 'customer'
+        && Auth::user()->wishlists->contains('product_id', $product->id);
 @endphp
 
 @once
@@ -269,10 +273,10 @@
         {{-- Wishlist & Compare icons (non-auction only) --}}
         @if ($product->auction_product == 0)
             <div class="ec-product-card__icons">
-                <a href="javascript:void(0)" class="ec-product-card__wishlist"
-                    onclick="addToWishList({{ $product->id }})"
-                    data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left"
-                    aria-label="{{ translate('Add to wishlist') }}">
+                <a href="javascript:void(0)" class="ec-product-card__wishlist {{ $is_in_wishlist ? 'is-active' : '' }}"
+                    onclick="addToWishList({{ $product->id }}, this)"
+                    data-toggle="tooltip" data-title="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}" data-placement="left"
+                    aria-label="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}">
                     <i class="las la-heart"></i>
                 </a>
                 <a href="javascript:void(0)" class="ec-product-card__compare"

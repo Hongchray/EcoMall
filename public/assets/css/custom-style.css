@@ -1513,7 +1513,6 @@
         align-items: center;
         justify-content: center;
         width: 24px;
-        height: 24px;
         margin-right: 12px;
         content: "";
         color: #19344c;
@@ -1601,7 +1600,7 @@
     }
 
     .aiz-top-menu-sidebar .ecm-mobile-about-ecomall-item .ecm-mobile-row-icon i {
-        color: #3894c9;
+        color: #91919c;
         font-size: 19px;
     }
 
@@ -1611,7 +1610,7 @@
     }
 
     .aiz-top-menu-sidebar .ecm-mobile-news-item .ecm-mobile-row-icon i {
-        color: #18a058;
+        color: #91919c;
         font-size: 19px;
     }
 
@@ -1648,8 +1647,9 @@
 
     .aiz-top-menu-sidebar .ecm-mobile-row-icon svg {
         display: block;
-        max-width: 24px;
-        max-height: 24px;
+        width: 16px;
+        height: 16px;
+        color: #91919c;
     }
 
     .aiz-top-menu-sidebar .ecm-mobile-notification-item > a::before {
@@ -1658,7 +1658,7 @@
     }
 
     .aiz-top-menu-sidebar .ecm-mobile-compare-item svg path {
-        fill: #3894c9;
+        fill: #91919c;
     }
 
     .aiz-top-menu-sidebar .ecm-mobile-count-badge {

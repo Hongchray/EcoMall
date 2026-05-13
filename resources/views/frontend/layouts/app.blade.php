@@ -205,8 +205,6 @@
     </script>
 @endif
 
-
-
 @if (get_setting('facebook_pixel') == 1)
     <!-- Facebook Pixel Code -->
     <script>
@@ -859,7 +857,7 @@
 
 
 
-        function addToWishList(id){
+        function addToWishList(id, el){
 
             @if (Auth::check() && Auth::user()->user_type == 'customer')
 
@@ -868,6 +866,15 @@
                     if(data != 0){
 
                         $('#wishlist').html(data);
+
+                        if (el) {
+                            $(el)
+                                .addClass('is-active')
+                                .attr('data-title', "{{ translate('in your wishlist') }}")
+                                .attr('aria-label', "{{ translate('in your wishlist') }}")
+                                .tooltip('dispose')
+                                .tooltip();
+                        }
 
                         AIZ.plugins.notify('success', "{{ translate('Item has been added to wishlist') }}");
 
