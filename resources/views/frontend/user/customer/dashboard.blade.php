@@ -1,138 +1,538 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-<style>
-.wishlist-card-modern {
-    background: #fff;
-    border: 1px solid #e9eef5;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-}
+    @php
+        $cart = get_user_cart() ?? collect();
+        $total_ordered_products = get_user_total_ordered_products() ?? 0;
+        $wishlists = get_user_wishlist() ?? collect();
+        $default_address = null;
 
-.wishlist-card-modern:hover {
-    border-color: #0d6efd;
-    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.12);
-    transform: translateY(-2px);
-}
+        if (Auth::user()->addresses != null) {
+            $default_address = Auth::user()->addresses->where('set_default', 1)->first();
+        }
+    @endphp
 
+    <style>
+        .ecm-dashboard {
+            color: #1f2937;
+        }
 
-/* image */
-.wishlist-img-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 180px;
-    background: #f8fafc;
-    border-radius: 12px;
-    overflow: hidden;
-}
+        .ecm-dashboard a:hover {
+            text-decoration: none;
+        }
 
-.wishlist-img {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-}
+        .ecm-dashboard-card {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            box-shadow: 0 14px 35px rgba(31, 41, 55, 0.07);
+        }
 
-/* remove button */
-.wishlist-remove-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: none;
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-}
+        .ecm-dashboard-topbar {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 8px;
+            box-shadow: 0 14px 35px rgba(31, 41, 55, 0.06);
+            overflow: hidden;
+            position: relative;
+        }
 
-/* body */
-.wishlist-body {
-    padding-top: 10px;
-    text-align: left;
-}
+        .ecm-dashboard-topbar:after {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(20, 184, 166, 0.12));
+            border-radius: 999px;
+            content: "";
+            height: 180px;
+            position: absolute;
+            right: -70px;
+            top: -95px;
+            width: 180px;
+        }
 
-/* title */
-.wishlist-title {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 6px;
-    line-height: 1.4;
-    height: 40px;
-    overflow: hidden;
-}
+        .ecm-dashboard-user-icon,
+        .ecm-dashboard-icon {
+            align-items: center;
+            border-radius: 8px;
+            display: inline-flex;
+            justify-content: center;
+        }
 
-.wishlist-title a {
-    color: #222;
-    text-decoration: none;
-}
+        .ecm-dashboard-user-icon {
+            background: linear-gradient(135deg, #2563eb, #14b8a6);
+            color: #fff;
+            flex: 0 0 54px;
+            font-size: 28px;
+            height: 54px;
+            width: 54px;
+        }
 
-/* price */
-.wishlist-price {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    margin-bottom: 10px;
-}
+        .ecm-dashboard-hero {
+            background: linear-gradient(135deg, #2563eb 0%, #0f766e 100%);
+            border-radius: 8px;
+            box-shadow: 0 18px 45px rgba(37, 99, 235, 0.2);
+            min-height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
 
-.price-main {
-    font-weight: 700;
-    color: #0d6efd;
-}
+        .ecm-dashboard-hero:before,
+        .ecm-dashboard-hero:after {
+            border-radius: 999px;
+            content: "";
+            position: absolute;
+        }
 
-.price-old {
-    font-size: 12px;
-    opacity: 0.6;
-}
+        .ecm-dashboard-hero:before {
+            background: rgba(255, 255, 255, 0.12);
+            height: 260px;
+            right: -80px;
+            top: -90px;
+            width: 260px;
+        }
 
-/* button */
-.wishlist-cart-btn {
-    width: 100%;
-    border: none;
-    background: #0d6efd;
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    transition: 0.2s;
-}
+        .ecm-dashboard-hero:after {
+            background: rgba(255, 255, 255, 0.1);
+            bottom: -65px;
+            height: 130px;
+            right: 125px;
+            width: 130px;
+        }
 
-.wishlist-cart-btn:hover {
-    background: #0b5ed7;
-}
+        .ecm-dashboard-wallet-bg {
+            background-image: url('{{ static_asset("assets/img/wallet-bg.png") }}');
+            background-position: center;
+            background-size: cover;
+        }
+
+        .ecm-dashboard-hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 220px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .ecm-dashboard-eyebrow {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .ecm-dashboard-value {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.15;
+        }
+
+        .ecm-dashboard-action {
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .ecm-dashboard-muted {
+            color: #7d8592;
+        }
+
+        .ecm-dashboard-stat {
+            border-radius: 8px;
+            box-shadow: 0 14px 35px rgba(31, 41, 55, 0.07);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+            min-height: 170px;
+            overflow: hidden;
+            padding: 24px;
+            position: relative;
+        }
+
+        .ecm-dashboard-stat:after {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            bottom: -70px;
+            content: "";
+            height: 150px;
+            position: absolute;
+            right: -45px;
+            width: 150px;
+        }
+
+        .ecm-dashboard-stat-primary {
+            background: #3d9bd3;
+        }
+
+        .ecm-dashboard-stat-secondary {
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+        }
+
+        .ecm-dashboard-icon {
+            flex: 0 0 46px;
+            font-size: 23px;
+            height: 46px;
+            width: 46px;
+        }
+
+        .ecm-dashboard-icon-light {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+        }
+
+        .ecm-dashboard-icon-cart {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .ecm-dashboard-icon-wishlist {
+            background: #fce7f3;
+            color: #db2777;
+        }
+
+        .ecm-dashboard-icon-order {
+            background: #ccfbf1;
+            color: #0f766e;
+        }
+
+        .ecm-dashboard-count-row {
+            align-items: center;
+            border-bottom: 1px solid #eef2f7;
+            display: flex;
+            padding: 21px 0;
+            transition: transform .18s ease;
+        }
+
+        .ecm-dashboard-count-row:hover {
+            transform: translateX(3px);
+        }
+
+        .ecm-dashboard-count-row:last-child {
+            border-bottom: 0;
+        }
+
+        .ecm-dashboard-section-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 0;
+        }
+
+        .ecm-dashboard-address-list li {
+            color: #4b5563;
+            line-height: 1.55;
+        }
+
+        .ecm-dashboard-product-grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .ecm-dashboard-product {
+            background: #f8fbfe;
+            border: 1.5px solid #e3f3fb;
+            border-radius: 14px;
+            height: 100%;
+            margin-top: 8px;
+            overflow: hidden;
+            padding: 16px 14px 14px;
+            position: relative;
+            transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease;
+        }
+
+        .ecm-dashboard-product:hover {
+            border-color: #3c9bd3;
+            box-shadow: 0 10px 36px rgba(60, 155, 211, 0.18);
+            transform: translateY(-4px);
+        }
+
+        .ecm-dashboard-product-top {
+            align-items: flex-start;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            min-height: 32px;
+        }
+
+        .ecm-dashboard-product-badge {
+            background: #3c9bd3;
+            border: 1px solid #3c9bd3;
+            border-radius: 999px;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: calc(100% - 42px);
+            overflow: hidden;
+            padding: 4px 10px;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .ecm-dashboard-product-delete {
+            align-items: center;
+            background: #fff;
+            border: 2px solid #f1b5b5;
+            border-radius: 50%;
+            color: #dc2626;
+            display: inline-flex;
+            flex: 0 0 32px;
+            font-size: 18px;
+            height: 32px;
+            justify-content: center;
+            line-height: 1;
+            text-decoration: none;
+            transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+            width: 32px;
+        }
+
+        .ecm-dashboard-product-delete:hover,
+        .ecm-dashboard-product-delete:focus {
+            background: #dc2626;
+            border-color: #dc2626;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .ecm-dashboard-product-image {
+            align-items: center;
+            background: #fff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            margin: 0 auto 18px;
+            max-width: 126px;
+            overflow: hidden;
+            text-decoration: none;
+            width: 72%;
+            aspect-ratio: 1 / 1;
+        }
+
+        .ecm-dashboard-product-image img {
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+            transition: transform .3s ease;
+            width: 100%;
+        }
+
+        .ecm-dashboard-product:hover .ecm-dashboard-product-image img {
+            transform: scale(1.08);
+        }
+
+        .ecm-dashboard-product-content {
+            background: #fff;
+            border-radius: 0 0 12px 12px;
+            border-top: 1px solid #e3f3fb;
+            margin: 0 -14px -14px;
+            padding: 16px 14px 14px;
+        }
+
+        .ecm-dashboard-product-name {
+            color: #111;
+            display: -webkit-box;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.35;
+            margin: 0 4px 10px;
+            min-height: 40px;
+            overflow: hidden;
+            text-decoration: none;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .ecm-dashboard-product-name:hover,
+        .ecm-dashboard-product-name:focus {
+            color: #227eb8;
+            text-decoration: none;
+        }
+
+        .ecm-dashboard-product-price {
+            color: #2d9add;
+            display: block;
+            font-size: 14px;
+            font-weight: 800;
+            margin: 0 4px 14px;
+        }
+
+        .ecm-dashboard-product-action {
+            align-items: center;
+            background: #f0f8fd;
+            border: 0;
+            border-radius: 5px;
+            color: #3d98d1;
+            display: inline-flex;
+            font-size: 13px;
+            font-weight: 800;
+            gap: 8px;
+            justify-content: center;
+            line-height: 1.2;
+            min-height: 40px;
+            opacity: 0;
+            text-align: center;
+            text-decoration: none;
+            transform: translateY(8px);
+            transition: opacity .2s ease, transform .2s ease, background-color .2s ease, color .2s ease;
+            width: 100%;
+        }
+
+        .ecm-dashboard-product:hover .ecm-dashboard-product-action {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ecm-dashboard-product-action:hover,
+        .ecm-dashboard-product-action:focus {
+            background: #3d98d1;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .ecm-dashboard-product-action i {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .ecm-dashboard-empty {
+            background: linear-gradient(180deg, #fff, #f8fafc);
+        }
+
+        .ecm-dashboard-note {
+            background: #f8fbfe;
+            border: 1.5px solid #e3f3fb;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .ecm-dashboard-note-icon {
+            align-items: center;
+            background: #3c9bd3;
+            border-radius: 8px;
+            color: #fff;
+            display: inline-flex;
+            flex: 0 0 42px;
+            font-size: 22px;
+            height: 42px;
+            justify-content: center;
+            width: 42px;
+        }
+
+        .ecm-dashboard-note-link {
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e3f3fb;
+            border-radius: 5px;
+            color: #3d98d1;
+            display: inline-flex;
+            font-size: 13px;
+            font-weight: 800;
+            justify-content: center;
+            min-height: 38px;
+            padding: 8px 12px;
+            text-decoration: none;
+            transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+        }
+
+        .ecm-dashboard-note-link:hover,
+        .ecm-dashboard-note-link:focus {
+            background: #3d98d1;
+            border-color: #3d98d1;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 1199.98px) {
+            .ecm-dashboard-product-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .ecm-dashboard-product-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .ecm-dashboard-value {
+                font-size: 26px;
+            }
+
+            .ecm-dashboard-stat {
+                min-height: 150px;
+            }
+
+            .ecm-dashboard-product-grid {
+                gap: 12px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .ecm-dashboard-product-image {
+                width: 76%;
+            }
+
+            .ecm-dashboard-product-action {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
-    <div class="row gutters-16">
-        <!-- Wallet summary -->
-        @if (get_setting('wallet_system') == 1)
-        <div class="col-xl-8 col-md-6 mb-4">
-            <div class="h-100" style="background-image: url('{{ static_asset("assets/img/wallet-bg.png") }}'); background-size: cover; background-position: center center;">
-                <div class="p-4 h-100 w-100 w-xl-50">
-                    <p class="fs-14 fw-400 text-gray mb-3">{{ translate('Wallet Balance') }}</p>
-                    <h1 class="fs-30 fw-700 text-white ">{{ single_price(Auth::user()->balance) }}</h1>
-                    <hr class="border border-dashed border-white opacity-40 ml-0 mt-4 mb-4">
-                    @php
-                        $last_recharge = get_user_last_wallet_recharge();
-                    @endphp
-                    <p class="fs-14 fw-400 text-gray mb-1">{{ translate('Last Recharge') }} <strong>{{ $last_recharge ? date('d.m.Y', strtotime($last_recharge->created_at)) : '' }}</strong></p>
-                    <h3 class="fs-20 fw-700 text-white ">{{ $last_recharge ? single_price($last_recharge->amount) : 0 }}</h3>
-                    <button class="btn btn-block border border-soft-light hov-bg-dark text-white mt-5 py-3" onclick="show_wallet_modal()" style="border-radius: 30px; background: rgba(255, 255, 255, 0.1);">
-                        <i class="la la-plus fs-18 fw-700 mr-2"></i>
-                        {{ translate('Recharge Wallet') }}
-                    </button>
+
+    <div class="ecm-dashboard">
+        <div class="ecm-dashboard-topbar p-4 mb-4">
+            <div class="position-relative d-flex flex-wrap align-items-center justify-content-between" style="z-index: 1;">
+                <div class="d-flex align-items-center pr-3">
+                    <span class="ecm-dashboard-user-icon">
+                        <i class="las la-user"></i>
+                    </span>
+                    <div class="ml-3">
+                        <div class="fs-13 fw-700 text-primary">{{ translate('Customer Dashboard') }}</div>
+                        <h1 class="h4 fw-800 mb-0 text-dark">{{ translate('Welcome') }}, {{ Auth::user()->name }}</h1>
+                    </div>
                 </div>
+                <a href="{{ route('purchase_history.index') }}" class="btn btn-primary ecm-dashboard-action px-4 mt-3 mt-sm-0">
+                    <i class="las la-receipt fs-18 mr-1"></i>
+                    {{ translate('My Orders') }}
+                </a>
             </div>
         </div>
-        @endif
+
+        <div class="row gutters-16">
+            @if (get_setting('wallet_system') == 1)
+                <div class="col-xl-8 col-md-6 mb-4">
+                    <div class="ecm-dashboard-hero ecm-dashboard-wallet-bg h-100">
+                        <div class="ecm-dashboard-hero-content p-4 p-md-5">
+                            <div>
+                                <div class="ecm-dashboard-eyebrow mb-2">{{ translate('Wallet Balance') }}</div>
+                                <div class="ecm-dashboard-value">{{ single_price(Auth::user()->balance) }}</div>
+                            </div>
+                            <div>
+                                @php
+                                    $last_recharge = get_user_last_wallet_recharge();
+                                @endphp
+                                <div class="d-flex flex-wrap align-items-end justify-content-between">
+                                    <div class="text-white pr-3 mb-3 mb-sm-0">
+                                        <div class="fs-13 opacity-70">{{ translate('Last Recharge') }}</div>
+                                        <div class="fs-18 fw-700">
+                                            {{ $last_recharge ? single_price($last_recharge->amount) : 0 }}
+                                        </div>
+                                        <div class="fs-12 opacity-70">
+                                            {{ $last_recharge ? date('d.m.Y', strtotime($last_recharge->created_at)) : translate('No recharge yet') }}
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-light ecm-dashboard-action px-4 py-3" onclick="show_wallet_modal()">
+                                        <i class="las la-plus fs-18 mr-2"></i>
+                                        {{ translate('Recharge Wallet') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="col mb-4">
                 <div class="row h-100 gutters-16 @if(get_setting('wallet_system') != 1 && addon_is_activated('club_point')) row-cols-md-2 @endif row-cols-1">
@@ -212,49 +612,86 @@
                 </div>
             </div>
 
-        <!-- Purchased Package -->
-        @if (get_setting('classified_product'))
-        <div class="col-xl-4 col-md-6 mb-4">
-            <div class="p-4 border h-100">
-                <h6 class="fw-700 mb-3 text-dark">{{ translate('Purchased Package') }}</h6>
-                @php
-                    $customer_package = get_single_customer_package(Auth::user()->customer_package_id);
-                @endphp
-                @if($customer_package != null)
-                    <img src="{{ uploaded_asset($customer_package->logo) }}" class="img-fluid mb-4 h-70px" 
-                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
-                    <p class="fs-14 fw-700 mb-3 text-primary">{{ translate('Current Package') }}: {{ $customer_package->getTranslation('name') }}</p>
-                    <p class="mb-2 d-flex justify-content-between">
-                        <span class="text-secondary">{{ translate('Product Upload') }}</span>
-                        <span class="fw-700">{{ $customer_package->product_upload }} {{ translate('Times')}}</span>
-                    </p>
-                    <p class="mb-3 d-flex justify-content-between">
-                        <span class="text-secondary">{{ translate('Product Upload Remains') }}</span>
-                        <span class="fw-700">{{ Auth::user()->remaining_uploads }} {{ translate('Times')}}</span>
-                    </p>
-                @else
-                    <span class="fs-14 fw-700 mb-4 text-primary">{{translate('Package Not Found')}}</span>
-                @endif
-                <a href="{{ route('customer_packages_list_show') }}" class="btn btn-primary btn-block fs-14 fw-500" style="border-radius: 25px;">{{ translate('Upgrade Package') }}</a>
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="ecm-dashboard-card p-4 h-100">
+                    <div class="ecm-dashboard-note h-100">
+                        <div class="d-flex align-items-start mb-3">
+                            <span class="ecm-dashboard-note-icon">
+                                <i class="las la-headset"></i>
+                            </span>
+                            <div class="ml-3">
+                                <h6 class="fw-800 fs-16 mb-1 text-dark">{{ translate('Need help or updates?') }}</h6>
+                                <p class="fs-14 ecm-dashboard-muted mb-0">{{ translate('Follow sellers, check conversations, or create a support ticket from one place.') }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap" style="gap: 10px;">
+                            <a href="{{ route('followed_seller') }}" class="ecm-dashboard-note-link">
+                                <i class="las la-store mr-1"></i>
+                                {{ translate('Followed Sellers') }}
+                            </a>
+                            @if (get_setting('conversation_system') == 1)
+                                <a href="{{ route('conversations.index') }}" class="ecm-dashboard-note-link">
+                                    <i class="las la-comments mr-1"></i>
+                                    {{ translate('Conversations') }}
+                                </a>
+                            @endif
+                            <a href="{{ route('support_ticket.index') }}" class="ecm-dashboard-note-link">
+                                <i class="las la-life-ring mr-1"></i>
+                                {{ translate('Support Ticket') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        @endif
-        
-        <!-- Default Shipping Address -->
-        <div class="col-xl-4 col-md-6 mb-4">
-            <div class="p-4 border h-100">
-                <h6 class="fw-700 mb-3 text-dark">{{ translate('Default Shipping Address') }}</h6>
-                @if(Auth::user()->addresses != null)
-                    @php
-                        $address = Auth::user()->addresses->where('set_default', 1)->first();
-                    @endphp
-                    @if($address != null)
-                        <ul class="list-unstyled mb-5">
-                            <li class="fs-14 fw-400 text-derk pb-1"><span>{{ $address->address }},</span></li>
-                            <li class="fs-14 fw-400 text-derk pb-1"><span>{{ $address->postal_code }} - {{ $address->city->name }},</span></li>
-                            <li class="fs-14 fw-400 text-derk pb-1"><span>{{ $address->state->name }},</span></li>
-                            <li class="fs-14 fw-400 text-derk pb-1"><span>{{ $address->country->name }}.</span></li>
-                            <li class="fs-14 fw-400 text-derk pb-1"><span>{{ $address->phone }}</span></li>
+
+            @if (get_setting('classified_product'))
+                <div class="col-xl-4 col-md-6 mb-4">
+                    <div class="ecm-dashboard-card p-4 h-100">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h6 class="fw-800 fs-16 mb-0 text-dark">{{ translate('Purchased Package') }}</h6>
+                            <span class="ecm-dashboard-icon ecm-dashboard-icon-order">
+                                <i class="las la-crown"></i>
+                            </span>
+                        </div>
+                        @php
+                            $customer_package = get_single_customer_package(Auth::user()->customer_package_id);
+                        @endphp
+                        @if($customer_package != null)
+                            <img src="{{ uploaded_asset($customer_package->logo) }}" class="img-fluid mb-4 h-70px"
+                                onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
+                            <p class="fs-14 fw-700 mb-3 text-primary">{{ translate('Current Package') }}: {{ $customer_package->getTranslation('name') }}</p>
+                            <p class="mb-2 d-flex justify-content-between">
+                                <span class="ecm-dashboard-muted">{{ translate('Product Upload') }}</span>
+                                <span class="fw-700">{{ $customer_package->product_upload }} {{ translate('Times')}}</span>
+                            </p>
+                            <p class="mb-4 d-flex justify-content-between">
+                                <span class="ecm-dashboard-muted">{{ translate('Product Upload Remains') }}</span>
+                                <span class="fw-700">{{ Auth::user()->remaining_uploads }} {{ translate('Times')}}</span>
+                            </p>
+                        @else
+                            <span class="fs-14 fw-700 d-block mb-4 text-primary">{{translate('Package Not Found')}}</span>
+                        @endif
+                        <a href="{{ route('customer_packages_list_show') }}" class="btn btn-primary btn-block ecm-dashboard-action fs-14 py-3">{{ translate('Upgrade Package') }}</a>
+                    </div>
+                </div>
+            @endif
+
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="ecm-dashboard-card p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="fw-800 fs-16 mb-0 text-dark">{{ translate('Default Shipping Address') }}</h6>
+                        <span class="ecm-dashboard-icon ecm-dashboard-icon-wishlist">
+                            <i class="las la-map-marker-alt"></i>
+                        </span>
+                    </div>
+
+                    @if($default_address != null)
+                        <ul class="list-unstyled ecm-dashboard-address-list mb-4">
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->address }},</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->postal_code }} - {{ $default_address->city->name }},</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->state->name }},</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->country->name }}.</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->phone }}</span></li>
                         </ul>
                     @else
                         <div class="bg-soft-light p-4 text-center mb-4">
@@ -278,64 +715,61 @@
                 <i class="las la-angle-right ml-1"></i>
             </a>
         </div>
-        <div class="col-6 text-right">
-            <a class="text-blue fs-10 fs-md-12 fw-700 hov-text-primary animate-underline-primary" href="{{ route('wishlists.index') }}">{{ translate('View All') }}</a>
-        </div>
-    </div>
-    @php
-        $wishlists = get_user_wishlist();
-    @endphp
-    @if (count($wishlists) > 0)
-        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 gutters-16 border-top border-left mx-1 mx-md-0 mb-4">
-            @foreach($wishlists->take(5) as $key => $wishlist)
-                @if ($wishlist->product != null)
-                    <div class="aiz-card-box col py-3 text-center border-right border-bottom has-transition hov-shadow-out z-1" id="wishlist_{{ $wishlist->id }}">
-                        <div class="position-relative h-140px h-md-200px img-fit overflow-hidden mb-3">
-                            <!-- Image -->
-                            <a href="{{ route('product', $wishlist->product->slug) }}" class="d-block h-100">
-                                <img src="{{ uploaded_asset($wishlist->product->thumbnail_img) }}" class="lazyload mx-auto img-fit"
-                                    title="{{ $wishlist->product->getTranslation('name') }}">
-                            </a>
-                            <!-- Remove from wishlisht -->
-                            <div class="absolute-top-right aiz-p-hov-icon">
-                                <a href="javascript:void(0)" onclick="removeFromWishlist({{ $wishlist->id }})" data-toggle="tooltip" data-title="{{ translate('Remove from wishlist') }}" data-placement="left">
+
+        @if (count($wishlists) > 0)
+            <div class="ecm-dashboard-product-grid mb-4">
+                @foreach($wishlists->take(5) as $key => $wishlist)
+                    @if ($wishlist->product != null)
+                        @php
+                            $wishlist_product_image = filter_var($wishlist->product->thumbnail_img, FILTER_VALIDATE_URL)
+                                ? $wishlist->product->thumbnail_img
+                                : uploaded_asset($wishlist->product->thumbnail_img);
+                            $wishlist_placeholder_image = static_asset('assets/img/placeholder.jpg');
+                        @endphp
+                        <div class="ecm-dashboard-product" id="wishlist_{{ $wishlist->id }}">
+                            <div class="ecm-dashboard-product-top">
+                                <span class="ecm-dashboard-product-badge">{{ translate('Wishlist') }}</span>
+                                <a href="javascript:void(0)" class="ecm-dashboard-product-delete"
+                                    onclick="removeFromWishlist({{ $wishlist->id }})"
+                                    data-toggle="tooltip" data-title="{{ translate('Remove from wishlist') }}" data-placement="left"
+                                    aria-label="{{ translate('Remove from wishlist') }}">
                                     <i class="la la-trash"></i>
                                 </a>
                             </div>
-                            <!-- add to cart -->
-                            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex justify-content-center align-items-center" 
-                                href="javascript:void(0)" onclick="showAddToCartModal({{ $wishlist->product->id }})">{{ translate('Add to Cart') }}</a>
+
+                            <a href="{{ route('product', $wishlist->product->slug) }}" class="ecm-dashboard-product-image" title="{{ $wishlist->product->getTranslation('name') }}">
+                                <img src="{{ $wishlist_placeholder_image }}" data-src="{{ $wishlist_product_image ?: $wishlist_placeholder_image }}" class="lazyload"
+                                    alt="{{ $wishlist->product->getTranslation('name') }}"
+                                    title="{{ $wishlist->product->getTranslation('name') }}"
+                                    onerror="this.onerror=null;this.src='{{ $wishlist_placeholder_image }}';">
+                            </a>
+
+                            <div class="ecm-dashboard-product-content">
+                                <a href="{{ route('product', $wishlist->product->slug) }}" class="ecm-dashboard-product-name"
+                                    title="{{ $wishlist->product->getTranslation('name') }}">{{ $wishlist->product->getTranslation('name') }}</a>
+
+                                <span class="ecm-dashboard-product-price">{{ home_discounted_base_price($wishlist->product) }}</span>
+
+                                <a class="ecm-dashboard-product-action" href="javascript:void(0)"
+                                    onclick="showAddToCartModal({{ $wishlist->product->id }})">
+                                    <i class="las la-shopping-cart"></i>
+                                    <span>{{ translate('Add to Cart') }}</span>
+                                </a>
+                            </div>
                         </div>
-                        <!-- Product Name -->
-                        <h5 class="fs-14 mb-0 lh-1-5 fw-400 text-truncate-2 mb-3">
-                            <a href="{{ route('product', $wishlist->product->slug) }}" class="text-reset hov-text-primary"
-                                title="{{ $wishlist->product->getTranslation('name') }}">{{ $wishlist->product->getTranslation('name') }}</a>
-                        </h5>
-                        <!-- Price -->
-                        <div class="fs-14">
-                            <span class="fw-600 text-primary">{{ home_discounted_base_price($wishlist->product) }}</span>
-                            @if(home_base_price($wishlist->product) != home_discounted_base_price($wishlist->product))
-                                <del class="opacity-60 ml-1">{{ home_base_price($wishlist->product) }}</del>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            @endforeach
-        </div>
-    @else
-        <div class="row">
-            <div class="col">
-                <div class="text-center bg-white p-4 border">
-                    <img class="mw-100 h-200px" src="{{ static_asset('assets/img/nothing.svg') }}" alt="Image">
-                    <h5 class="mb-0 h5 mt-3">{{ translate("There isn't anything added yet")}}</h5>
-                </div>
+                    @endif
+                @endforeach
+            </div>
+        @else
+            <div class="ecm-dashboard-card ecm-dashboard-empty text-center p-5 mb-4">
+                <img class="mw-100 h-200px" src="{{ static_asset('assets/img/nothing.svg') }}" alt="Image">
+                <h5 class="mb-0 h5 mt-3">{{ translate("There isn't anything added yet")}}</h5>
             </div>
         @endif
     </div>
 @endsection
 
 @section('modal')
-    <!-- Wallet Recharge Modal -->
     @include('frontend.'.get_setting('homepage_select').'.partials.wallet_modal')
     <script type="text/javascript">
         function show_wallet_modal() {
@@ -343,7 +777,6 @@
         }
     </script>
 
-    <!-- Address modal Modal -->
     @include('frontend.'.get_setting('homepage_select').'.partials.address_modal')
 @endsection
 

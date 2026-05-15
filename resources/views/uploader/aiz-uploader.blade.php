@@ -1,3 +1,130 @@
+<style>
+	#aizUploaderModal .modal-content {
+		border: 0;
+		border-radius: 18px;
+		box-shadow: 0 24px 70px rgba(15, 23, 42, .24);
+		overflow: hidden;
+	}
+
+	#aizUploaderModal .modal-header {
+		background: #f8fbfe !important;
+		border-bottom: 1px solid #e3f3fb;
+		padding: 18px 22px 0;
+	}
+
+	#aizUploaderModal .uppy-modal-nav .nav-tabs {
+		gap: 8px;
+	}
+
+	#aizUploaderModal .uppy-modal-nav .nav-link {
+		border: 0;
+		border-radius: 10px 10px 0 0;
+		color: #64748b !important;
+		font-size: 13px;
+		font-weight: 800 !important;
+		padding: 12px 16px;
+	}
+
+	#aizUploaderModal .uppy-modal-nav .nav-link.active {
+		background: #fff;
+		color: #3d98d1 !important;
+		box-shadow: 0 -1px 0 #e3f3fb inset;
+	}
+
+	#aizUploaderModal .close {
+		align-items: center;
+		background: #fff;
+		border: 1px solid #e3f3fb;
+		border-radius: 50%;
+		display: inline-flex;
+		height: 34px;
+		justify-content: center;
+		opacity: 1;
+		padding: 0;
+		position: relative;
+		width: 34px;
+	}
+
+	#aizUploaderModal .close span:before,
+	#aizUploaderModal .close span:after {
+		background: #64748b;
+		content: "";
+		height: 2px;
+		left: 9px;
+		position: absolute;
+		top: 16px;
+		width: 14px;
+	}
+
+	#aizUploaderModal .close span:before {
+		transform: rotate(45deg);
+	}
+
+	#aizUploaderModal .close span:after {
+		transform: rotate(-45deg);
+	}
+
+	#aizUploaderModal .modal-body {
+		padding: 22px;
+	}
+
+	#aizUploaderModal .aiz-uploader-filter {
+		background: #f8fbfe;
+		border: 1px solid #e3f3fb !important;
+		border-radius: 14px;
+		margin-bottom: 18px !important;
+		padding: 14px !important;
+	}
+
+	#aizUploaderModal .form-control,
+	#aizUploaderModal .bootstrap-select > .dropdown-toggle {
+		border: 1px solid #e2e8f0;
+		border-radius: 8px !important;
+		min-height: 38px;
+	}
+
+	#aizUploaderModal .aiz-uploader-all {
+		background: #fff;
+		border: 1px solid #edf2f7;
+		border-radius: 14px;
+	}
+
+	#aizUploaderModal .modal-footer {
+		background: #f8fbfe !important;
+		border-top: 1px solid #e3f3fb;
+		padding: 16px 22px;
+	}
+
+	#aizUploaderModal .aiz-uploader-selected {
+		color: #1e293b;
+		font-size: 13px;
+		font-weight: 800;
+	}
+
+	#aizUploaderModal .aiz-uploader-selected-clear {
+		color: #dc2626;
+		font-size: 12px;
+		font-weight: 800;
+	}
+
+	#aizUploaderModal .btn-primary {
+		background: #3d98d1;
+		border-color: #3d98d1;
+		border-radius: 5px;
+		font-size: 13px;
+		font-weight: 800;
+		min-height: 36px;
+		padding-left: 14px;
+		padding-right: 14px;
+	}
+
+	#aizUploaderModal .custom-control-label {
+		color: #334155;
+		font-size: 13px;
+		font-weight: 700;
+	}
+</style>
+
 <div class="modal fade" id="aizUploaderModal" data-backdrop="static" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog modal-adaptive" role="document">
 		<div class="modal-content h-100">

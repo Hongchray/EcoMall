@@ -1,4 +1,28 @@
 <div class="aiz-user-sidenav-wrap position-relative z-1 rounded-0">
+    <style>
+        .ecm-account-delete-link {
+            align-items: center;
+            color: #dc2626 !important;
+            display: flex;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .ecm-account-delete-link svg {
+            flex: 0 0 16px;
+            margin-top: 0;
+        }
+
+        .ecm-account-delete-link svg path,
+        .ecm-account-delete-link svg rect {
+            fill: #dc2626 !important;
+        }
+
+        .ecm-account-delete-link:hover {
+            background: #fef2f2;
+            color: #b91c1c !important;
+        }
+    </style>
     <div class="aiz-user-sidenav overflow-auto c-scrollbar-light px-4 pb-4">
         <!-- Close button -->
         <div class="d-xl-none">
@@ -358,7 +382,7 @@
 
                 <!-- Delete My Account -->
                 <li class="aiz-side-nav-item">
-                    <a href="javascript:void(0)" onclick="account_delete_confirm_modal('{{ route('account_delete') }}')" class="aiz-side-nav-link">
+                    <a href="javascript:void(0)" onclick="account_delete_confirm_modal('{{ route('account_delete') }}')" class="aiz-side-nav-link ecm-account-delete-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
                             <g id="Group_25000" data-name="Group 25000" transform="translate(-240.535 -537)">
                             <path id="Path_2961" data-name="Path 2961" d="M221.069,0a8,8,0,1,0,8,8,8,8,0,0,0-8-8m0,15a7,7,0,1,1,7-7,7,7,0,0,1-7,7" transform="translate(27.466 537)" fill="#b5b5bf"/>

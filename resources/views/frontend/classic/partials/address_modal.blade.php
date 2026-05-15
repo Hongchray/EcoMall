@@ -1,5 +1,112 @@
 <!-- New Address Modal -->
 
+<style>
+    #new-address-modal .modal-content,
+    #edit-address-modal .modal-content {
+        border: 0;
+        border-radius: 18px;
+        box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+        overflow: hidden;
+    }
+
+    #new-address-modal .modal-header,
+    #edit-address-modal .modal-header {
+        align-items: center;
+        background: #f8fbfe;
+        border-bottom: 1px solid #e3f3fb;
+        padding: 22px 24px;
+    }
+
+    #new-address-modal .modal-title,
+    #edit-address-modal .modal-title {
+        color: #1e293b;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    #new-address-modal .close,
+    #edit-address-modal .close {
+        align-items: center;
+        background: #fff;
+        border: 1px solid #e3f3fb;
+        border-radius: 50%;
+        color: #64748b;
+        display: inline-flex;
+        height: 34px;
+        justify-content: center;
+        opacity: 1;
+        padding: 0;
+        width: 34px;
+    }
+
+    #new-address-modal .modal-body,
+    #edit-address-modal .modal-body {
+        padding: 24px;
+    }
+
+    #new-address-modal .modal-body > .p-3,
+    #edit-address-modal .modal-body .p-3 {
+        padding: 0 !important;
+    }
+
+    #new-address-modal label,
+    #edit-address-modal label {
+        color: #334155;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    #new-address-modal .row,
+    #edit-address-modal .row {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+
+    #new-address-modal .row > [class*="col-"],
+    #edit-address-modal .row > [class*="col-"] {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    #new-address-modal .col-md-2,
+    #edit-address-modal .col-md-2 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    #new-address-modal .col-md-10,
+    #edit-address-modal .col-md-10 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    #new-address-modal .form-control,
+    #edit-address-modal .form-control,
+    #new-address-modal .bootstrap-select > .dropdown-toggle,
+    #edit-address-modal .bootstrap-select > .dropdown-toggle {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px !important;
+        min-height: 44px;
+    }
+
+    #new-address-modal textarea.form-control,
+    #edit-address-modal textarea.form-control {
+        min-height: 92px;
+    }
+
+    #new-address-modal .btn-primary,
+    #edit-address-modal .btn-primary {
+        align-items: center;
+        border-radius: 5px !important;
+        display: inline-flex;
+        font-size: 13px;
+        font-weight: 800;
+        justify-content: center;
+        min-height: 42px;
+    }
+</style>
+
 <div class="modal fade" id="new-address-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
