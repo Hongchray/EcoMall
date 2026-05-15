@@ -227,29 +227,74 @@
     }
 
     @media (max-width: 575.98px) {
-        .ec-cart-modal {
-            padding: 14px;
+        #addToCart .modal-dialog {
+            margin: 10px;
         }
 
-        .ec-cart-gallery {
+        #addToCart .modal-content {
+            max-height: calc(100vh - 20px);
+            border-radius: 14px;
+        }
+
+        #addToCart .close {
+            top: 12px !important;
+            right: 12px !important;
+            width: 34px !important;
+            height: 34px !important;
+            z-index: 5;
+        }
+
+        .ec-cart-modal {
+            max-height: calc(100vh - 20px);
+            overflow-y: auto;
             padding: 12px;
         }
 
+        .ec-cart-gallery {
+            display: block;
+            height: auto;
+            padding: 10px;
+            border-radius: 14px;
+        }
+
+        .ec-cart-gallery > .col,
+        .ec-cart-gallery > .col-auto {
+            width: 100%;
+            max-width: 100%;
+            padding-right: 5px;
+            padding-left: 5px;
+        }
+
         .ec-cart-gallery__main .carousel-box {
-            min-height: 280px;
-            padding: 18px;
+            min-height: 220px;
+            padding: 14px;
         }
 
         .ec-cart-gallery__main img {
-            max-height: 250px;
+            max-width: 100%;
+            max-height: 190px;
+        }
+
+        .ec-cart-gallery__thumbs {
+            display: none !important;
         }
 
         .ec-cart-info {
-            padding: 16px;
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 14px;
         }
 
         .ec-cart-info__title {
-            font-size: 19px !important;
+            font-size: 18px !important;
+        }
+
+        .ec-cart-price {
+            font-size: 21px !important;
+        }
+
+        .ec-cart-row {
+            padding: 12px 0;
         }
 
         .ec-cart-row .col-3,
@@ -279,6 +324,12 @@
                     if (count($photos) == 0 && $product->thumbnail_img != null) {
                         $photos = [$product->thumbnail_img];
                     }
+
+                    $product_image_url = function ($image) {
+                        return filter_var($image, FILTER_VALIDATE_URL)
+                            ? $image
+                            : uploaded_asset($image);
+                    };
                 @endphp
                 <div class="col">
                     <div class="aiz-carousel product-gallery ec-cart-gallery__main" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
@@ -288,7 +339,7 @@
 
                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
 
-                                data-src="{{ uploaded_asset($photo) }}"
+                                data-src="{{ $product_image_url($photo) }}"
                                 alt="{{ $product->getTranslation('name') }}"
                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                         </div>
@@ -298,7 +349,7 @@
                                 <div class="carousel-box img-zoom rounded-0">
                                     <img class="img-fluid lazyload"
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($stock->image) }}"
+                                        data-src="{{ $product_image_url($stock->image) }}"
                                         alt="{{ $product->getTranslation('name') }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                 </div>
@@ -312,7 +363,7 @@
                         <div class="carousel-box c-pointer border rounded-0">
                             <img class="lazyload mw-100 size-60px mx-auto"
                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                data-src="{{ uploaded_asset($photo) }}"
+                                data-src="{{ $product_image_url($photo) }}"
                                 alt="{{ $product->getTranslation('name') }}"
                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                         </div>
@@ -322,7 +373,7 @@
                                 <div class="carousel-box c-pointer border rounded-0" data-variation="{{ $stock->variant }}">
                                     <img class="lazyload mw-100 size-50px mx-auto"
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($stock->image) }}"
+                                        data-src="{{ $product_image_url($stock->image) }}"
                                         alt="{{ $product->getTranslation('name') }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                 </div>

@@ -213,6 +213,14 @@
     }
 </style>
 
+@php
+    $product_image_url = function ($image) {
+        return filter_var($image, FILTER_VALIDATE_URL)
+            ? $image
+            : uploaded_asset($image);
+    };
+@endphp
+
 <div class="modal-body ec-added-modal c-scrollbar-light">
     <!-- Item added to your cart -->
     <div class="ec-added-success">
@@ -224,7 +232,7 @@
 
     <!-- Product Info -->
     <div class="ec-added-product media">
-        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ uploaded_asset($product->thumbnail_img) }}"
+        <img src="{{ static_asset('assets/img/placeholder.jpg') }}" data-src="{{ $product_image_url($product->thumbnail_img) }}"
             class="ec-added-product__image mr-0 lazyload img-fit" alt="{{ $product->getTranslation('name') }}" onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
         <div class="media-body text-left">
             <h6 class="ec-added-product__name text-truncate-2">
@@ -254,7 +262,7 @@
                             <a href="{{ route('product', $related_product->slug) }}" class="d-block">
                                 <img class="ec-added-card__image img-fit lazyload mx-auto has-transition"
                                     src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                    data-src="{{ uploaded_asset($related_product->thumbnail_img) }}"
+                                    data-src="{{ $product_image_url($related_product->thumbnail_img) }}"
                                     alt="{{ $related_product->getTranslation('name') }}"
                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                             </a>

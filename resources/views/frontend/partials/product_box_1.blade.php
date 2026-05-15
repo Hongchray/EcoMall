@@ -82,7 +82,8 @@
   }
 
   .ec-product-card__wishlist:hover,
-  .ec-product-card__wishlist:focus {
+  .ec-product-card__wishlist:focus,
+  .ec-product-card__wishlist.is-active {
     background: #3c9bd3;
     border-color: #3c9bd3;
     color: #fff;
@@ -275,8 +276,11 @@
     $product_badge_key = strtolower(str_replace(' ', '-', $product_badge));
 
     $cart_onclick = 'showAddToCartModal(' . $product->id . ')';
-    $wishlist_onclick = 'addToWishList(' . $product->id . ')';
+    $wishlist_onclick = 'addToWishList(' . $product->id . ', this)';
     $compare_onclick = 'addToCompare(' . $product->id . ')';
+    $is_in_wishlist = Auth::check()
+        && Auth::user()->user_type == 'customer'
+        && Auth::user()->wishlists->contains('product_id', $product->id);
 @endphp
 
 @once
@@ -296,10 +300,10 @@
             @endif
 
             @if ($product->auction_product == 0)
-                <a href="javascript:void(0)" class="ec-product-card__wishlist"
+                <a href="javascript:void(0)" class="ec-product-card__wishlist {{ $is_in_wishlist ? 'is-active' : '' }}"
                     onclick="{{ $wishlist_onclick }}"
-                    data-toggle="tooltip" data-title="{{ translate('Add to wishlist') }}" data-placement="left"
-                    aria-label="{{ translate('Add to wishlist') }}">
+                    data-toggle="tooltip" data-title="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}" data-placement="left"
+                    aria-label="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}">
                     <i class="las la-heart"></i>
                 </a>
             @endif

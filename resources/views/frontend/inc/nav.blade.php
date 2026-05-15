@@ -1075,7 +1075,20 @@
                             <a href="{{ $mobile_header_menu_link }}"
                                 class="@if ($is_mobile_category_menu) js-mobile-category-toggle @endif fs-13 px-3 py-3 w-100 d-flex align-items-center @if ($is_mobile_category_menu) justify-content-between @endif fw-700 text-dark header_menu_links @if (!$is_mobile_category_menu && $mobile_header_menu_link != '#' && url()->current() == $mobile_header_menu_link) active @endif">
                                 <span class="ecm-mobile-row-icon">
-                                    <i class="las {{ $mobile_menu_icon_class }}"></i>
+                                    @if ($mobile_menu_slug == 'home')
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                            <path d="M15.3,5.4,9.561.481A2,2,0,0,0,8.26,0H7.74a2,2,0,0,0-1.3.481L.7,5.4A2,2,0,0,0,0,6.92V14a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V6.92A2,2,0,0,0,15.3,5.4M10,15H6V9A1,1,0,0,1,7,8H9a1,1,0,0,1,1,1Zm5-1a1,1,0,0,1-1,1H11V9A2,2,0,0,0,9,7H7A2,2,0,0,0,5,9v6H2a1,1,0,0,1-1-1V6.92a1,1,0,0,1,.349-.76l5.74-4.92A1,1,0,0,1,7.74,1h.52a1,1,0,0,1,.651.24l5.74,4.92A1,1,0,0,1,15,6.92Z" fill="currentColor" />
+                                        </svg>
+                                    @elseif ($is_mobile_category_menu)
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                            <path d="M5,0H0V5A2,2,0,0,0,2,7H5A2,2,0,0,0,7,5V2A2,2,0,0,0,5,0M6,5A1,1,0,0,1,5,6H2A1,1,0,0,1,1,5V1H5A1,1,0,0,1,6,2Z" fill="currentColor" />
+                                            <path d="M13,9H10a2,2,0,0,0-2,2v3a2,2,0,0,0,2,2h5V11a2,2,0,0,0-2-2m1,6H10a1,1,0,0,1-1-1V11a1,1,0,0,1,1-1h3a1,1,0,0,1,1,1Z" fill="currentColor" />
+                                            <path d="M11.5,0A3.5,3.5,0,1,0,15,3.5,3.5,3.5,0,0,0,11.5,0m0,6A2.5,2.5,0,1,1,14,3.5,2.5,2.5,0,0,1,11.5,6" fill="currentColor" />
+                                            <path d="M3.5,9A3.5,3.5,0,1,0,7,12.5,3.5,3.5,0,0,0,3.5,9m0,6A2.5,2.5,0,1,1,6,12.5,2.5,2.5,0,0,1,3.5,15" fill="currentColor" />
+                                        </svg>
+                                    @else
+                                        <i class="las {{ $mobile_menu_icon_class }}"></i>
+                                    @endif
                                 </span>
                                 <span class="ecm-mobile-link-label">{{ $value }}</span>
                                 @if ($is_mobile_category_menu)

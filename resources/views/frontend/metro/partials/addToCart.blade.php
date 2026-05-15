@@ -4,7 +4,17 @@
         <div class="col-lg-6">
             <div class="row gutters-10 flex-row-reverse">
                 @php
-                    $photos = explode(',',$product->photos);
+                    $photos = array_filter(explode(',', $product->photos ?? ''));
+
+                    if (count($photos) == 0 && $product->thumbnail_img != null) {
+                        $photos = [$product->thumbnail_img];
+                    }
+
+                    $product_image_url = function ($image) {
+                        return filter_var($image, FILTER_VALIDATE_URL)
+                            ? $image
+                            : uploaded_asset($image);
+                    };
                 @endphp
                 <div class="col">
                     <div class="aiz-carousel product-gallery" data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true'>
@@ -12,7 +22,7 @@
                         <div class="carousel-box img-zoom rounded-0">
                             <img class="img-fluid lazyload"
                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                data-src="{{ uploaded_asset($photo) }}"
+                                data-src="{{ $product_image_url($photo) }}"
                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                         </div>
                         @endforeach
@@ -21,7 +31,7 @@
                                 <div class="carousel-box img-zoom rounded-0">
                                     <img class="img-fluid lazyload"
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($stock->image) }}"
+                                        data-src="{{ $product_image_url($stock->image) }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                 </div>
                             @endif
@@ -34,7 +44,7 @@
                         <div class="carousel-box c-pointer border rounded-0">
                             <img class="lazyload mw-100 size-60px mx-auto"
                                 src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                data-src="{{ uploaded_asset($photo) }}"
+                                data-src="{{ $product_image_url($photo) }}"
                                 onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                         </div>
                         @endforeach
@@ -43,7 +53,7 @@
                                 <div class="carousel-box c-pointer border rounded-0" data-variation="{{ $stock->variant }}">
                                     <img class="lazyload mw-100 size-50px mx-auto"
                                         src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                        data-src="{{ uploaded_asset($stock->image) }}"
+                                        data-src="{{ $product_image_url($stock->image) }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                                 </div>
                             @endif
