@@ -323,11 +323,6 @@
                         @endforeach
                     </div>
 
-                    <p class="text-muted small mt-2">
-                        {{ translate("showing") }} {{ $category->subcategories->count() }} {{ translate("of") }} {{ $category->subcategories->count() }} {{ translate("categories") }}
-                    </p>
-
-
                     <div id="products-section" style="border-top: 1px solid #e9e9e9; margin-bottom: 16px">
 
                     </div>

@@ -1,7 +1,116 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
+<style>
+.wishlist-card-modern {
+    background: #fff;
+    border: 1px solid #e9eef5;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+}
 
+.wishlist-card-modern:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.12);
+    transform: translateY(-2px);
+}
+
+
+/* image */
+.wishlist-img-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 180px;
+    background: #f8fafc;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.wishlist-img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* remove button */
+.wishlist-remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+/* body */
+.wishlist-body {
+    padding-top: 10px;
+    text-align: left;
+}
+
+/* title */
+.wishlist-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    height: 40px;
+    overflow: hidden;
+}
+
+.wishlist-title a {
+    color: #222;
+    text-decoration: none;
+}
+
+/* price */
+.wishlist-price {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.price-main {
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.price-old {
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* button */
+.wishlist-cart-btn {
+    width: 100%;
+    border: none;
+    background: #0d6efd;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.wishlist-cart-btn:hover {
+    background: #0b5ed7;
+}
+    </style>
     <div class="row gutters-16">
         <!-- Wallet summary -->
         @if (get_setting('wallet_system') == 1)
@@ -160,7 +269,7 @@
                     $customer_package = get_single_customer_package(Auth::user()->customer_package_id);
                 @endphp
                 @if($customer_package != null)
-                    <img src="{{ uploaded_asset($customer_package->logo) }}" class="img-fluid mb-4 h-70px" 
+                    <img src="{{ uploaded_asset($customer_package->logo) }}" class="img-fluid mb-4 h-70px"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/avatar-place.png') }}';">
                     <p class="fs-14 fw-700 mb-3 text-primary">{{ translate('Current Package') }}: {{ $customer_package->getTranslation('name') }}</p>
                     <p class="mb-2 d-flex justify-content-between">
@@ -178,7 +287,7 @@
             </div>
         </div>
         @endif
-        
+
         <!-- Default Shipping Address -->
         <div class="col-xl-4 col-md-6 mb-4">
             <div class="p-4 border h-100">
@@ -218,38 +327,58 @@
         $wishlists = get_user_wishlist();
     @endphp
     @if (count($wishlists) > 0)
-        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 gutters-16 border-top border-left mx-1 mx-md-0 mb-4">
+        <div class="row row-cols-xxl-5 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 gutters-16 mx-1 mx-md-0 mb-4">
             @foreach($wishlists->take(5) as $key => $wishlist)
                 @if ($wishlist->product != null)
-                    <div class="aiz-card-box col py-3 text-center border-right border-bottom has-transition hov-shadow-out z-1" id="wishlist_{{ $wishlist->id }}">
-                        <div class="position-relative h-140px h-md-200px img-fit overflow-hidden mb-3">
-                            <!-- Image -->
-                            <a href="{{ route('product', $wishlist->product->slug) }}" class="d-block h-100">
-                                <img src="{{ uploaded_asset($wishlist->product->thumbnail_img) }}" class="lazyload mx-auto img-fit"
-                                    title="{{ $wishlist->product->getTranslation('name') }}">
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+
+                        <div class="wishlist-card-modern h-100 position-relative" id="wishlist_{{ $wishlist->id }}">
+
+                            <!-- REMOVE BUTTON (kept function) -->
+                            <button type="button"
+                                    class="wishlist-remove-btn"
+                                    onclick="removeFromWishlist({{ $wishlist->id }})">
+                                <i class="la la-trash"></i>
+                            </button>
+
+                            <!-- IMAGE -->
+                            <a href="{{ route('product', $wishlist->product->slug) }}"
+                            class="wishlist-img-wrap">
+                                <img src="{{ static_asset($wishlist->product->thumbnail_img) }}"
+                                    alt="{{ $wishlist->product->getTranslation('name') }}"
+                                    class="wishlist-img">
                             </a>
-                            <!-- Remove from wishlisht -->
-                            <div class="absolute-top-right aiz-p-hov-icon">
-                                <a href="javascript:void(0)" onclick="removeFromWishlist({{ $wishlist->id }})" data-toggle="tooltip" data-title="{{ translate('Remove from wishlist') }}" data-placement="left">
-                                    <i class="la la-trash"></i>
-                                </a>
+
+                            <!-- CONTENT -->
+                            <div class="wishlist-body">
+
+                                <h6 class="wishlist-title">
+                                    <a href="{{ route('product', $wishlist->product->slug) }}">
+                                        {{ $wishlist->product->getTranslation('name') }}
+                                    </a>
+                                </h6>
+
+                                <div class="wishlist-price">
+                                    <span class="price-main">
+                                        {{ home_discounted_base_price($wishlist->product) }}
+                                    </span>
+
+                                    @if(home_base_price($wishlist->product) != home_discounted_base_price($wishlist->product))
+                                        <del class="price-old">
+                                            {{ home_base_price($wishlist->product) }}
+                                        </del>
+                                    @endif
+                                </div>
+
+                                <!-- ADD TO CART -->
+                                <button class="wishlist-cart-btn"
+                                        onclick="showAddToCartModal({{ $wishlist->product->id }})">
+                                    {{ translate('Add to Cart') }}
+                                </button>
+
                             </div>
-                            <!-- add to cart -->
-                            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex justify-content-center align-items-center" 
-                                href="javascript:void(0)" onclick="showAddToCartModal({{ $wishlist->product->id }})">{{ translate('Add to Cart') }}</a>
                         </div>
-                        <!-- Product Name -->
-                        <h5 class="fs-14 mb-0 lh-1-5 fw-400 text-truncate-2 mb-3">
-                            <a href="{{ route('product', $wishlist->product->slug) }}" class="text-reset hov-text-primary"
-                                title="{{ $wishlist->product->getTranslation('name') }}">{{ $wishlist->product->getTranslation('name') }}</a>
-                        </h5>
-                        <!-- Price -->
-                        <div class="fs-14">
-                            <span class="fw-600 text-primary">{{ home_discounted_base_price($wishlist->product) }}</span>
-                            @if(home_base_price($wishlist->product) != home_discounted_base_price($wishlist->product))
-                                <del class="opacity-60 ml-1">{{ home_base_price($wishlist->product) }}</del>
-                            @endif
-                        </div>
+
                     </div>
                 @endif
             @endforeach
@@ -274,7 +403,7 @@
             $('#wallet_modal').modal('show');
         }
     </script>
-    
+
     <!-- Address modal Modal -->
     @include('frontend.'.get_setting('homepage_select').'.partials.address_modal')
 @endsection
