@@ -1,16 +1,157 @@
-<div class="aiz-user-sidenav-wrap position-relative z-1 rounded-0">
+<div class="aiz-user-sidenav-wrap position-relative z-1 rounded-0 ecm-account-drawer">
     <style>
+        .ecm-account-drawer {
+            background: #fff;
+            min-height: 100%;
+        }
+
+        .ecm-account-drawer .aiz-user-sidenav {
+            padding: 0 18px 22px !important;
+        }
+
+        .ecm-account-close {
+            align-items: center;
+            background: #f6f9fc;
+            border: 1px solid #e5eef7;
+            border-radius: 999px;
+            color: #111827;
+            display: inline-flex;
+            height: 38px;
+            justify-content: center;
+            margin: 12px 0 6px;
+            width: 38px;
+        }
+
+        .ecm-account-close:hover,
+        .ecm-account-close:focus {
+            background: #e7f4fb;
+            color: #2e94d0;
+        }
+
+        .ecm-account-profile {
+            background: linear-gradient(180deg, #f7fbff 0%, #fff 100%);
+            border: 1px solid #e5eef7;
+            border-radius: 14px;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+            margin: 6px 0 18px;
+            padding: 22px 16px;
+            text-align: center;
+        }
+
+        .ecm-account-profile .avatar {
+            background: #e7f4fb;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10);
+            height: 68px;
+            margin-bottom: 12px !important;
+            width: 68px;
+        }
+
+        .ecm-account-profile .avatar img {
+            height: 100%;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .ecm-account-name {
+            color: #111827;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+
+        .ecm-account-contact {
+            color: #7d8592;
+            font-size: 12px;
+            margin: 0 auto;
+            max-width: 210px;
+        }
+
+        .ecm-account-drawer .sidemnenu {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 190px);
+        }
+
+        .ecm-account-drawer .aiz-side-nav-list {
+            border-bottom: 0 !important;
+            margin-bottom: 14px !important;
+            padding-bottom: 0 !important;
+        }
+
+        .ecm-account-drawer .aiz-side-nav-item {
+            margin-bottom: 5px;
+        }
+
+        .ecm-account-drawer .aiz-side-nav-link {
+            align-items: center;
+            border-radius: 10px;
+            color: #111827;
+            display: flex;
+            font-size: 14px;
+            font-weight: 700;
+            min-height: 44px;
+            padding: 11px 14px;
+            transition: background-color .2s ease, color .2s ease, transform .2s ease;
+        }
+
+        .ecm-account-drawer .aiz-side-nav-link:hover,
+        .ecm-account-drawer .aiz-side-nav-link:focus,
+        .ecm-account-drawer .aiz-side-nav-link.active {
+            background: #e7f4fb;
+            color: #2e94d0;
+            text-decoration: none;
+            transform: translateX(2px);
+        }
+
+        .ecm-account-drawer .aiz-side-nav-link svg {
+            flex: 0 0 18px;
+            height: 18px;
+            width: 18px;
+        }
+
+        .ecm-account-drawer .aiz-side-nav-link:hover svg path,
+        .ecm-account-drawer .aiz-side-nav-link:hover svg rect,
+        .ecm-account-drawer .aiz-side-nav-link:focus svg path,
+        .ecm-account-drawer .aiz-side-nav-link:focus svg rect,
+        .ecm-account-drawer .aiz-side-nav-link.active svg path,
+        .ecm-account-drawer .aiz-side-nav-link.active svg rect {
+            fill: #2e94d0;
+        }
+
+        .ecm-account-drawer .aiz-side-nav-text {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .ecm-account-drawer .badge {
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            margin-left: 8px;
+            padding: 4px 7px;
+        }
+
         .ecm-account-delete-link {
             align-items: center;
             color: #dc2626 !important;
-            display: flex;
-            font-weight: 600;
-            line-height: 1.2;
+            display: flex !important;
+            font-weight: 700;
+            gap: 14px;
+            justify-content: flex-start;
+            line-height: 1.25;
         }
 
         .ecm-account-delete-link svg {
-            flex: 0 0 16px;
+            flex: 0 0 18px;
+            height: 18px;
             margin-top: 0;
+            width: 18px;
+        }
+
+        .ecm-account-delete-link .aiz-side-nav-text {
+            flex: 1 1 auto;
+            margin-left: 0 !important;
         }
 
         .ecm-account-delete-link svg path,
@@ -22,13 +163,43 @@
             background: #fef2f2;
             color: #b91c1c !important;
         }
+
+        .ecm-account-delete-link:hover svg path,
+        .ecm-account-delete-link:hover svg rect {
+            fill: #b91c1c !important;
+        }
+
+        .ecm-account-signout {
+            background: #2e94d0;
+            border: 0;
+            border-radius: 999px !important;
+            box-shadow: 0 10px 22px rgba(46, 148, 208, 0.24);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 800;
+            margin-top: auto;
+            min-height: 46px;
+        }
+
+        .ecm-account-signout:hover,
+        .ecm-account-signout:focus {
+            background: #227eb8;
+            color: #fff;
+        }
+
+        @media (max-width: 575.98px) {
+            .aiz-mobile-side-nav .aiz-user-sidenav-wrap {
+                max-width: 310px;
+                width: 82vw;
+            }
+        }
     </style>
     <div class="aiz-user-sidenav overflow-auto c-scrollbar-light px-4 pb-4">
         <!-- Close button -->
         <div class="d-xl-none">
-            <button class="btn btn-sm p-2 " data-toggle="class-toggle" data-backdrop="static"
+            <button class="btn btn-sm p-0 ecm-account-close" data-toggle="class-toggle" data-backdrop="static"
                 data-target=".aiz-mobile-side-nav" data-same=".mobile-side-nav-thumb">
-                <i class="las la-times la-2x"></i>
+                <i class="las la-times fs-20"></i>
             </button>
         </div>
         @php
@@ -40,7 +211,7 @@
             }
         @endphp
         <!-- Customer info -->
-        <div class="p-4 text-center mb-4 border-bottom position-relative">
+        <div class="ecm-account-profile position-relative">
             <!-- Image -->
             <span class="avatar avatar-md mb-3">
                 @if ($user->avatar_original != null)
@@ -52,13 +223,13 @@
                 @endif
             </span>
             <!-- Name -->
-            <h4 class="h5 fs-14 mb-1 fw-700 text-dark">{{ $user->name }}</h4>
+            <h4 class="ecm-account-name">{{ $user->name }}</h4>
             <!-- Phone -->
             @if ($user->phone != null)
-                <div class="text-truncate opacity-60 fs-12">{{ $user->phone }}</div>
+                <div class="ecm-account-contact text-truncate">{{ $user->phone }}</div>
             <!-- Email -->
             @else
-                <div class="text-truncate opacity-60 fs-12">{{ $user->email }}</div>
+                <div class="ecm-account-contact text-truncate">{{ $user->email }}</div>
             @endif
         </div>
 
@@ -396,7 +567,7 @@
             </ul>
         
             <!-- logout -->
-            <a href="{{ route('logout') }}" class="btn btn-primary btn-block fs-14 fw-700 mb-5 mb-md-0" style="border-radius: 25px;">{{ translate('Sign Out') }}</a>
+            <a href="{{ route('logout') }}" class="btn btn-primary btn-block ecm-account-signout mb-5 mb-md-0">{{ translate('Sign Out') }}</a>
         </div>
 
     </div>

@@ -1,43 +1,92 @@
 @extends('frontend.layouts.app')
 
 @section('content')
+    <style>
+        .ecm-checkout-steps {
+            background: linear-gradient(180deg, #f7fbff 0%, #fff 100%);
+        }
+
+        .ecm-step-card {
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e3edf7;
+            border-bottom: 4px solid #d7dee8;
+            border-radius: 8px;
+            box-shadow: 0 10px 26px rgba(31, 41, 55, 0.06);
+            color: #8b94a3;
+            display: flex;
+            flex-direction: column;
+            min-height: 94px;
+            padding: 16px 10px 14px;
+            text-align: center;
+        }
+
+        .ecm-step-card.active {
+            border-bottom-color: #3c9bd3;
+            color: #2e94d0;
+        }
+
+        .ecm-step-card i {
+            font-size: 30px;
+            line-height: 1;
+            margin-bottom: 9px;
+        }
+
+        .ecm-step-card h3 {
+            color: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        @media (max-width: 575.98px) {
+            .ecm-step-card {
+                min-height: 62px;
+                padding: 12px 6px;
+            }
+
+            .ecm-step-card i {
+                font-size: 24px;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+
     <!-- Steps -->
-    <section class="pt-5 mb-4">
+    <section class="ecm-checkout-steps pt-5 pb-2 mb-4">
         <div class="container">
             <div class="row">
-                <div class="col-xl-8 mx-auto">
+                <div class="col-xl-8 col-lg-10 mx-auto">
                     <div class="row gutters-5 sm-gutters-10">
                         <div class="col active">
-                            <div class="text-center border border-bottom-6px p-2 text-primary">
-                                <i class="la-3x mb-2 las la-shopping-cart cart-animate" style="margin-left: -100px; transition: 2s;"></i>
-                                <h3 class="fs-14 fw-600 d-none d-lg-block">{{ translate('1. My Cart') }}</h3>
+                            <div class="ecm-step-card active">
+                                <i class="las la-shopping-cart cart-animate"></i>
+                                <h3 class="d-none d-lg-block">{{ translate('1. My Cart') }}</h3>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="text-center border border-bottom-6px p-2">
-                                <i class="la-3x mb-2 opacity-50 las la-map"></i>
-                                <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('2. Shipping info') }}
-                                </h3>
+                            <div class="ecm-step-card">
+                                <i class="las la-map"></i>
+                                <h3 class="d-none d-lg-block">{{ translate('2. Shipping info') }}</h3>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="text-center border border-bottom-6px p-2">
-                                <i class="la-3x mb-2 opacity-50 las la-truck"></i>
-                                <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('3. Delivery info') }}
-                                </h3>
+                            <div class="ecm-step-card">
+                                <i class="las la-truck"></i>
+                                <h3 class="d-none d-lg-block">{{ translate('3. Delivery info') }}</h3>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="text-center border border-bottom-6px p-2">
-                                <i class="la-3x mb-2 opacity-50 las la-credit-card"></i>
-                                <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('4. Payment') }}</h3>
+                            <div class="ecm-step-card">
+                                <i class="las la-credit-card"></i>
+                                <h3 class="d-none d-lg-block">{{ translate('4. Payment') }}</h3>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="text-center border border-bottom-6px p-2">
-                                <i class="la-3x mb-2 opacity-50 las la-check-circle"></i>
-                                <h3 class="fs-14 fw-600 d-none d-lg-block opacity-50">{{ translate('5. Confirmation') }}
-                                </h3>
+                            <div class="ecm-step-card">
+                                <i class="las la-check-circle"></i>
+                                <h3 class="d-none d-lg-block">{{ translate('5. Confirmation') }}</h3>
                             </div>
                         </div>
                     </div>

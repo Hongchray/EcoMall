@@ -2,48 +2,55 @@
 
 @section('panel_content')
 
-<div class="card rounded-0 shadow-none border">
-    <form class="" id="sort_customers" action="" method="GET">
-        <div class="card-header border-bottom-0 row gutters-5">
-            <div class="col">
-                <h5 class="mb-0 fs-20 fw-700 text-dark">{{translate('Notifications')}}</h5>
-            </div>
+<div class="ecm-notifications-page">
+    <div class="ecm-notifications-hero">
+        <div>
+            <span class="ecm-notifications-kicker">{{ translate('Account updates') }}</span>
+            <h5>{{ translate('Notifications') }}</h5>
         </div>
-        <div class="card-body">
-            <!-- Notifications -->
-            <ul class="list-group list-group-flush">
-                @forelse($notifications as $notification)
-                    @if($notification->type == 'App\Notifications\OrderNotification')
-                        <li class="list-group-item d-flex justify-content-between align-items- py-3 px-0">
-                            <div class="media text-inherit">
-                                <div class="media-body">
-                                    <p class="mb-1 text-truncate-2">
-                                        {{translate('Your Order: ')}}
-                                        <a href="{{route('purchase_history.details', encrypt($notification->data['order_id']))}}">
-                                            {{$notification->data['order_code']}}
-                                        </a>
-                                        {{translate(' has been '. ucfirst(str_replace('_', ' ', $notification->data['status'])))}}
-                                    </p>
-                                    <small class="text-muted">
-                                        {{ date("F j Y, g:i a", strtotime($notification->created_at)) }}
-                                    </small>
-                                </div>
-                            </div>
-                        </li>
-                    @endif
+        <span class="ecm-notifications-count">{{ $notifications->total() }}</span>
+    </div>
 
-                @empty
-                    <li class="list-group-item">
-                        <div class="py-4 text-center fs-16">{{ translate('No notification found') }}</div>
-                    </li>
-                @endforelse
-            </ul>
-            <!-- Pagination -->
-            <div class="aiz-pagination mt-3">
-                {{ $notifications->links() }}
+    <div class="ecm-notifications-list">
+        @forelse($notifications as $notification)
+            @if($notification->type == 'App\Notifications\OrderNotification')
+                @php
+                    $status = ucfirst(str_replace('_', ' ', $notification->data['status']));
+                @endphp
+                <a class="ecm-notification-row" href="{{ route('purchase_history.details', encrypt($notification->data['order_id'])) }}">
+                    <span class="ecm-notification-row-icon">
+                        <i class="las la-receipt"></i>
+                    </span>
+                    <span class="ecm-notification-row-content">
+                        <span class="ecm-notification-row-top">
+                            <span class="ecm-notification-row-title">{{ translate('Order placed') }}</span>
+                            <span class="ecm-notification-row-chip">{{ translate($status) }}</span>
+                        </span>
+                        <span class="ecm-notification-row-message">
+                            {{ translate('Your Order: ') }}<strong>{{ $notification->data['order_code'] }}</strong>
+                            {{ translate(' has been '. $status) }}
+                        </span>
+                        <span class="ecm-notification-row-time">
+                            <i class="las la-clock"></i>
+                            {{ date("F j Y, g:i a", strtotime($notification->created_at)) }}
+                        </span>
+                    </span>
+                    <span class="ecm-notification-row-arrow">
+                        <i class="las la-angle-right"></i>
+                    </span>
+                </a>
+            @endif
+        @empty
+            <div class="ecm-notifications-empty">
+                <span><i class="las la-bell-slash"></i></span>
+                <h6>{{ translate('No notification found') }}</h6>
             </div>
-        </div>
-    </form>
+        @endforelse
+    </div>
+
+    <div class="aiz-pagination ecm-notifications-pagination">
+        {{ $notifications->links() }}
+    </div>
 </div>
 
 @endsection

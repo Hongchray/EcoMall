@@ -145,12 +145,12 @@
   }
 
   .ec-product-card__price-row {
-    min-height: 20px;
+    min-height: 36px;
     margin: 0 4px 16px;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    gap: 4px;
+    gap: 10px;
     line-height: 1.2;
   }
 
@@ -167,8 +167,8 @@
 
   .ec-product-card__price-value {
     color: #2d9add;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
   }
 
   .ec-product-card__unit {
@@ -178,9 +178,9 @@
   }
 
   .ec-product-card__compare {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -191,7 +191,7 @@
     font-size: 20px;
     line-height: 1;
     text-decoration: none;
-    box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
+    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.08);
     transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
   }
 

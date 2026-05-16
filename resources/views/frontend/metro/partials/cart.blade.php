@@ -48,17 +48,28 @@
             @foreach ($carts as $key => $cartItem)
                 @php
                     $product = get_single_product($cartItem['product_id']);
+                    $cart_product_image = $product && $product->thumbnail_img
+                        ? (filter_var($product->thumbnail_img, FILTER_VALIDATE_URL) ? $product->thumbnail_img : uploaded_asset($product->thumbnail_img))
+                        : null;
+                    if (!$cart_product_image && $product && isset($product->thumbnail)) {
+                        $cart_product_image = get_image($product->thumbnail);
+                    }
+                    if (!$cart_product_image && $product && $product->photos) {
+                        $cart_photos = explode(',', $product->photos);
+                        $cart_product_image = uploaded_asset($cart_photos[0]);
+                    }
+                    $cart_placeholder_image = static_asset('assets/img/placeholder.jpg');
                 @endphp
                 @if ($product != null)
                     <li class="list-group-item border-0 ecm-cart-item hov-scale-img">
                         <span class="d-flex align-items-center">
                             <a href="{{ route('product', $product->slug) }}"
                                 class="ecm-cart-product text-reset d-flex align-items-center flex-grow-1">
-                                <img src="{{ static_asset('assets/img/placeholder.jpg') }}"
-                                    data-src="{{ uploaded_asset($product->thumbnail_img) }}"
+                                <img src="{{ $cart_placeholder_image }}"
+                                    data-src="{{ $cart_product_image ?: $cart_placeholder_image }}"
                                     class="img-fit lazyload has-transition ecm-cart-product-img"
                                     alt="{{ $product->getTranslation('name') }}"
-                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                    onerror="this.onerror=null;this.src='{{ $cart_placeholder_image }}';">
                                 <span class="ecm-cart-product-info minw-0 flex-grow-1">
                                     <span class="ecm-cart-product-name text-truncate-2" title="{{ $product->getTranslation('name') }}">
                                         {{ $product->getTranslation('name') }}

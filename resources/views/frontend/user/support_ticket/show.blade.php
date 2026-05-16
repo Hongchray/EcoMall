@@ -1,23 +1,38 @@
 @extends('frontend.layouts.user_panel')
 
 @section('panel_content')
-    <div class="card rounded-0 shadow-none border">
+    <style>
+        .ecm-ticket-detail{background:#fff;border:1px solid #e7edf3;border-radius:8px;overflow:hidden;box-shadow:0 8px 22px rgba(17,24,39,.045)}
+        .ecm-ticket-detail-header{padding:20px;border-bottom:1px solid #edf2f7}
+        .ecm-ticket-detail-title{color:#111827;font-size:20px;font-weight:800;line-height:1.3;margin:0;overflow-wrap:anywhere}
+        .ecm-ticket-meta{align-items:center;display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+        .ecm-ticket-meta-name{color:#111827;font-size:13px;font-weight:800}.ecm-ticket-meta-date{color:#64748b;font-size:12px;font-weight:700}
+        .ecm-ticket-status{background:#f1f5f9;border-radius:999px;color:#475569;display:inline-flex;font-size:12px;font-weight:800;min-height:28px;padding:7px 12px}
+        .ecm-ticket-detail-body{padding:20px}
+        .ecm-ticket-reply-box{background:#f8fafc;border:1px solid #edf2f7;border-radius:8px;margin-bottom:18px;padding:14px}
+        .ecm-ticket-message{border-bottom:1px solid #edf2f7;padding:14px 0}.ecm-ticket-message:last-child{border-bottom:0}
+        .ecm-ticket-message-head{align-items:flex-start;display:flex;gap:10px;margin-bottom:10px}
+        .ecm-ticket-message-body{color:#111827;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+        .ecm-ticket-message-body img{height:auto;max-width:100%}
+        @media(max-width:767.98px){.ecm-ticket-detail{border-left:0;border-right:0;border-radius:0;margin:0 -15px 76px}.ecm-ticket-detail-header{padding:16px 12px}.ecm-ticket-detail-title{font-size:18px}.ecm-ticket-detail-body{padding:12px}.ecm-ticket-reply-box{padding:12px}.ecm-ticket-meta{display:grid;grid-template-columns:1fr;gap:6px}.ecm-ticket-message{background:#fff;border:1px solid #edf2f7;border-radius:12px;margin-bottom:10px;padding:12px}.ecm-ticket-message:last-child{border-bottom:1px solid #edf2f7}.ecm-ticket-message-head{gap:8px}.ecm-ticket-detail .w-150px{width:100%!important}.ecm-ticket-detail .form-group.mb-0.text-right{text-align:stretch!important}}
+    </style>
+
+    <div class="ecm-ticket-detail">
         <!-- Ticket info -->
-        <div class="card-header border-bottom-0">
+        <div class="ecm-ticket-detail-header">
             <div class="text-center text-md-left">
-                <h5 class="mb-md-0 fs-20 fw-700 text-dark">{{ $ticket->subject }} #{{ $ticket->code }}</h5>
-               <div class="mt-4 fs-14">
-                   <span class="fw-700 text-dark"> {{ $ticket->user->name }} </span>
-                   <span class="ml-2 text-secondary"> {{ $ticket->created_at }} </span>
-                   <span class="badge badge-inline badge-gray ml-2 p-3 fs-12" style="border-radius: 25px; min-width: 80px !important;"> {{ translate(ucfirst($ticket->status)) }} </span>
+                <h5 class="ecm-ticket-detail-title">{{ $ticket->subject }} #{{ $ticket->code }}</h5>
+               <div class="ecm-ticket-meta">
+                   <span class="ecm-ticket-meta-name">{{ $ticket->user->name }}</span>
+                   <span class="ecm-ticket-meta-date">{{ $ticket->created_at }}</span>
+                   <span class="ecm-ticket-status">{{ translate(ucfirst($ticket->status)) }}</span>
                </div>
             </div>
         </div>
-        <hr class="mx-4">
         
-        <div class="card-body">
+        <div class="ecm-ticket-detail-body">
             <!-- Reply form -->
-            <form action="{{route('support_ticket.seller_store')}}" method="POST" enctype="multipart/form-data">
+            <form class="ecm-ticket-reply-box" action="{{route('support_ticket.seller_store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="ticket_id" value="{{$ticket->id}}" required>
                 <input type="hidden" name="user_id" value="{{$ticket->user_id}}">
@@ -46,8 +61,8 @@
                 <ul class="list-group list-group-flush mt-3">
                     <!-- Replies -->
                     @foreach($ticket->ticketreplies as $ticketreply)
-                        <li class="list-group-item px-0 border-bottom-0">
-                            <div class="media">
+                        <li class="list-group-item px-0 border-bottom-0 ecm-ticket-message">
+                            <div class="media ecm-ticket-message-head">
                                 <a class="media-left" href="#">
                                     @if($ticketreply->user->avatar_original != null)
                                         <span class="avatar avatar-sm mr-3">
@@ -66,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="fs-14 fw-400">
+                            <div class="ecm-ticket-message-body">
                                 {!! $ticketreply->reply !!}
                                 <br>
                                 <br>
@@ -84,8 +99,8 @@
                     @endforeach
 
                     <!-- Ticket Details -->
-                    <li class="list-group-item px-0">
-                        <div class="media">
+                    <li class="list-group-item px-0 ecm-ticket-message">
+                        <div class="media ecm-ticket-message-head">
                             <a class="media-left" href="#">
                                 @if($ticket->user->avatar_original != null)
                                     <span class="avatar avatar-sm mr-3">
@@ -104,7 +119,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="ecm-ticket-message-body">
                             {!! $ticket->details !!}
                             <br>
                             <br>

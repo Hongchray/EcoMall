@@ -84,19 +84,20 @@
 }
 
 .ec-product-card__compare {
-    width: 32px;
-    height: 32px;
-    flex: 0 0 32px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #8193a3;
+    border: 1px solid #d8eaf5;
     border-radius: 50%;
     background: #fff;
-    color: #425b6f;
+    color: #3D98D1;
     line-height: 1;
     text-decoration: none;
-    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.08);
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
 }
 
 .ec-product-card__compare:hover,
@@ -105,6 +106,8 @@
     border-color: #3c9bd3;
     color: #fff;
     text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(60, 155, 211, 0.24);
 }
 
 .ec-product-card__icons {
@@ -168,13 +171,21 @@
 }
 
 .ec-product-card__price-row {
-    min-height: 20px;
+    min-height: 36px;
     margin: 0 4px 16px;
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     line-height: 1.2;
+}
+
+.ec-product-card__price-meta {
+    align-items: baseline;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-width: 0;
 }
 
 .ec-product-card__price-original {
@@ -186,8 +197,8 @@
 
 .ec-product-card__price {
     color: #2d9add;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
 }
 
 .ec-product-card__action {
@@ -270,7 +281,7 @@
             @endif
         </div>
 
-        {{-- Wishlist & Compare icons (non-auction only) --}}
+        {{-- Wishlist icon (non-auction only) --}}
         @if ($product->auction_product == 0)
             <div class="ec-product-card__icons">
                 <a href="javascript:void(0)" class="ec-product-card__wishlist {{ $is_in_wishlist ? 'is-active' : '' }}"
@@ -278,15 +289,6 @@
                     data-toggle="tooltip" data-title="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}" data-placement="left"
                     aria-label="{{ $is_in_wishlist ? translate('in your wishlist') : translate('Add to wishlist') }}">
                     <i class="las la-heart"></i>
-                </a>
-                <a href="javascript:void(0)" class="ec-product-card__compare"
-                    onclick="addToCompare({{ $product->id }})"
-                    data-toggle="tooltip" data-title="{{ translate('Add to compare') }}" data-placement="left"
-                    aria-label="{{ translate('Add to compare') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16">
-                        <path d="M18.037,5.547v.8a.8.8,0,0,1-.8.8H7.221a.4.4,0,0,0-.4.4V9.216a.642.642,0,0,1-1.1.454L2.456,6.4a.643.643,0,0,1,0-.909L5.723,2.227a.642.642,0,0,1,1.1.454V4.342a.4.4,0,0,0,.4.4H17.234a.8.8,0,0,1,.8.8Zm-3.685,4.86a.642.642,0,0,0-1.1.454v1.661a.4.4,0,0,1-.4.4H2.84a.8.8,0,0,0-.8.8v.8a.8.8,0,0,0,.8.8H12.854a.4.4,0,0,1,.4.4V17.4a.642.642,0,0,0,1.1.454l3.267-3.268a.643.643,0,0,0,0-.909Z"
-                            transform="translate(-2.037 -2.038)" fill="currentColor"/>
-                    </svg>
                 </a>
             </div>
         @endif
@@ -313,10 +315,21 @@
         {{-- Price row --}}
         <div class="ec-product-card__price-row">
             @if ($product->auction_product == 0)
-                @if (home_base_price($product) != home_discounted_base_price($product))
-                    <del class="ec-product-card__price-original">{{ home_base_price($product) }}</del>
-                @endif
-                <span class="ec-product-card__price">{{ home_discounted_base_price($product) }}</span>
+                <span class="ec-product-card__price-meta">
+                    @if (home_base_price($product) != home_discounted_base_price($product))
+                        <del class="ec-product-card__price-original">{{ home_base_price($product) }}</del>
+                    @endif
+                    <span class="ec-product-card__price">{{ home_discounted_base_price($product) }}</span>
+                </span>
+                <a href="javascript:void(0)" class="ec-product-card__compare"
+                    onclick="addToCompare({{ $product->id }})"
+                    data-toggle="tooltip" data-title="{{ translate('Add to compare') }}" data-placement="left"
+                    aria-label="{{ translate('Add to compare') }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16">
+                        <path d="M18.037,5.547v.8a.8.8,0,0,1-.8.8H7.221a.4.4,0,0,0-.4.4V9.216a.642.642,0,0,1-1.1.454L2.456,6.4a.643.643,0,0,1,0-.909L5.723,2.227a.642.642,0,0,1,1.1.454V4.342a.4.4,0,0,0,.4.4H17.234a.8.8,0,0,1,.8.8Zm-3.685,4.86a.642.642,0,0,0-1.1.454v1.661a.4.4,0,0,1-.4.4H2.84a.8.8,0,0,0-.8.8v.8a.8.8,0,0,0,.8.8H12.854a.4.4,0,0,1,.4.4V17.4a.642.642,0,0,0,1.1.454l3.267-3.268a.643.643,0,0,0,0-.909Z"
+                            transform="translate(-2.037 -2.038)" fill="currentColor"/>
+                    </svg>
+                </a>
             @else
                 <span class="ec-product-card__price">{{ single_price($product->starting_bid) }}</span>
             @endif
