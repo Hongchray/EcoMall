@@ -37,7 +37,7 @@
 
     .ecm-cart-table-head {
         color: #8b94a3;
-        font-size: 11px;
+        font-size: 16px;
         font-weight: 800;
         letter-spacing: .06em;
         padding: 18px 26px;
@@ -45,12 +45,16 @@
     }
 
     .ecm-cart-list {
-        padding: 0 26px;
+        background: #fff;
+        margin: 0;
+        max-height: none;
+        padding: 0;
     }
 
     .ecm-cart-row {
+        background: #fff;
         border-color: #edf2f7 !important;
-        padding: 22px 0;
+        padding: 22px 26px !important;
     }
 
     .ecm-cart-thumb {
@@ -254,10 +258,14 @@
 
         .ecm-cart-heading,
         .ecm-cart-table-head,
-        .ecm-cart-list,
         .ecm-cart-footer {
             padding-left: 14px;
             padding-right: 14px;
+        }
+
+        .ecm-cart-list {
+            padding-left: 0;
+            padding-right: 0;
         }
 
         .ecm-cart-shell {

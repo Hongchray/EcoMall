@@ -1344,7 +1344,7 @@
 
                                 <div class="text-secondary fs-14 fw-400 mt-2 ">
 
-                                    {{ get_single_attribute_name($choice->attribute_id) }}
+                                    {{ translate(get_single_attribute_name($choice->attribute_id)) }}
 
                                 </div>
 

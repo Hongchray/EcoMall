@@ -59,6 +59,7 @@
 
 
     </span>
+    <span class="ecm-header-action-label">{{ translate('Cart') }}</span>
 
 </a>
 

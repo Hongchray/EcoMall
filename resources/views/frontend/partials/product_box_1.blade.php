@@ -266,14 +266,15 @@
 
     $is_popular_product = (int) $product->num_of_sale > 10;
     $product_badge = translate('Available');
+    $product_badge_key = 'available';
 
     if ($is_popular_product) {
         $product_badge = translate('Best Selling');
+        $product_badge_key = 'best-selling';
     } elseif ($is_new_product) {
         $product_badge = translate('New');
+        $product_badge_key = 'new';
     }
-
-    $product_badge_key = strtolower(str_replace(' ', '-', $product_badge));
 
     $cart_onclick = 'showAddToCartModal(' . $product->id . ')';
     $wishlist_onclick = 'addToWishList(' . $product->id . ', this)';

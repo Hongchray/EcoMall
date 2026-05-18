@@ -26,6 +26,25 @@
 
                 return $link;
             };
+            $translate_header_menu_label = function ($label) {
+                $label = trim($label);
+                $label_slug = strtolower($label);
+
+                if ($label_slug == 'home') {
+                    return translate('Home');
+                }
+                if ($label_slug == 'category' || $label_slug == 'categories') {
+                    return translate('Category');
+                }
+                if ($label_slug == 'about ecomall' || $label_slug == 'about eco mall' || $label_slug == 'about') {
+                    return translate('About ECO MALL');
+                }
+                if ($label_slug == 'new' || $label_slug == 'news' || $label_slug == 'blog' || $label_slug == 'blogs') {
+                    return translate('News');
+                }
+
+                return translate($label);
+            };
 
         @endphp
 
@@ -930,7 +949,7 @@
 
                                                 @if ($header_menu_link != '#' && url()->current() == $header_menu_link) active @endif">
 
-                                                    {{ $value }}
+                                                    {{ $translate_header_menu_label($value) }}
                                                     @if ($is_category_menu)
                                                         <i class="las la-angle-down ml-1 has-transition" id="category-menu-bar-icon"></i>
                                                     @endif
@@ -1090,7 +1109,7 @@
                                         <i class="las {{ $mobile_menu_icon_class }}"></i>
                                     @endif
                                 </span>
-                                <span class="ecm-mobile-link-label">{{ $value }}</span>
+                                <span class="ecm-mobile-link-label">{{ $translate_header_menu_label($value) }}</span>
                                 @if ($is_mobile_category_menu)
                                     <i class="las la-angle-down mobile-category-arrow has-transition"></i>
                                 @endif
@@ -1098,7 +1117,7 @@
 
                             @if ($is_mobile_category_menu)
                                 <ul class="list-unstyled mobile-category-dropdown mb-0" style="display: none;">
-                                    @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->take(8)->get() as $category)
+                                    @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $category)
                                         @php
                                             $category_icon = $category->icon ?: static_asset('assets/img/placeholder.jpg');
                                         @endphp
@@ -1149,7 +1168,7 @@
                                     </g>
                                 </svg>
                             </span>
-                            <span class="ecm-mobile-link-label">{{ translate('Favorite') }}</span>
+                            <span class="ecm-mobile-link-label">{{ translate('Wishlist') }}</span>
                             <span class="ecm-mobile-count-badge">{{ $mobile_wishlist_count }}</span>
                         </a>
                     </li>
