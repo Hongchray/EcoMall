@@ -144,33 +144,67 @@
     }
 
 
-    /* ================= MOBILE ================= */
-    @media (max-width: 991px) {
+    @media (min-width: 768px) and (max-width: 991px) {
 
         .hero-wrapper {
-            height: auto;
+            height: 550px;
+            flex-direction: column !important;
+            gap: 16px;
         }
 
-       .hero-left {
+        /* BIG SLIDER */
+        .hero-left {
             width: 100%;
-            height: 140px; /* smaller carousel */
-        }
-        .hero-right {
-            width: 100%;
-            height: 100%;
+            height: 325px;
         }
 
-        /* right becomes horizontal */
+        /* RIGHT BANNERS */
         .hero-right {
+            width: 100%;
+            height: 225px;
             flex-direction: row;
-            gap: 10px;
+            gap: 16px;
         }
 
         .hero-right .hero-box {
-            height: 100px; /* smaller boxes */
-            flex: 1;
+            height: 100%;
         }
     }
+
+
+    @media (max-width: 767px) {
+
+        .hero-wrapper {
+            height: 300px;
+            flex-direction: column !important;
+            gap: 12px;
+        }
+
+        .hero-left {
+            width: 100%;
+            height: 170px;
+            border-radius: 14px;
+        }
+
+        .hero-right {
+            width: 100%;
+            height: 130px;
+            flex-direction: row;
+            gap: 12px;
+        }
+
+        .hero-right .hero-box {
+            height: 100%;
+            border-radius: 14px;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            display: none;
+        }
+    }
+
+
     </style>
     <div class="home-banner-area mb-3 " style="padding: 12px">
         <div class="container mt-4">
@@ -260,9 +294,17 @@
                         <div class="d-flex align-items-center border rounded-3 shadow-sm bg-white h-100 p-3">
                             <img src="/icons/delivery-bike.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
+
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Fast Delivery</h6>
-                                <small class="text-muted">Phnom Penh & nationwide</small>
+                                <h6 class="mb-1 fw-bold">
+                                    {{ translate('Fast Delivery') }}
+
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, ad, assumenda, consequatur minima autem optio dolores doloremque saepe ullam error alias! Omnis, adipisci eos deserunt voluptas reiciendis in quas nemo.{{  App::getLocale() }}
+                                </h6>
+
+                                <small class="text-muted">
+                                    {{ translate('Phnom Penh & nationwide') }}
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -311,9 +353,9 @@
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
                                 <h6 class="mb-1 fw-bold">
-                                    Fast Delivery
+                                    {{ translate('Fast Delivery') }}
                                 </h6>
-                                <small class="text-muted">Phnom Penh & nationwide</small>
+                                <small class="text-muted">{{ translate('Phnom Penh & nationwide') }}</small>
                             </div>
                         </div>
                     </div>
@@ -323,8 +365,8 @@
                             <img src="/icons/quality-assurance.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Quality Assured</h6>
-                                <small class="text-muted">Certified products only</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('Quality Assured') }}</h6>
+                                <small class="text-muted">{{ translate('Certified products only') }}</small>
                             </div>
                         </div>
                     </div>
@@ -334,8 +376,8 @@
                             <img src="/icons/best-price.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Best Prices</h6>
-                                <small class="text-muted">Wholesale & retail rates</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('Best Prices') }}</h6>
+                                <small class="text-muted">{{ translate('Wholesale & retail rates') }}</small>
                             </div>
                         </div>
                     </div>
@@ -345,8 +387,8 @@
                             <img src="/icons/telephone.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">24/7 Support</h6>
-                                <small class="text-muted">078 333 016</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('24/7 Support') }}</h6>
+                                <small class="text-muted">{{ translate('078 333 016') }}</small>
                             </div>
                         </div>
                     </div>
