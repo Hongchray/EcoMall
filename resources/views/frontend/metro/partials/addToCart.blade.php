@@ -151,7 +151,7 @@ x
 
                                 <div class="row no-gutters mt-3">
                                     <div class="col-3">
-                                        <div class="text-secondary fs-14 fw-400 mt-2 ">{{ $choice->attribute_id ? get_single_attribute_name($choice->attribute_id) : translate('Option') }}</div>
+                                        <div class="text-secondary fs-14 fw-400 mt-2 ">{{ $choice->attribute_id ? translate(get_single_attribute_name($choice->attribute_id)) : translate('Option') }}</div>
                                     </div>
                                     <div class="col-9">
                                         <div class="aiz-radio-inline">

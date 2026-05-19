@@ -29,6 +29,7 @@
         (<span class="cart-count">{{count($carts) > 0 ? count($carts) : 0 }}</span> {{translate('Items')}})
 
     </span>
+    <span class="ecm-header-action-label">{{ translate('Cart') }}</span>
 </a>
 
 <!-- Cart Items -->

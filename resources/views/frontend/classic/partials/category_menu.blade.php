@@ -1,6 +1,6 @@
 <div class="aiz-category-menu bg-white rounded-0 border-top" id="category-sidebar" style="width:270px;">
     <ul class="list-unstyled categories no-scrollbar mb-0 text-left">
-        @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->take(10)->get() as $key => $category)
+        @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $key => $category)
             @php
                 $category_name = $category->getTranslation('name');
                 $category_icon = $category->icon ?: static_asset('assets/img/placeholder.jpg');

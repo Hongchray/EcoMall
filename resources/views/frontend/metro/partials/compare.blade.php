@@ -5,4 +5,5 @@
         </svg>
         <span class="badge badge-primary badge-inline badge-pill absolute-top-right--10px">{{ Session::has('compare') ? count(Session::get('compare')) : 0 }}</span>
     </span>
+    <span class="ecm-header-action-label">{{ translate('Compare') }}</span>
 </a>

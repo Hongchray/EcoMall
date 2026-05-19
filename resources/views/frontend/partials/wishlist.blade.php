@@ -11,4 +11,5 @@
         </svg>
         <span class="badge badge-primary badge-inline badge-pill absolute-top-right--10px">{{ $wishlist_count }}</span>
     </span>
+    <span class="ecm-header-action-label">{{ translate('Wishlist') }}</span>
 </a>
