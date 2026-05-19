@@ -393,8 +393,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
                 </div> 
                 <div style="background-color: #1a73b5;">
                     <p style="color: #b9d8ee; font-size: 18px; line-height: 1.85; font-weight: 400; margin: 0;">
-                        Cambodia's premier online construction materials marketplace. Quality
-                        products, competitive prices, reliable delivery nationwide.
+                        {{ translate('eco_mall_description') }}
                     </p>
                 </div>
 
@@ -452,7 +451,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
             <!-- Quick Links -->
                     <div class="col-md-3 col-sm-6 footer-quick-links">
                         <div class="text-center text-sm-left mt-4">
-                            <h4 class="fs-18 text-white text-uppercase fw-700 mb-3">{{ translate('Quick Links') }}</h4>
+                            <h4 class="fs-18 text-white text-uppercase fw-700 mb-3">{{ translate('quick_links') }}</h4>
 
                             <ul class="list-unstyled">
                                 <li class="mb-2">
@@ -473,7 +472,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
                                 </li>
                                 <li class="mb-2">
                                     <a href="{{ route('terms') }}" class="footer-muted-link animate-underline-white">
-                                        {{ translate('Term Conditions') }}
+                                        {{ translate('terms_conditions') }}
                                     </a>
                                 </li>
                             </ul>

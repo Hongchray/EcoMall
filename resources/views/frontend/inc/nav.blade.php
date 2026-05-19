@@ -77,9 +77,7 @@
                 <button class="btn text-white h-100 absolute-top-right set-session" data-key="top-banner"
 
                     data-value="removed" data-toggle="remove-parent" data-parent=".top-banner">
-
                     <i class="la la-close la-2x"></i>
-
                 </button>
 
             </div>
@@ -87,16 +85,10 @@
         @endif
 
     <!-- -- address -->
-
-
     <div class="text-white text-center py-2" style="background-color: #2e86c1;">
-        <p class="mb-0">
-            🚚 Free delivery in Phnom Penh |
-            <span>078 333 016</span> |
-            Cambodia's #1 Online Construction Mall |
-            <span>Open 24/7</span>
+        <p class="mb-0 font-weight-500 fs-16">
+            🚚{{ translate('free_delivery_phnom_penh') }}
         </p>
-
     </div>
 
         <!-- Top Bar language -->

@@ -37,8 +37,8 @@
         <div class="profile-panel">
             <div class="profile-panel-header">
                 <div>
-                    <h1 class="profile-title">{{ translate('Manage Profile') }}</h1>
-                    <p class="profile-subtitle">{{ translate('Update your personal information and account access.') }}</p>
+                    <h1 class="profile-title  ">{{ translate('Manage Profile') }}</h1>
+                    <p class="profile-subtitle">{{ translate('update_your_personal_information_and_account_access') }}</p>
                 </div>
             </div>
             <div class="profile-body">
@@ -101,7 +101,7 @@
             <div class="profile-panel-header">
                 <div>
                     <h2 class="profile-title">{{ translate('Address')}}</h2>
-                    <p class="profile-subtitle">{{ translate('Manage delivery addresses for your account.') }}</p>
+                    <p class="profile-subtitle">{{ translate('manage_delivery_addresses_for_your_account') }}</p>
                 </div>
             </div>
             <div class="profile-body">
@@ -147,7 +147,7 @@
                 <div class="profile-panel-header">
                     <div>
                         <h2 class="profile-title">{{ translate('Change your email')}}</h2>
-                        <p class="profile-subtitle">{{ translate('Verify your new email before saving changes.') }}</p>
+                        <p class="profile-subtitle">{{ translate('verify_your_new_email_before_saving_changes') }}</p>
                     </div>
                 </div>
                 <div class="profile-body">
