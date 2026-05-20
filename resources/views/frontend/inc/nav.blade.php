@@ -1161,7 +1161,7 @@
                                 </svg>
                             </span>
                             <span class="ecm-mobile-link-label">{{ translate('Wishlist') }}</span>
-                            <span class="ecm-mobile-count-badge">{{ $mobile_wishlist_count }}</span>
+                            <span class="ecm-mobile-count-badge ecm-mobile-wishlist-count">{{ $mobile_wishlist_count }}</span>
                         </a>
                     </li>
 

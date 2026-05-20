@@ -867,6 +867,11 @@
 
                         $('#wishlist').html(data);
 
+                        var wishlistCount = $('#wishlist .badge').first().text().trim();
+                        if (wishlistCount !== '') {
+                            $('.ecm-mobile-wishlist-count').text(wishlistCount);
+                        }
+
                         if (el) {
                             $(el)
                                 .addClass('is-active')

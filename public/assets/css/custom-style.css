@@ -226,6 +226,17 @@
     font-weight: 800;
 }
 
+.ecm-benefit-title {
+    font-size: 16px;
+    line-height: 1.25;
+}
+
+.ecm-benefit-text {
+    display: block;
+    font-size: 14px;
+    line-height: 1.35;
+}
+
 .ecm-news-detail-hero {
     align-items: center;
 }
@@ -991,6 +1002,10 @@
     padding-left: 0 !important;
 }
 
+.ecm-search-input-box {
+    position: relative;
+}
+
 .ecm-search-input-box > .ecm-search-input {
     height: 34px;
     padding: 0 56px 0 26px;
@@ -1012,6 +1027,18 @@
     box-shadow: 0 0 0 2px rgba(19, 148, 210, 0.12);
 }
 
+.ecm-search-input-box::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 100%;
+    background: #349bd4;
+    border-radius: 0 7px 7px 0;
+    pointer-events: none;
+}
+
 .ecm-search-input-box > .ecm-search-icon {
     position: absolute;
     top: 50%;
@@ -1020,6 +1047,8 @@
     height: 15px;
     display: block;
     object-fit: contain;
+    filter: brightness(0) invert(1);
+    z-index: 1;
     transform: translateY(-50%);
     pointer-events: none;
 }
@@ -1032,6 +1061,12 @@
 [dir="rtl"] .ecm-search-input-box > .ecm-search-icon {
     right: auto;
     left: 26px;
+}
+
+[dir="rtl"] .ecm-search-input-box::after {
+    right: auto;
+    left: 0;
+    border-radius: 7px 0 0 7px;
 }
 
 .ecm-header-search .typed-search-box {
@@ -2199,6 +2234,11 @@
         line-height: 1;
     }
 
+    .aiz-top-menu-sidebar .ecm-mobile-wishlist-count {
+        display: inline-flex !important;
+        visibility: visible;
+    }
+
     .aiz-top-menu-sidebar .js-mobile-category-toggle.active .mobile-category-arrow {
         transform: rotate(180deg);
     }
@@ -2337,4 +2377,63 @@
         background: #349bd4;
         border-color: #349bd4;
     }
+}
+
+@font-face {
+    font-family: "EcoMall Chinese";
+    font-weight: 400;
+    font-style: normal;
+    src: url("../fonts/chinese-msyh.ttf") format("truetype");
+    font-display: swap;
+}
+
+.ecm-policy-content,
+.ecm-policy-content * {
+    font-family: "DM Sans", "Siemreap", "EcoMall Chinese", "Microsoft YaHei", Arial, sans-serif !important;
+}
+
+.ecm-policy-content {
+    color: #263238;
+    font-size: 15px;
+    line-height: 1.85;
+}
+
+.ecm-policy-content h1,
+.ecm-policy-content h2,
+.ecm-policy-content h3,
+.ecm-policy-content h4,
+.ecm-policy-content h5,
+.ecm-policy-content h6 {
+    margin-top: 1.35em;
+    margin-bottom: 0.7em;
+    color: #111827;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.ecm-policy-content h1:first-child,
+.ecm-policy-content h2:first-child,
+.ecm-policy-content h3:first-child {
+    margin-top: 0;
+}
+
+.ecm-policy-content p,
+.ecm-policy-content ul,
+.ecm-policy-content ol,
+.ecm-policy-content table {
+    margin-bottom: 1rem;
+}
+
+.ecm-policy-content ul,
+.ecm-policy-content ol {
+    padding-left: 1.35rem;
+}
+
+.ecm-policy-content li {
+    margin-bottom: 0.45rem;
+}
+
+.ecm-policy-content a {
+    color: #2274a5;
+    text-decoration: underline;
 }

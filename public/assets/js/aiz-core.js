@@ -1331,6 +1331,9 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                     focusOnSelect: focusOnSelect,
                     adaptiveHeight: adaptiveHeight,
                     slidesToScroll: 1,
+                    swipeToSlide: true,
+                    touchThreshold: 15,
+                    waitForAnimate: false,
                     prevArrow:
                         '<button type="button" class="slick-prev"><i class="las la-angle-left"></i></button>',
                     nextArrow:
@@ -1342,6 +1345,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 slidesToShow: slidesPerViewXl,
                                 vertical: verticalXl,
                                 rtl: slidesRtlXL,
+                                swipeToSlide: true,
                             },
                         },
                         {
@@ -1350,6 +1354,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 slidesToShow: slidesPerViewLg,
                                 vertical: verticalLg,
                                 rtl: slidesRtlLg,
+                                swipeToSlide: true,
                             },
                         },
                         {
@@ -1358,6 +1363,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 slidesToShow: slidesPerViewMd,
                                 vertical: verticalMd,
                                 rtl: slidesRtlMd,
+                                swipeToSlide: true,
                             },
                         },
                         {
@@ -1366,6 +1372,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 slidesToShow: slidesPerViewSm,
                                 vertical: verticalSm,
                                 rtl: slidesRtlSm,
+                                swipeToSlide: true,
                             },
                         },
                         {
@@ -1374,6 +1381,7 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                                 slidesToShow: slidesPerViewXs,
                                 vertical: verticalXs,
                                 rtl: slidesRtlXs,
+                                swipeToSlide: true,
                             },
                         },
                     ],

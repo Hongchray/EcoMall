@@ -400,7 +400,7 @@
             <h1 class="ecm-order-title">{{ translate('Order id') }}: {{ $order->code }}</h1>
             <div class="ecm-order-hero-meta">
                 <span class="ecm-order-hero-pill">{{ translate(ucfirst(str_replace('_', ' ', $order->delivery_status))) }}</span>
-                <span class="ecm-order-hero-pill">{{ date('d M Y, h:i A', $order->date) }}</span>
+                <span class="ecm-order-hero-pill">{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, h:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</span>
             </div>
         </div>
         <div class="ecm-order-hero-amount">
@@ -445,7 +445,7 @@
                     </div>
                     <div class="ecm-order-summary-item">
                         <span class="ecm-order-summary-label">{{ translate('Order date') }}</span>
-                        <span class="ecm-order-summary-value">{{ date('d-m-Y H:i A', $order->date) }}</span>
+                        <span class="ecm-order-summary-value">{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, H:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</span>
                     </div>
                     <div class="ecm-order-summary-item">
                         <span class="ecm-order-summary-label">{{ translate('Order status') }}</span>
@@ -509,7 +509,7 @@
                     <table class="table-borderless table ecm-order-info-table">
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Order date') }}:</td>
-                            <td>{{ date('d-m-Y H:i A', $order->date) }}</td>
+                            <td>{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, H:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</td>
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Order status') }}:</td>

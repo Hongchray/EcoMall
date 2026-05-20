@@ -1,7 +1,4 @@
 @extends('frontend.layouts.app')
-
-
-
 @section('content')
 
     <!-- Sliders -->
@@ -296,14 +293,12 @@
                                 class="me-3 flex-shrink-0" style="width:45px;">
 
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">
                                     {{ translate('Fast Delivery') }}
-
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, ad, assumenda, consequatur minima autem optio dolores doloremque saepe ullam error alias! Omnis, adipisci eos deserunt voluptas reiciendis in quas nemo.{{  App::getLocale() }}
                                 </h6>
 
-                                <small class="text-muted">
-                                    {{ translate('Phnom Penh & nationwide') }}
+                                <small class="text-muted ecm-benefit-text">
+                                    {{ translate('phnom_penh_nationwide') }}
                                 </small>
                             </div>
                         </div>
@@ -314,8 +309,8 @@
                             <img src="/icons/quality-assurance.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('quality_assured') }}</h6>
-                                <small class="text-muted">{{ translate('certified_products_only') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('quality_assured') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('certified_products_only') }}</small>
                             </div>
                         </div>
                     </div>
@@ -325,8 +320,8 @@
                             <img src="/icons/best-price.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('best_prices') }}</h6>
-                                <small class="text-muted">{{ translate('wholesale_retail_rates') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('best_prices') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('wholesale_retail_rates') }}</small>
                             </div>
                         </div>
                     </div>
@@ -336,8 +331,8 @@
                             <img src="/icons/telephone.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('24_7_support') }}</h6>
-                                <small class="text-muted">{{ translate('support_phone_078333016') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('24_7_support') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('support_phone_078333016') }}</small>
                             </div>
                         </div>
                     </div>
@@ -351,10 +346,10 @@
                             <img src="/icons/delivery-bike.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">
-                                    Fast Delivery
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">
+                                    {{ translate('Fast Delivery') }}
                                 </h6>
-                                <small class="text-muted">Phnom Penh & nationwide</small>
+                                <small class="text-muted ecm-benefit-text">{{ translate('phnom_penh_nationwide') }}</small>
                             </div>
                         </div>
                     </div>
@@ -364,8 +359,8 @@
                             <img src="/icons/quality-assurance.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Quality Assured</h6>
-                                <small class="text-muted">Certified products only</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('quality_assured') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('certified_products_only') }}</small>
                             </div>
                         </div>
                     </div>
@@ -375,8 +370,8 @@
                             <img src="/icons/best-price.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Best Prices</h6>
-                                <small class="text-muted">Wholesale & retail rates</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('best_prices') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('wholesale_retail_rates') }}</small>
                             </div>
                         </div>
                     </div>
@@ -386,8 +381,8 @@
                             <img src="/icons/telephone.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">24/7 Support</h6>
-                                <small class="text-muted">078 333 016</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('24_7_support') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('support_phone_078333016') }}</small>
                             </div>
                         </div>
                     </div>
