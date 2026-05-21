@@ -801,9 +801,9 @@
 
         function updateNavCart(view,count){
 
-            $('.cart-count').html(count);
-
             $('#cart_items').html(view);
+
+            $('.cart-count').html(count);
 
         }
 

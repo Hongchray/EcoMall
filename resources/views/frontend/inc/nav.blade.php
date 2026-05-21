@@ -1049,7 +1049,7 @@
                     @php
                         $mobile_notification_count = Auth::check() ? count(Auth::user()->unreadNotifications) : 0;
                         $mobile_wishlist_count = Auth::check() ? Auth::user()->wishlists()->count() : 0;
-                        $mobile_cart_count = isset($carts) ? count($carts) : 0;
+                        $mobile_cart_count = collect(get_user_cart())->sum('quantity');
                         $mobile_compare_count = Session::has('compare') ? count(Session::get('compare')) : 0;
                         $mobile_header_menu_labels = $header_menu_labels;
                         $mobile_header_menu_links = $header_menu_links;

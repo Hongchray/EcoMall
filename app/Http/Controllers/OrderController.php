@@ -304,7 +304,7 @@ class OrderController extends Controller
 
             $shippingAddress['country']     = optional($address->country)->name;
 
-            $shippingAddress['state']       = optional($address->state)->name;
+            $shippingAddress['state']       = optional($address->state)->getTranslation('name');
 
             $shippingAddress['city']        = optional($address->city)->name;
 

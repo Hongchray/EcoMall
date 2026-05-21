@@ -13,6 +13,11 @@ use Cookie;
 
 class CartController extends Controller
 {
+    private function cartQuantityCount($carts)
+    {
+        return collect($carts)->sum('quantity');
+    }
+
     public function index(Request $request)
     {
         if (auth()->user() != null) {
@@ -60,7 +65,7 @@ class CartController extends Controller
         if($check_auction_in_cart && $product->auction_product == 0) {
             return array(
                 'status' => 0,
-                'cart_count' => count($carts),
+                'cart_count' => $this->cartQuantityCount($carts),
                 'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.removeAuctionProductFromCart')->render(),
                 'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
             );
@@ -71,7 +76,7 @@ class CartController extends Controller
         if ($quantity < $product->min_qty) {
             return array(
                 'status' => 0,
-                'cart_count' => count($carts),
+                'cart_count' => $this->cartQuantityCount($carts),
                 'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.minQtyNotSatisfied', ['min_qty' => $product->min_qty])->render(),
                 'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
             );
@@ -88,7 +93,7 @@ class CartController extends Controller
         if ($product_stock == null || ($product->digital == 0 && $product_stock->qty < $quantity)) {
             return array(
                 'status' => 0,
-                'cart_count' => count($carts),
+                'cart_count' => $this->cartQuantityCount($carts),
                 'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.outOfStockCart')->render(),
                 'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
             );
@@ -104,7 +109,7 @@ class CartController extends Controller
             if ($product->auction_product == 1 && ($cart->product_id == $product->id)) {
                 return array(
                     'status' => 0,
-                    'cart_count' => count($carts),
+                    'cart_count' => $this->cartQuantityCount($carts),
                     'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.auctionProductAlredayAddedCart')->render(),
                     'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
                 );
@@ -112,7 +117,7 @@ class CartController extends Controller
             if ($product_stock->qty < $cart->quantity + $request['quantity']) {
                 return array(
                     'status' => 0,
-                    'cart_count' => count($carts),
+                    'cart_count' => $this->cartQuantityCount($carts),
                     'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.outOfStockCart')->render(),
                     'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
                 );
@@ -128,7 +133,7 @@ class CartController extends Controller
         $carts = Cart::where('user_id', auth()->user()->id)->get();
         return array(
             'status' => 1,
-            'cart_count' => count($carts),
+            'cart_count' => $this->cartQuantityCount($carts),
             'modal_view' => view('frontend.'.get_setting('homepage_select').'.partials.addedToCart', compact('product', 'cart'))->render(),
             'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
         );
@@ -147,7 +152,7 @@ class CartController extends Controller
         }
 
         return array(
-            'cart_count' => count($carts),
+            'cart_count' => $this->cartQuantityCount($carts),
             'cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart_details', compact('carts'))->render(),
             'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
         );
@@ -210,7 +215,7 @@ class CartController extends Controller
         }
 
         return array(
-            'cart_count' => count($carts),
+            'cart_count' => $this->cartQuantityCount($carts),
             'cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart_details', compact('carts'))->render(),
             'nav_cart_view' => view('frontend.'.get_setting('homepage_select').'.partials.cart')->render(),
         );

@@ -718,12 +718,12 @@
 }
 
 .ecm-header-cart .ecm-cart-menu {
-    width: 390px;
+    width: 360px;
     max-width: calc(100vw - 24px);
     overflow: hidden;
-    border: 1px solid #e6edf2;
+    border: 1px solid #d8e9f4;
     border-radius: 8px !important;
-    box-shadow: 0 18px 45px rgba(17, 24, 39, 0.14);
+    box-shadow: 0 18px 42px rgba(31, 84, 122, 0.2);
 }
 
 .ecm-cart-header {
@@ -734,6 +734,24 @@
     padding: 16px 18px;
     background: #ffffff;
     border-bottom: 1px solid #eef2f6;
+}
+
+.ecm-cart-empty-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #ffffff;
+    border-top: 4px solid #349bd4;
+    border-bottom: 1px solid #edf4f8;
+}
+
+.ecm-cart-empty-header h6 {
+    color: #102f44;
+    font-size: 15px;
+    font-weight: 900;
+    line-height: 1.25;
 }
 
 .ecm-cart-header h6 {
@@ -900,30 +918,70 @@
 }
 
 .ecm-cart-empty {
-    padding: 34px 20px;
-    color: #8b98a7;
-    background: #ffffff;
+    padding: 24px 18px 22px;
+    color: #5f7284;
+    background: #f8fbfd;
     text-align: center;
 }
 
-.ecm-cart-empty i {
+.ecm-cart-empty-visual {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 13px;
+}
+
+.ecm-cart-empty-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 54px;
-    height: 54px;
-    margin-bottom: 12px;
+    width: 56px;
+    height: 56px;
     color: #f3a000;
     background: #fff5df;
+    border: 1px solid #ffe4aa;
     border-radius: 8px;
+    box-shadow: 0 10px 22px rgba(243, 160, 0, 0.16);
+}
+
+.ecm-cart-empty-icon i {
     font-size: 30px;
+    line-height: 1;
 }
 
 .ecm-cart-empty h3 {
     margin: 0;
-    color: #111827;
+    color: #102f44;
     font-size: 15px;
+    font-weight: 900;
+    line-height: 1.35;
+}
+
+.ecm-cart-empty-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 132px;
+    height: 40px;
+    margin-top: 16px;
+    padding: 0 18px;
+    color: #ffffff !important;
+    background: #2f94cf;
+    border: 1px solid #2f94cf;
+    border-radius: 8px;
+    font-size: 13px;
     font-weight: 800;
+    text-decoration: none !important;
+    box-shadow: 0 10px 20px rgba(52, 155, 212, 0.22);
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.ecm-cart-empty-btn:hover,
+.ecm-cart-empty-btn:focus {
+    color: #ffffff !important;
+    background: #237fb1;
+    border-color: #237fb1;
+    box-shadow: 0 12px 24px rgba(35, 127, 177, 0.26);
+    transform: translateY(-1px);
 }
 
 .slide-arrow i {

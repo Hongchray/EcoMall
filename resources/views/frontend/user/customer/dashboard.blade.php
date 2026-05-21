@@ -689,7 +689,7 @@
                         <ul class="list-unstyled ecm-dashboard-address-list mb-4">
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->address }},</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->postal_code }} - {{ $default_address->city->name }},</span></li>
-                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->state->name }},</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->state->getTranslation('name') }},</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->country->name }}.</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->phone }}</span></li>
                         </ul>

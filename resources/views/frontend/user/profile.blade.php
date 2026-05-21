@@ -114,7 +114,7 @@
                             <div class="address-row"><span class="address-label">{{ translate('Address') }}</span><span class="address-value">{{ $address->address }}</span></div>
                             <div class="address-row"><span class="address-label">{{ translate('Postal Code') }}</span><span class="address-value">{{ $address->postal_code }}</span></div>
                             <div class="address-row"><span class="address-label">{{ translate('City') }}</span><span class="address-value">{{ optional($address->city)->name }}</span></div>
-                            <div class="address-row"><span class="address-label">{{ translate('State') }}</span><span class="address-value">{{ optional($address->state)->name }}</span></div>
+                            <div class="address-row"><span class="address-label">{{ translate('State') }}</span><span class="address-value">{{ optional($address->state)->getTranslation('name') }}</span></div>
                             <div class="address-row"><span class="address-label">{{ translate('Country') }}</span><span class="address-value">{{ optional($address->country)->name }}</span></div>
                             <div class="address-row mb-0"><span class="address-label">{{ translate('Phone') }}</span><span class="address-value">{{ $address->phone }}</span></div>
 
