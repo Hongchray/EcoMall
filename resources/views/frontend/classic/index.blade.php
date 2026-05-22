@@ -6,28 +6,24 @@
 
     <!-- Sliders -->
 <style>
-    /* Cross-fade: outgoing slides stay visible while incoming fades in */
-    #homeCarousel .carousel-item {
-        transition: none;
-    }
+
 
     #homeCarousel .carousel-inner {
         position: relative;
     }
 
     #homeCarousel .carousel-item {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        opacity: 0;
-        transition: opacity 0.8s ease;
-        display: block !important; /* override Bootstrap's display:none */
+        transition: opacity 0.8s ease-in-out;
     }
 
-    #homeCarousel .carousel-item.active {
-        opacity: 1;
-        position: relative; /* active item holds the height */
+    #homeCarousel .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
+
+
+
 
     /* Indicators */
     .carousel-indicators [data-bs-target] {
@@ -205,7 +201,7 @@
     }
 
 
-    </style>
+</style>
     <div class="home-banner-area mb-3 " style="padding: 12px">
         <div class="container mt-4">
 
@@ -215,9 +211,9 @@
                 <div class="hero-left bg-light shadow-sm">
 
                     <div id="homeCarousel"
-                        class="carousel slide h-100"
+                        class="carousel slide carousel-fade h-100"
                         data-bs-ride="carousel"
-                        data-bs-interval="3000"
+                        data-bs-interval="5000"
                         data-bs-pause="hover"
                         data-bs-wrap="true">
 
@@ -299,7 +295,6 @@
                                 <h6 class="mb-1 fw-bold">
                                     {{ translate('Fast Delivery') }}
 
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, ad, assumenda, consequatur minima autem optio dolores doloremque saepe ullam error alias! Omnis, adipisci eos deserunt voluptas reiciendis in quas nemo.{{  App::getLocale() }}
                                 </h6>
 
                                 <small class="text-muted">
@@ -314,8 +309,8 @@
                             <img src="/icons/quality-assurance.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Quality Assured</h6>
-                                <small class="text-muted">Certified products only</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('Quality Assured') }}</h6>
+                                <small class="text-muted">{{ translate('Certified products only') }}</small>
                             </div>
                         </div>
                     </div>
@@ -325,8 +320,8 @@
                             <img src="/icons/best-price.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">Best Prices</h6>
-                                <small class="text-muted">Wholesale & retail rates</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('Best Prices') }}</h6>
+                                <small class="text-muted">{{ translate('Wholesale & retail rates') }}</small>
                             </div>
                         </div>
                     </div>
@@ -336,8 +331,8 @@
                             <img src="/icons/telephone.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">24/7 Support</h6>
-                                <small class="text-muted">078 333 016</small>
+                                <h6 class="mb-1 fw-bold">{{ translate('24/7 Support') }}</h6>
+                                <small class="text-muted">{{ translate('078 333 016') }}</small>
                             </div>
                         </div>
                     </div>
@@ -769,14 +764,6 @@
 
 
 
-    <!-- Today's deal -->
-
-<!--     <div id="todays_deal"  class="mb-2 mb-md-3 mt-2 mt-md-3">
-
-    </div> -->
-
-
-<!-- Featured Categories -->
     @if (count($featured_categories) > 0)
         @foreach($featured_categories as $category)
             @if(count($category->products) > 0)
