@@ -27,12 +27,14 @@
                             <span class="ecm-notification-row-chip">{{ translate($status) }}</span>
                         </span>
                         <span class="ecm-notification-row-message">
-                            {{ translate('Your Order: ') }}<strong>{{ $notification->data['order_code'] }}</strong>
-                            {{ translate(' has been '. $status) }}
+                            {{ translate('your_order') }}:<strong>{{ $notification->data['order_code'] }}</strong>
+                            {{ translate('has_been_'.$notification->data['status']) }}
                         </span>
                         <span class="ecm-notification-row-time">
                             <i class="las la-clock"></i>
-                            {{ date("F j Y, g:i a", strtotime($notification->created_at)) }}
+                            {{ translate(date("F", strtotime($notification->created_at))) }}
+                            {{ date("j Y, g:i", strtotime($notification->created_at)) }}
+                            {{ translate(date("a", strtotime($notification->created_at))) }}
                         </span>
                     </span>
                     <span class="ecm-notification-row-arrow">

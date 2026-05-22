@@ -38,9 +38,19 @@
             --hov-blue: #1f6dc2;
             --soft-blue: #f1fafd;
         }
+        @font-face {
+            font-family: "Siemreap";
+            font-weight: normal;
+            src: url("{{ static_asset('assets/fonts/Siemreap-Regular.woff') }}") format("woff"), url("{{ static_asset('assets/fonts/Siemreap-Regular.ttf') }}") format("truetype");
+        }
+        @font-face {
+            font-family: "Siemreap";
+            font-weight: bold;
+            src: url("{{ static_asset('assets/fonts/Siemreap-Bold.woff') }}") format("woff"), url("{{ static_asset('assets/fonts/Siemreap-Bold.ttf') }}") format("truetype");
+        }
         body {
             font-size: 12px;
-            font-family: 'Public Sans', sans-serif;
+            font-family: 'Public Sans', 'Siemreap', sans-serif;
         }
         /* .bootstrap-select .btn,
         .btn:not(.btn-circle),

@@ -801,9 +801,9 @@
 
         function updateNavCart(view,count){
 
-            $('.cart-count').html(count);
-
             $('#cart_items').html(view);
+
+            $('.cart-count').html(count);
 
         }
 
@@ -866,6 +866,11 @@
                     if(data != 0){
 
                         $('#wishlist').html(data);
+
+                        var wishlistCount = $('#wishlist .badge').first().text().trim();
+                        if (wishlistCount !== '') {
+                            $('.ecm-mobile-wishlist-count').text(wishlistCount);
+                        }
 
                         if (el) {
                             $(el)

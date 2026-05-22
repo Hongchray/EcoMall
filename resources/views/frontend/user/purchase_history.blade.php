@@ -527,7 +527,9 @@
                             <a href="{{route('purchase_history.details', encrypt($order->id))}}" class="purchase-mobile-code">
                                 {{ $order->code }}
                             </a>
-                            <span class="purchase-mobile-date">{{ date('d M Y', $order->date) }}</span>
+                            <span class="purchase-mobile-date">
+                                {{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y', $order->date) }}
+                            </span>
                         </div>
                         <div class="purchase-mobile-amount">{{ single_price($order->grand_total) }}</div>
                     </div>

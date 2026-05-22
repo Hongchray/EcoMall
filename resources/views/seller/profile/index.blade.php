@@ -166,7 +166,7 @@
                             </div>
                             <div>
                                 <span class="w-50 fw-600">{{ translate('State') }}:</span>
-                                <span class="ml-2">{{ optional($address->state)->name }}</span>
+                                <span class="ml-2">{{ optional($address->state)->getTranslation('name') }}</span>
                             </div>
                             <div>
                                 <span class="w-50 fw-600">{{ translate('Country') }}:</span>

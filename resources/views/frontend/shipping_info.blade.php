@@ -371,7 +371,7 @@
                                                         </div>
                                                         <div class="row mb-1">
                                                             <span class="ecm-address-label col-4 col-sm-3">{{ translate('State') }}</span>
-                                                            <span class="ecm-address-value col">{{ optional($address->state)->name }}</span>
+                                                            <span class="ecm-address-value col">{{ optional($address->state)->getTranslation('name') }}</span>
                                                         </div>
                                                         <div class="row mb-1">
                                                             <span class="ecm-address-label col-4 col-sm-3">{{ translate('Country') }}</span>

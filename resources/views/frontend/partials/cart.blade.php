@@ -1,10 +1,12 @@
 @php
     $total = 0;
     $carts = get_user_cart();
+    $cartCount = 0;
     if(count($carts) > 0) {
         foreach ($carts as $key => $cartItem) {
             $product = get_single_product($cartItem['product_id']);
             $total = $total + cart_product_price($cartItem, $product, false) * $cartItem['quantity'];
+            $cartCount += $cartItem['quantity'];
         }
     }
 @endphp
@@ -26,7 +28,7 @@
     <span class="d-none d-xl-block ml-2 fs-14 fw-700 text-white">{{ single_price($total) }}</span>
     <span class="nav-box-text d-none d-xl-block ml-2 text-white fs-12">
 
-        (<span class="cart-count">{{count($carts) > 0 ? count($carts) : 0 }}</span> {{translate('Items')}})
+        (<span class="cart-count">{{ $cartCount }}</span> {{translate('Items')}})
 
     </span>
     <span class="ecm-header-action-label">{{ translate('Cart') }}</span>
@@ -41,7 +43,7 @@
                 <h6 class="mb-0">{{ translate('Cart Items') }}</h6>
             </div>
             <span class="ecm-cart-total-items">
-                <span class="cart-count">{{ count($carts) }}</span>
+                <span class="cart-count">{{ $cartCount }}</span>
             </span>
         </div>
         <!-- Cart Products -->
@@ -114,9 +116,23 @@
             </div>
         </div>
     @else
+        <div class="ecm-cart-empty-header">
+            <div>
+                <span class="ecm-notification-eyebrow">{{ translate('Shopping') }}</span>
+                <h6 class="mb-0">{{ translate('My Cart') }}</h6>
+            </div>
+            <span class="ecm-cart-total-items">0</span>
+        </div>
         <div class="ecm-cart-empty">
-            <i class="las la-shopping-cart"></i>
+            <div class="ecm-cart-empty-visual">
+                <span class="ecm-cart-empty-icon">
+                    <i class="las la-shopping-cart"></i>
+                </span>
+            </div>
             <h3>{{ translate('Your Cart is empty') }}</h3>
+            <a href="{{ route('home') }}" class="ecm-cart-empty-btn">
+                {{ translate('Shop now') }}
+            </a>
         </div>
     @endif
 </div>

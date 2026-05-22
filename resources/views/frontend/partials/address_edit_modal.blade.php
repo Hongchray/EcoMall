@@ -39,7 +39,7 @@
                 <select class="form-control mb-3 aiz-selectpicker rounded-0" name="state_id" id="edit_state"  data-live-search="true" required>
                     @foreach ($states as $key => $state)
                         <option value="{{ $state->id }}" @if($address_data->state_id == $state->id) selected @endif>
-                            {{ $state->name }}
+                            {{ $state->getTranslation('name') }}
                         </option>
                     @endforeach
                 </select>

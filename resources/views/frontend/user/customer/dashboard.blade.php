@@ -489,13 +489,13 @@
                         <i class="las la-user"></i>
                     </span>
                     <div class="ml-3">
-                        <div class="fs-13 fw-700 text-primary">{{ translate('Customer Dashboard') }}</div>
-                        <h1 class="h4 fw-800 mb-0 text-dark">{{ translate('Welcome') }}, {{ Auth::user()->name }}</h1>
+                        <div class="fs-18 fw-700 text-primary">{{ translate('customer_dashboard') }}</div>
+                        <h1 class="h4 fw-800 mb-0 text-dark">{{ translate('welcome') }}, {{ Auth::user()->name }}</h1>
                     </div>
                 </div>
                 <a href="{{ route('purchase_history.index') }}" class="btn btn-primary ecm-dashboard-action px-4 mt-3 mt-sm-0">
                     <i class="las la-receipt fs-18 mr-1"></i>
-                    {{ translate('My Orders') }}
+                    {{ translate('my_order') }}
                 </a>
             </div>
         </div>
@@ -543,11 +543,11 @@
                                     <i class="las la-receipt"></i>
                                 </span>
                                 <div class="ml-3">
-                                    <div class="fs-13 opacity-70">{{ translate('Total Expenditure') }}</div>
+                                    <div class="fs-20 opacity-70">{{ translate('Total Expenditure') }}</div>
                                     <div class="fs-22 fw-800">{{ single_price(get_user_total_expenditure()) }}</div>
                                 </div>
                             </div>
-                            <a href="{{ route('purchase_history.index') }}" class="text-white fs-13 fw-700">
+                            <a  href="{{ route('purchase_history.index') }}" class="text-white fs-16 fw-700">
                                 {{ translate('View Order History') }}
                                 <i class="las la-angle-right ml-1"></i>
                             </a>
@@ -620,8 +620,8 @@
                                 <i class="las la-headset"></i>
                             </span>
                             <div class="ml-3">
-                                <h6 class="fw-800 fs-16 mb-1 text-dark">{{ translate('Need help or updates?') }}</h6>
-                                <p class="fs-14 ecm-dashboard-muted mb-0">{{ translate('Follow sellers, check conversations, or create a support ticket from one place.') }}</p>
+                                <h6 class="fw-800 fs-16 mb-1 text-dark">{{ translate('need_help_or_updates') }}</h6>
+                                <p class="fs-14 ecm-dashboard-muted mb-0">{{ translate('follow_sellers_check_conversations_or_create_a_support_ticket_from_one_place') }}</p>
                             </div>
                         </div>
                         <div class="d-flex flex-wrap" style="gap: 10px;">
@@ -689,7 +689,7 @@
                         <ul class="list-unstyled ecm-dashboard-address-list mb-4">
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->address }},</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->postal_code }} - {{ $default_address->city->name }},</span></li>
-                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->state->name }},</span></li>
+                            <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->state->getTranslation('name') }},</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->country->name }}.</span></li>
                             <li class="fs-14 fw-400 pb-1"><span>{{ $default_address->phone }}</span></li>
                         </ul>

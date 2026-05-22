@@ -1,7 +1,4 @@
 @extends('frontend.layouts.app')
-
-
-
 @section('content')
 
     <!-- Sliders -->
@@ -292,13 +289,12 @@
                                 class="me-3 flex-shrink-0" style="width:45px;">
 
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">
                                     {{ translate('Fast Delivery') }}
-
                                 </h6>
 
-                                <small class="text-muted">
-                                    {{ translate('Phnom Penh & nationwide') }}
+                                <small class="text-muted ecm-benefit-text">
+                                    {{ translate('phnom_penh_nationwide') }}
                                 </small>
                             </div>
                         </div>
@@ -336,7 +332,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- normal grid for desktop -->
@@ -347,10 +342,10 @@
                             <img src="/icons/delivery-bike.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">
                                     {{ translate('Fast Delivery') }}
                                 </h6>
-                                <small class="text-muted">{{ translate('Phnom Penh & nationwide') }}</small>
+                                <small class="text-muted ecm-benefit-text">{{ translate('phnom_penh_nationwide') }}</small>
                             </div>
                         </div>
                     </div>
@@ -360,8 +355,8 @@
                             <img src="/icons/quality-assurance.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('Quality Assured') }}</h6>
-                                <small class="text-muted">{{ translate('Certified products only') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('quality_assured') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('certified_products_only') }}</small>
                             </div>
                         </div>
                     </div>
@@ -371,8 +366,8 @@
                             <img src="/icons/best-price.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('Best Prices') }}</h6>
-                                <small class="text-muted">{{ translate('Wholesale & retail rates') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('best_prices') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('wholesale_retail_rates') }}</small>
                             </div>
                         </div>
                     </div>
@@ -382,8 +377,8 @@
                             <img src="/icons/telephone.png"
                                 class="me-3 flex-shrink-0" style="width:45px;">
                             <div class="ml-2">
-                                <h6 class="mb-1 fw-bold">{{ translate('24/7 Support') }}</h6>
-                                <small class="text-muted">{{ translate('078 333 016') }}</small>
+                                <h6 class="mb-1 fw-bold ecm-benefit-title">{{ translate('24_7_support') }}</h6>
+                                <small class="text-muted ecm-benefit-text">{{ translate('support_phone_078333016') }}</small>
                             </div>
                         </div>
                     </div>

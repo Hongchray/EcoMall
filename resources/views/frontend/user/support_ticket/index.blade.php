@@ -80,7 +80,9 @@
                         <div class="ecm-ticket-card-top">
                             <div>
                                 <div class="ecm-ticket-card-code">#{{ $ticket->code }}</div>
-                                <span class="ecm-ticket-card-date">{{ date('d M Y, h:i A', strtotime($ticket->created_at)) }}</span>
+                                <span class="ecm-ticket-card-date">
+                                    {{ date('d', strtotime($ticket->created_at)) }} {{ translate(date('F', strtotime($ticket->created_at))) }} {{ date('Y, h:i', strtotime($ticket->created_at)) }} {{ translate(strtolower(date('A', strtotime($ticket->created_at)))) }}
+                                </span>
                             </div>
                             @if ($ticket->status == 'pending')
                                 <span class="ecm-status ecm-status-pending">{{ translate('Pending')}}</span>

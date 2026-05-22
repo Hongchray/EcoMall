@@ -60,7 +60,7 @@ class AddressCollection extends ResourceCollection
 
                     'country_name' => optional($data->country)->name,
 
-                    'state_name' => optional($data->state)->name,
+                    'state_name' => optional($data->state)->getTranslation('name'),
 
                     'city_name' => optional($data->city)->name,
 
