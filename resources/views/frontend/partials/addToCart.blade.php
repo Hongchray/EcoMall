@@ -453,6 +453,7 @@
                     foreach ($product->stocks as $key => $stock) {
                         $qty += $stock->qty;
                     }
+                    $is_out_of_stock = $product->digital != 1 && $qty < $product->min_qty;
                 @endphp
 
                 <!-- Product Choice options form -->
@@ -531,8 +532,8 @@
                                         <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="minus" data-field="quantity" disabled="">
                                             <i class="las la-minus"></i>
                                         </button>
-                                        <input type="number" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10" lang="en">
-                                        <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="plus" data-field="quantity">
+                                        <input type="number" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10" lang="en" @if($is_out_of_stock) readonly @endif>
+                                        <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="plus" data-field="quantity" @if($is_out_of_stock) disabled @endif>
                                             <i class="las la-plus"></i>
                                         </button>
                                     </div>
@@ -576,18 +577,18 @@
                         </button>
                     @elseif($qty > 0)
                         @if ($product->external_link != null)
-                            <a type="button" class="btn btn-soft-primary rounded-0 mr-2 add-to-cart fw-600" href="{{ $product->external_link }}">
+                            <a type="button" class="btn btn-soft-primary rounded-0 mr-2 add-to-cart fw-600 @if($is_out_of_stock) d-none @endif" href="{{ $product->external_link }}">
                                 <i class="las la-share"></i>
                                 <span class="d-none d-md-inline-block">{{ translate($product->external_link_btn)}}</span>
                             </a>
                         @else
-                            <button type="button" class="btn btn-primary rounded-0 buy-now fw-600 add-to-cart" onclick="addToCart()">
+                            <button type="button" class="btn btn-primary rounded-0 buy-now fw-600 add-to-cart @if($is_out_of_stock) d-none @endif" onclick="addToCart()">
                                 <i class="la la-shopping-cart"></i>
                                 <span class="d-none d-md-inline-block">{{ translate('Add to cart')}}</span>
                             </button>
                         @endif
                     @endif
-                    <button type="button" class="btn btn-secondary rounded-0 out-of-stock fw-600 d-none" disabled>
+                    <button type="button" class="btn btn-secondary rounded-0 out-of-stock fw-600 @if(!$is_out_of_stock) d-none @endif" disabled>
                         <i class="la la-cart-arrow-down"></i>{{ translate('Out of Stock')}}
                     </button>
                 </div>
