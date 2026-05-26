@@ -24,7 +24,7 @@
                                     class="text-truncate text-dark pl-5 pr-4 py-2 fs-13 d-block hov-bg-soft-primary">
                                     <img class="cat-image mr-2" src="{{ $subcategory_image }}" width="16" alt="{{ $subcategory->name }}"
                                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                    {{ $subcategory->name }}
+                                    {{ $subcategory->getTranslation('name') }}
                                 </a>
                             </li>
                         @endforeach

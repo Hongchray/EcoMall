@@ -430,7 +430,7 @@
                                                 </div>
 
                                                 <small class="fw-semibold d-block text-truncate">
-                                                    {{ $sub->name }}
+                                                    {{ $sub->getTranslation('name') }}
                                                 </small>
 
                                             </a>
@@ -509,7 +509,7 @@
                                             </div>
 
                                             <p class="fw-semibold mb-0" style="font-size: 14px;">
-                                                {{ $sub->name }}
+                                                {{ $sub->getTranslation('name') }}
                                             </p>
 
                                         </a>

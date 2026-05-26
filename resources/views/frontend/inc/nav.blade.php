@@ -228,7 +228,7 @@
 
                             </div>
 
-                    
+
                         <!-- Compare -->
 
                         <!-- <div class="d-none d-lg-block ml-3 mr-0">
@@ -251,7 +251,7 @@
 
                                     id="nav-user-info">
 
-                                
+
 
                                     <span
 
@@ -275,7 +275,7 @@
 
                                     </span>
 
-                                
+
 
                                     <h4 class="h5 fs-14 fw-700 text-dark ml-2 mb-0">{{ $user->name }}</h4>
 
@@ -283,11 +283,11 @@
 
                             @else
 
-                            
+
 
                                 <span class="d-flex align-items-center nav-user-info ml-3">
 
-                        
+
 
                                     <span
 
@@ -477,7 +477,7 @@
                                 @include('frontend.'.get_setting('homepage_select').'.partials.cart')
                             </div>
                         </div>
-                        
+
                             <!-- button login and logout -->
                         <div class="ecm-header-auth d-none d-xl-flex align-items-center">
                             @auth
@@ -958,7 +958,7 @@
 
                             </div>
 
-                        </div> 
+                        </div>
 
                     </div>
 
@@ -1027,7 +1027,7 @@
                                 <img src="{{ static_asset('assets/img/logo.png') }}" alt="{{ env('APP_NAME') }}">
                             @endif
                         </a>
-    
+
                     </div>
 
                     <div class="ecm-mobile-auth-actions">
@@ -1132,7 +1132,7 @@
                                                                 class="mobile-subcategory-link d-flex align-items-center text-dark">
                                                                 <img src="{{ $subcategory_image }}" alt="{{ $subcategory->name }}"
                                                                     onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                                                                <span>{{ $subcategory->name }}</span>
+                                                                <span>{{ $subcategory->getTranslation('name') }}</span>
                                                             </a>
                                                         </li>
                                                     @endforeach
@@ -1317,4 +1317,4 @@
         @endsection
 
 <!-- ================================================ -->
- 
+

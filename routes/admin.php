@@ -94,7 +94,7 @@ use App\Http\Controllers\WebsiteController;
 
 use App\Http\Controllers\ZoneController;
 
-
+use App\Http\Controllers\SubcategoryController;
 
 /*
 
@@ -138,7 +138,7 @@ Route::get('/admin', [AdminController::class, 'admin_dashboard'])->name('admin.d
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-back-history']], function() {
 
-    
+
 
     // category
 
@@ -157,7 +157,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+    Route::controller(SubcategoryController::class)->prefix('subcategories')->name('subcategories.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{subcategory}/edit', 'edit')->name('edit');
+        Route::put('/{subcategory}', 'update')->name('update');
+        Route::delete('/{subcategory}', 'destroy')->name('destroy');
+    });
 
     // Brand
 
@@ -209,7 +216,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::post('/bulk-product-delete', 'bulk_product_delete')->name('bulk-product-delete');
 
-    
+
 
         Route::post('/products/sku_combination', 'sku_combination')->name('products.sku_combination');
 
@@ -243,7 +250,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::get('/product-bulk-export', 'export')->name('product_bulk_export.index');
 
-        
+
 
         //Product Bulk Upload
 
@@ -267,7 +274,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     // Seller
 
@@ -469,7 +476,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     //Tax
 
@@ -485,7 +492,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     // Language
 
@@ -517,7 +524,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
 
 
@@ -575,7 +582,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     // Staff
 
@@ -605,7 +612,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     //Subscribers
 
@@ -617,7 +624,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     // Order
 
@@ -635,7 +642,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::get('orders_by_pickup_point', 'all_orders')->name('pick_up_point.index');
 
-        
+
 
         Route::get('/orders/{id}/show', 'show')->name('all_orders.show');
 
@@ -675,7 +682,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     Route::post('/pay_to_seller', [CommissionController::class, 'pay_to_seller'])->name('commissions.pay_to_seller');
 
@@ -735,7 +742,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::get('/coupon/destroy/{id}', 'destroy')->name('coupon.destroy');
 
-    
+
 
         //Coupon Form
 
@@ -823,7 +830,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::get('/attributes/destroy/{id}', 'destroy')->name('attributes.destroy');
 
-    
+
 
         //Attribute Value
 
@@ -835,7 +842,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
         Route::get('/destroy-attribute-value/{id}', 'destroy_attribute_value')->name('destroy-attribute-value');
 
-    
+
 
         //Colors
 
@@ -965,7 +972,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
     });
 
-    
+
 
     Route::get('/all-notification', [NotificationController::class, 'index'])->name('admin.all-notification');
 
