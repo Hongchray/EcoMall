@@ -555,6 +555,8 @@
 
     </div>
 
+    @include('frontend.partials.category_product_sections')
+
 
 
     <!-- Banner Section 3 -->

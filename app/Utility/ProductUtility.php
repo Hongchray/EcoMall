@@ -28,7 +28,7 @@ class ProductUtility
 
             $collection['colors_active'] &&
 
-            $collection['colors'] &&
+            $collection->get('colors') &&
 
             count($collection['colors']) > 0
 
@@ -84,7 +84,7 @@ class ProductUtility
 
             } else {
 
-                if (isset($collection['colors_active']) && $collection['colors_active'] && $collection['colors'] && count($collection['colors']) > 0) {
+                if (isset($collection['colors_active']) && $collection['colors_active'] && $collection->get('colors') && count($collection['colors']) > 0) {
 
                     $color_name = Color::where('code', $item)->first()->name;
 

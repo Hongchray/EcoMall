@@ -205,6 +205,18 @@
 
     </div>
 
+    <!-- New Products -->
+    <div id="section_newest">
+
+    </div>
+
+    <!-- Best Selling  -->
+    <div id="section_best_selling">
+
+    </div>
+
+    @include('frontend.partials.category_product_sections')
+
     <!-- Featured Categories -->
     @if (count($featured_categories) > 0)
         <section class="mb-2 mb-md-3 mt-2 mt-md-3">
@@ -323,16 +335,6 @@
             </div>
         </div>
     @endif
-
-    <!-- New Products -->
-    <div id="section_newest">
-
-    </div>
-
-    <!-- Best Selling  -->
-    <div id="section_best_selling">
-
-    </div>
 
     <!-- Featured Products -->
     <div id="section_featured" class="pt-2 pt-md-3" style="background: #f5f5fa;">

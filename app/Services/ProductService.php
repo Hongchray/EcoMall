@@ -151,7 +151,7 @@ class ProductService
 
             $collection['colors_active'] &&
 
-            $collection['colors'] &&
+            $collection->get('colors') &&
 
             count($collection['colors']) > 0
 
@@ -215,7 +215,7 @@ class ProductService
 
                 // foreach (json_decode($request[$str][0]) as $key => $eachValue) {
 
-                foreach ($collection[$str] as $key => $eachValue) {
+                foreach ($collection->get($str, []) as $key => $eachValue) {
 
                     // array_push($data, $eachValue->value);
 
@@ -486,7 +486,7 @@ class ProductService
 
             $collection['colors_active'] &&
 
-            $collection['colors'] &&
+            $collection->get('colors') &&
 
             count($collection['colors']) > 0
 
@@ -638,7 +638,8 @@ class ProductService
         $collection['thumbnail_img'] = $collection->get('thumbnail_img');
         $collection['button'] = $collection->get('button', 'publish');
         $collection['slug'] = $collection->get('slug');
-        $collection['lang'] = $collection->get('lang', env("DEFAULT_LANGUAGE"));
+        $collection['lang'] = $collection->get('lang') ?: env("DEFAULT_LANGUAGE", config('app.locale', 'en'));
+        $collection['colors'] = $collection->get('colors', []);
 
         if (isset($collection['photos']) && is_array($collection['photos'])) {
 

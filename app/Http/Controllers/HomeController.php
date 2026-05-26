@@ -108,9 +108,23 @@ class HomeController extends Controller
                     ->orderBy('created_at', 'asc')
                     ->get();
 
+                $home_section_category_names = ['Structure', 'PVC Pipe'];
+                $home_section_categories = Category::whereIn('name', $home_section_category_names)
+                    ->orWhereHas('category_translations', function ($query) use ($home_section_category_names) {
+                        $query->whereIn('name', $home_section_category_names);
+                    })
+                    ->get()
+                    ->sortBy(function ($category) use ($home_section_category_names) {
+                        $name = $category->getTranslation('name');
+                        $index = array_search($name, $home_section_category_names);
+
+                        return $index === false ? count($home_section_category_names) : $index;
+                    })
+                    ->values();
+
                 return view(
                     'frontend.' . get_setting('homepage_select') . '.index',
-                    compact('featured_categories', 'banners')
+                    compact('featured_categories', 'banners', 'home_section_categories')
                 );
 
             } catch (\Exception $e) {
