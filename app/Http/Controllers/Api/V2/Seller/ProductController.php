@@ -127,7 +127,7 @@ class ProductController extends Controller
         ]), $product);
 
         // Product Translations
-        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
+        $request->merge(['lang' => env('DEFAULT_LANGUAGE', config('app.locale', 'en'))]);
         ProductTranslation::create($request->only([
             'lang', 'name', 'unit', 'description', 'product_id'
         ]));

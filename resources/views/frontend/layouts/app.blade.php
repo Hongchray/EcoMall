@@ -989,6 +989,14 @@
 
                            $('.add-to-cart').addClass('d-none');
 
+                           $('.buy-now').prop('disabled', true);
+
+                           $('.add-to-cart').prop('disabled', true);
+
+                           $('.input-number').prop('readonly', true);
+
+                           $('.aiz-plus-minus button[data-type=plus]').prop('disabled', true);
+
                            $('.out-of-stock').removeClass('d-none');
 
                         }
@@ -998,6 +1006,14 @@
                            $('.buy-now').removeClass('d-none');
 
                            $('.add-to-cart').removeClass('d-none');
+
+                           $('.buy-now').prop('disabled', false);
+
+                           $('.add-to-cart').prop('disabled', false);
+
+                           $('.input-number').prop('readonly', false);
+
+                           $('.aiz-plus-minus button[data-type=plus]').prop('disabled', false);
 
                            $('.out-of-stock').addClass('d-none');
 

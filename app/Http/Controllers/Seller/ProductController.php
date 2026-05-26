@@ -103,7 +103,7 @@ class ProductController extends Controller
         ]), $product);
 
         // Product Translations
-        $request->merge(['lang' => env('DEFAULT_LANGUAGE')]);
+        $request->merge(['lang' => env('DEFAULT_LANGUAGE', config('app.locale', 'en'))]);
         ProductTranslation::create($request->only([
             'lang', 'name', 'unit', 'description', 'product_id'
         ]));
@@ -118,7 +118,7 @@ class ProductController extends Controller
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
 
-        return redirect()->route('seller.products');
+        return redirect()->route('seller.dashboard');
     }
 
     public function edit(Request $request, $id)

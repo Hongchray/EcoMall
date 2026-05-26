@@ -1331,6 +1331,13 @@
 
 
             @if ($detailedProduct->digital == 0)
+                @php
+                    $qty = 0;
+                    foreach ($detailedProduct->stocks as $key => $stock) {
+                        $qty += $stock->qty;
+                    }
+                    $is_out_of_stock = $qty < $detailedProduct->min_qty;
+                @endphp
 
                 <!-- Choice Options -->
 
@@ -1470,11 +1477,11 @@
 
                                     value="{{ $detailedProduct->min_qty }}" min="{{ $detailedProduct->min_qty }}"
 
-                                    max="10" lang="en">
+                                    max="10" lang="en" @if ($is_out_of_stock) readonly @endif>
 
                                 <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button"
 
-                                    data-type="plus" data-field="quantity">
+                                    data-type="plus" data-field="quantity" @if ($is_out_of_stock) disabled @endif>
 
                                     <i class="las la-plus"></i>
 
@@ -1624,7 +1631,7 @@
 
                 @if ($detailedProduct->external_link != null)
 
-                    <a type="button" class="btn btn-primary buy-now fw-600 add-to-cart px-4 rounded-0 ec-btn-cart"
+                    <a type="button" class="btn btn-primary buy-now fw-600 add-to-cart px-4 rounded-0 ec-btn-cart @if ($is_out_of_stock) d-none @endif"
 
                         href="{{ $detailedProduct->external_link }}">
 
@@ -1636,7 +1643,7 @@
 
                     <button type="button"
 
-                        class="btn bg-warning mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white ec-btn-cart"
+                        class="btn bg-warning mr-2 add-to-cart fw-600 min-w-150px rounded-0 text-white ec-btn-cart @if ($is_out_of_stock) d-none @endif"
 
                         @if (Auth::check()) onclick="addToCart()" @else onclick="showLoginModal()" @endif>
 
@@ -1644,7 +1651,7 @@
 
                     </button>
 
-                    <button type="button" class="btn bg-danger text-white buy-now fw-600 add-to-cart min-w-150px rounded-0 ec-btn-buy"
+                    <button type="button" class="btn bg-danger text-white buy-now fw-600 add-to-cart min-w-150px rounded-0 ec-btn-buy @if ($is_out_of_stock) d-none @endif"
 
                         @if (Auth::check()) onclick="buyNow()" @else onclick="showLoginModal()" @endif>
 
@@ -1654,7 +1661,7 @@
 
                 @endif
 
-                <button type="button" class="btn btn-secondary out-of-stock fw-600 d-none" disabled>
+                <button type="button" class="btn btn-secondary out-of-stock fw-600 @if (!$is_out_of_stock) d-none @endif" disabled>
 
                     <i class="la la-cart-arrow-down"></i> {{ translate('Out of Stock') }}
 

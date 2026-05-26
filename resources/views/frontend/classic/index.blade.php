@@ -386,6 +386,9 @@
                 </div>
 
             </div>
+
+            
+
             @foreach($featured_categories as $category)
 
                 <!-- ================= MOBILE ================= -->
@@ -859,11 +862,13 @@
 
     @endif -->
 
-  <!-- New Products -->
-    <div id="section_newest"> </div>
+    <!-- New Products -->
+    <div id="section_newest"></div>
 
-   <!-- Best Selling  -->
+    <!-- Best Selling  -->
     <div id="section_best_selling"></div>
+
+    @include('frontend.partials.category_product_sections')
 
     <!-- Featured Products -->
     <div id="section_featured"></div>
