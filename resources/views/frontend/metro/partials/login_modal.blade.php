@@ -1,15 +1,37 @@
 <div class="modal fade" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-    <div class="modal-dialog modal-dialog-zoom" role="document">
+    <style>
+        #login_modal .modal-dialog { max-width: 470px; }
+        #login_modal .modal-content { overflow: hidden; border: 0; border-radius: 14px; box-shadow: 0 24px 70px rgba(15, 34, 48, .28); }
+        #login_modal .modal-header { align-items: center; padding: 20px 24px; border-bottom: 1px solid #e7f1f7; background: #f8fbfe; }
+        #login_modal .modal-title { color: #17212b; font-size: 20px; font-weight: 800; }
+        #login_modal .close { width: 36px; height: 36px; margin: -6px -8px -6px auto; padding: 0; border-radius: 50%; background: #eaf4fb; color: #526778; opacity: 1; text-shadow: none; }
+        #login_modal .close:hover, #login_modal .close:focus { background: #3c9bd3; color: #fff; outline: 0; }
+        #login_modal .close span { display: none; }
+        #login_modal .modal-body { padding: 24px 32px 30px; }
+        #login_modal .form-group { margin-bottom: 16px; }
+        #login_modal .form-control { height: 48px; border: 1px solid #d7e8f3; border-radius: 8px !important; background: #f8fbfe; color: #17212b; font-size: 14px; box-shadow: none; }
+        #login_modal .form-control:focus { border-color: #3c9bd3; background: #fff; box-shadow: 0 0 0 3px rgba(60, 155, 211, .14); }
+        #login_modal .aiz-checkbox { display: inline-flex; align-items: center; min-height: 22px; }
+        #login_modal a { color: #217fb8; font-weight: 700; }
+        #login_modal .btn-primary { min-height: 48px; border: 0; border-radius: 8px !important; background: #3c9bd3; font-weight: 800; box-shadow: 0 10px 22px rgba(60, 155, 211, .24); }
+        #login_modal .btn-primary:hover, #login_modal .btn-primary:focus { background: #217fb8; }
+        #login_modal .login-register-block { padding-top: 18px; border-top: 1px solid #edf5f9; }
+        @media (max-width: 575.98px) {
+            #login_modal .modal-dialog { margin: 12px; }
+            #login_modal .modal-body { padding: 20px; }
+        }
+    </style>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title fw-600">{{ translate('Login') }}</h6>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="close d-flex align-items-center justify-content-center" data-dismiss="modal" onclick="$('#login_modal').modal('hide')" aria-label="{{ translate('Close') }}">
                     <span aria-hidden="true"></span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="p-3">
+                <div>
                     <form class="form-default" role="form" action="{{ route('cart.login.submit') }}" method="POST">
                         @csrf
 
@@ -76,14 +98,14 @@
                         </div>
 
                         <!-- Login Button -->
-                        <div class="mb-5">
+                        <div class="mb-4">
                             <button type="submit"
                                 class="btn btn-primary btn-block fw-600 rounded-0">{{ translate('Login') }}</button>
                         </div>
                     </form>
 
                     <!-- Register Now -->
-                    <div class="text-center mb-3">
+                    <div class="login-register-block text-center mb-3">
                         <p class="text-muted mb-0">{{ translate('Dont have an account?') }}</p>
                         <a href="{{ route('user.registration') }}">{{ translate('Register Now') }}</a>
                     </div>

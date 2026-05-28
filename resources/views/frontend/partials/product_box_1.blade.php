@@ -91,8 +91,8 @@
   }
 
   .ec-product-card__image-wrap {
-    width: 72%;
-    max-width: 126px;
+    width: 78%;
+    max-width: 142px;
     aspect-ratio: 1 / 1;
     margin: 0 auto 18px;
     display: flex;
@@ -107,7 +107,7 @@
   .ec-product-card__image {
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 5px;
     object-fit: contain;
     transition: transform 0.3s ease;
   }
@@ -238,7 +238,7 @@
 
   @media (max-width: 575.98px) {
     .ec-product-card { padding: 14px 12px 12px; }
-    .ec-product-card__image-wrap { width: 76%; margin-bottom: 14px; }
+    .ec-product-card__image-wrap { width: 82%; margin-bottom: 14px; }
     .ec-product-card__content { margin: 0 -12px -12px; padding: 14px 12px 12px; }
     .ec-product-card__action { min-height: 38px; font-size: 12px; }
   }
@@ -265,8 +265,12 @@
     // $is_new_product = $product->created_at != null && $product->created_at->gte(now()->subMinute());
 
     $is_popular_product = (int) $product->num_of_sale > 10;
-    $product_badge = translate('Available');
-    $product_badge_key = 'available';
+    $product_stock_qty = $product->digital == 1
+        ? 1
+        : $product->stocks->sum('qty');
+    $product_is_available = $product->digital == 1 || $product_stock_qty >= $product->min_qty;
+    $product_badge = $product_is_available ? translate('Available') : translate('Out of Stock');
+    $product_badge_key = $product_is_available ? 'available' : 'out-of-stock';
 
     if ($is_popular_product) {
         $product_badge = translate('Best Selling');
@@ -276,7 +280,9 @@
         $product_badge_key = 'new';
     }
 
-    $cart_onclick = 'showAddToCartModal(' . $product->id . ')';
+    $cart_onclick = Auth::check()
+        ? 'showAddToCartModal(' . $product->id . ')'
+        : 'showLoginModal()';
     $wishlist_onclick = 'addToWishList(' . $product->id . ', this)';
     $compare_onclick = 'addToCompare(' . $product->id . ')';
     $is_in_wishlist = Auth::check()
@@ -341,7 +347,8 @@
         </div>
 
         @if ($product->auction_product == 0)
-            <a class="ec-product-card__action" href="javascript:void(0)"
+            <a class="ec-product-card__action js-add-to-cart-trigger" href="javascript:void(0)"
+                data-product-id="{{ $product->id }}"
                 onclick="{{ $cart_onclick }}">
                    <img src="{{ asset('icons/cartBeforehover.png') }}" alt="Add to Cart"  class="w-20px" >
                 <span>{{ translate('Add to Cart') }}</span>

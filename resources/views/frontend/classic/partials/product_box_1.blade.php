@@ -116,8 +116,8 @@
 }
 
 .ec-product-card__image-wrap {
-    width: 72%;
-    max-width: 126px;
+    width: 78%;
+    max-width: 142px;
     aspect-ratio: 1 / 1;
     margin: 0 auto 18px;
     display: flex;
@@ -132,7 +132,7 @@
 .ec-product-card__image {
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 5px;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
@@ -235,7 +235,7 @@
 
 @media (max-width: 575.98px) {
     .ec-product-card { padding: 14px 12px 12px; }
-    .ec-product-card__image-wrap { width: 76%; margin-bottom: 14px; }
+    .ec-product-card__image-wrap { width: 82%; margin-bottom: 14px; }
     .ec-product-card__content { margin: 0 -12px -12px; padding: 14px 12px 12px; }
     .ec-product-card__action { min-height: 38px; font-size: 12px; }
 }
@@ -343,9 +343,10 @@
                     $cart_added = $carts->pluck('product_id')->toArray();
                 }
             @endphp
-            <a class="ec-product-card__action @if (in_array($product->id, $cart_added)) active @endif"
+            <a class="ec-product-card__action js-add-to-cart-trigger @if (in_array($product->id, $cart_added)) active @endif"
                 href="javascript:void(0)"
-                onclick="showAddToCartModal({{ $product->id }})">
+                data-product-id="{{ $product->id }}"
+                @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
                 <i class="las la-shopping-cart"></i>
                 <span>{{ translate('Add to Cart') }}</span>
             </a>

@@ -835,9 +835,27 @@
 
         function showLoginModal() {
 
-            $('#login_modal').modal();
+            $('#addToCart').modal('hide');
+
+            $('#login_modal').modal('show');
 
         }
+
+        $(document).on('click', '.js-add-to-cart-trigger', function (e) {
+
+            @if (!Auth::check())
+
+                e.preventDefault();
+
+                e.stopImmediatePropagation();
+
+                showLoginModal();
+
+                return false;
+
+            @endif
+
+        });
 
 
 
@@ -908,6 +926,14 @@
 
 
         function showAddToCartModal(id){
+
+            @if (!Auth::check())
+
+                showLoginModal();
+
+                return false;
+
+            @endif
 
             if(!$('#modal-size').hasClass('modal-lg')){
 

@@ -599,14 +599,6 @@ class HomeController extends Controller
 
         if ($detailedProduct != null && $detailedProduct->published) {
 
-            if((get_setting('vendor_system_activation') != 1) && $detailedProduct->added_by == 'seller'){
-
-                abort(404);
-
-            }
-
-
-
             if($detailedProduct->added_by == 'seller' && $detailedProduct->user->banned == 1){
 
                 abort(404);

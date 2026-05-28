@@ -170,9 +170,9 @@
         <div class="container">
             <div class="ecm-about-hero">
                 <div class="ecm-about-hero-main">
-                    <div class="ecm-about-kicker">{{ translate('About EcoMall') }}</div>
+                    <div class="ecm-about-kicker">{{ translate('about_ecomall') }}</div>
                     <h1>{{ $page->getTranslation('title') }}</h1>
-                    <p>{{ $page->meta_description }}</p>
+                    <p>{{ str_replace(['Address:', 'Phone numbers:'], [translate('address') . ':', translate('phone_numbers') . ':'], $page->meta_description) }}</p>
                     <ul class="breadcrumb bg-transparent p-0 mb-0 ecm-about-breadcrumb">
                         <li class="breadcrumb-item has-transition opacity-70 hov-opacity-100">
                             <a class="text-reset" href="{{ route('home') }}">{{ translate('Home')}}</a>
@@ -184,16 +184,16 @@
                 </div>
                 <div class="ecm-about-hero-side">
                     <div class="ecm-about-stat">
-                        <strong>{{ translate('Trusted') }}</strong>
-                        <span>{{ translate('Marketplace experience') }}</span>
+                        <strong>{{ translate('trusted') }}</strong>
+                        <span>{{ translate('marketplace_experience') }}</span>
                     </div>
                     <div class="ecm-about-stat">
-                        <strong>{{ translate('Simple') }}</strong>
-                        <span>{{ translate('Shopping for everyday needs') }}</span>
+                        <strong>{{ translate('simple') }}</strong>
+                        <span>{{ translate('shopping_for_everyday_needs') }}</span>
                     </div>
                     <div class="ecm-about-stat">
-                        <strong>{{ translate('Connected') }}</strong>
-                        <span>{{ translate('Customers, sellers, and products') }}</span>
+                        <strong>{{ translate('connected') }}</strong>
+                        <span>{{ translate('customers_sellers_and_products') }}</span>
                     </div>
                 </div>
             </div>

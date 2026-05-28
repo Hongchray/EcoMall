@@ -380,7 +380,7 @@
                             <!-- DATE -->
                             <td data-label="{{ translate('Date')}}">
                                 <span class="order-date">
-                                    {{ date('d M Y', $order->date) }}
+                                    {{ localized_date($order->date) }}
                                 </span>
                             </td>
 
