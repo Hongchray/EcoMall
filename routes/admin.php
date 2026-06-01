@@ -163,7 +163,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
         Route::post('/', 'store')->name('store');
         Route::get('/{subcategory}/edit', 'edit')->name('edit');
         Route::put('/{subcategory}', 'update')->name('update');
-        Route::delete('/{subcategory}', 'destroy')->name('destroy');
+        Route::get('/delete/{subcategory}', 'destroy')->name('destroy');
     });
 
     // Brand

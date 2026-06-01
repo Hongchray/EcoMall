@@ -10,6 +10,15 @@ use App\Models\SubCategoryTranslation;
 class SubcategoryController extends Controller
 {
 
+    public function __construct() {
+
+        $this->middleware(['permission:view_product_subcategories'])->only('index');
+        $this->middleware(['permission:add_product_subcategories'])->only('create');
+        $this->middleware(['permission:edit_product_subcategories'])->only('edit');
+        $this->middleware(['permission:delete_product_subcategories'])->only('destroy');
+
+        }
+
     public function index(Request $request)
     {
         $sort_search = null;
@@ -60,13 +69,16 @@ class SubcategoryController extends Controller
         $subcategory->save();
 
         $translation = new SubCategoryTranslation;
+
         $translation->subcategory_id = $subcategory->id;
         $translation->name = $request->name;
         $translation->lang = env('DEFAULT_LANGUAGE');
+
         $translation->save();
 
-        return redirect()->route('subcategories.index')
-            ->with('success', 'Subcategory created successfully.');
+        flash(translate('Subcategory has been created successfully'))->success();
+
+        return redirect()->route('subcategories.index');
     }
 
     public function edit(SubCategory $subcategory, Request $request)
@@ -103,7 +115,6 @@ class SubcategoryController extends Controller
 
         $subcategory->save();
 
-        // translation (same pattern as Category)
         $translation = SubCategoryTranslation::firstOrNew([
             'subcategory_id' => $subcategory->id,
             'lang' => $request->lang ?? env('DEFAULT_LANGUAGE'),
@@ -112,13 +123,17 @@ class SubcategoryController extends Controller
         $translation->name = $request->name;
         $translation->save();
 
-        return back()->with('success', 'Subcategory updated successfully');
+        flash(translate('Subcategory has been updated successfully'))->success();
+
+        return back();
     }
 
-    public function destroy($id)
+    public function destroy(SubCategory $subcategory)
     {
-        return redirect()
-            ->route('subcategories.index')
-            ->with('success', 'Subcategory deleted successfully.');
+        $subcategory->delete();
+
+        flash(translate('Subcategory deleted successfully'))->success();
+
+        return redirect()->route('subcategories.index');
     }
 }

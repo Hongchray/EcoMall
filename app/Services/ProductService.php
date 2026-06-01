@@ -87,7 +87,7 @@ class ProductService
 
         unset($collection['date_range']);
 
-        
+
 
         if ($collection['meta_title'] == null) {
 
@@ -169,7 +169,7 @@ class ProductService
 
         $combinations = (new CombinationService())->generate_combination($options);
 
-        
+
 
         if (count($combinations) > 0) {
 
@@ -418,7 +418,7 @@ class ProductService
 
         unset($collection['date_range']);
 
-        
+
 
         if ($collection['meta_title'] == null) {
 
@@ -456,7 +456,7 @@ class ProductService
 
 
 
-        
+
 
         $shipping_cost = 0;
 
@@ -482,7 +482,7 @@ class ProductService
 
         if (
 
-            isset($collection['colors_active']) && 
+            isset($collection['colors_active']) &&
 
             $collection['colors_active'] &&
 
@@ -590,7 +590,7 @@ class ProductService
 
         unset($collection['button']);
 
-        
+
 
         $data = $collection->merge(compact(
 
@@ -610,7 +610,7 @@ class ProductService
 
         ))->toArray();
 
-        
+
 
         $product->update($data);
 
@@ -621,39 +621,30 @@ class ProductService
     }
 
     protected function normalizeProductPayload($collection)
-
     {
-
         if (!isset($collection['tags']) || !is_array($collection['tags']) || !isset($collection['tags'][0])) {
-
             $collection['tags'] = [null];
-
         }
 
-        $collection['date_range'] = $collection->get('date_range');
-        $collection['meta_title'] = $collection->get('meta_title');
-        $collection['meta_description'] = $collection->get('meta_description');
-        $collection['meta_img'] = $collection->get('meta_img');
-        $collection['description'] = $collection->get('description', '');
-        $collection['thumbnail_img'] = $collection->get('thumbnail_img');
-        $collection['button'] = $collection->get('button', 'publish');
-        $collection['slug'] = $collection->get('slug');
-        $collection['lang'] = $collection->get('lang') ?: env("DEFAULT_LANGUAGE", config('app.locale', 'en'));
-        $collection['colors'] = $collection->get('colors', []);
+        $collection['date_range']        = $collection->get('date_range');
+        $collection['meta_title']        = $collection->get('meta_title');
+        $collection['meta_description']  = $collection->get('meta_description');
+        $collection['meta_img']          = $collection->get('meta_img');
+        $collection['description']       = $collection->get('description', '');
+        $collection['thumbnail_img']     = $collection->get('thumbnail_img');
+        $collection['button']            = $collection->get('button', 'publish');
+        $collection['slug']              = $collection->get('slug');
+        $collection['lang']              = $collection->get('lang') ?: env("DEFAULT_LANGUAGE", config('app.locale', 'en'));
+        $collection['colors']            = $collection->get('colors', []);
 
         if (isset($collection['photos']) && is_array($collection['photos'])) {
-
             $collection['photos'] = implode(',', $collection['photos']);
-
         }
 
-        unset($collection['category_ids']);
-
         return $collection;
-
     }
 
-    
+
 
     public function product_duplicate_store($product)
 

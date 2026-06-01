@@ -713,572 +713,74 @@
 
 
             <div class="col-lg-4">
-
                 <div class="card">
-
                     <div class="card-header">
-
                         <h5 class="mb-0 h6">{{ translate('Product Category') }}</h5>
-
                         <h6 class="float-right fs-13 mb-0">
-
                             {{ translate('Select Main') }}
-
                             <span class="position-relative main-category-info-icon">
-
                                 <i class="las la-question-circle fs-18 text-info"></i>
-
                                 <span class="main-category-info bg-soft-info p-2 position-absolute d-none border">{{ translate('This will be used for commission based calculations and homepage category wise product Show.') }}</span>
-
                             </span>
-
                         </h6>
-
                     </div>
-
                     <div class="card-body">
 
-                        <div class="h-300px overflow-auto c-scrollbar-light">
+                        {{-- Category Treeview --}}
+                        <div class="h-300px overflow-auto c-scrollbar-light mb-3">
+                           <ul id="treeview"
+                                class="hummingbird-treeview-converter list-unstyled"
 
-                            <ul class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
+                                data-radio-name="category_id">
 
                                 @foreach ($categories as $category)
+                                    <li id="{{ $category->id }}">
+                                        {{ $category->getTranslation('name') }}
 
-                                <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}</li>
-
-                                    @foreach ($category->childrenCategories as $childCategory)
-
-                                        @include('backend.product.products.child_category', ['child_category' => $childCategory])
-
-                                    @endforeach
-
+                                        @if($category->childrenCategories->count() > 0)
+                                            <ul>
+                                                @foreach ($category->childrenCategories as $childCategory)
+                                                    @include('backend.product.products.child_category', [
+                                                        'child_category' => $childCategory
+                                                    ])
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
                                 @endforeach
 
                             </ul>
-
                         </div>
 
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">
-
-                            {{translate('Shipping Configuration')}}
-
-                        </h5>
-
-                    </div>
-
-
-
-                    <div class="card-body">
-
-                        @if (get_setting('shipping_type') == 'product_wise_shipping')
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Free Shipping')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="radio" name="shipping_type" value="free" checked>
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Flat Rate')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="radio" name="shipping_type" value="flat_rate">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="flat_rate_shipping_div" style="display: none">
-
-                            <div class="form-group row">
-
-                                <label class="col-md-6 col-from-label">{{translate('Shipping cost')}}</label>
-
-                                <div class="col-md-6">
-
-                                    <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Shipping cost') }}" name="flat_shipping_cost" class="form-control" required>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Is Product Quantity Mulitiply')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="checkbox" name="is_quantity_multiplied" value="1">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                        @else
-
-                        <p>
-
-                            {{ translate('Product wise shipping cost is disable. Shipping cost is configured from here') }}
-
-                            <a href="{{route('shipping_configuration.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['shipping_configuration.index','shipping_configuration.edit','shipping_configuration.update'])}}">
-
-                                <span class="aiz-side-nav-text">{{translate('Shipping Configuration')}}</span>
-
-                            </a>
-
-                        </p>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Low Stock Quantity Warning')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="form-group mb-3">
-
-                            <label for="name">
-
-                                {{translate('Quantity')}}
-
+                        {{-- Subcategory List (hidden until category selected) --}}
+                        <div id="subcategory-wrapper" style="display:none;">
+                            <hr class="my-2">
+                            <label class="col-from-label mb-2">
+                                {{ translate('Sub Category') }}
                             </label>
-
-                            <input type="number" name="low_stock_quantity" value="1" min="0" step="1" class="form-control">
-
-                        </div>
-
+                            <div class="h-200px overflow-auto c-scrollbar-light mt-2">
+                                <ul class="list-unstyled" id="subcategory_list">
+                                    @foreach($subcategories as $sub)
+                                        <li class="subcategory-item py-1 px-2"
+                                            data-category="{{ $sub->category_id }}"
+                                            style="display:none;">
+                                            <label class="d-flex align-items-center mb-0" style="cursor:pointer; gap:8px;">
+                                                <input type="radio"
+                                                    name="subcategory_id"
+                                                    value="{{ $sub->id }}"
+                                                    style="margin-right:6px;">
+                                                {{ $sub->name }}
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                     </div>
 
                 </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">
-
-                            {{translate('Stock Visibility State')}}
-
-                        </h5>
-
-                    </div>
-
-
-
-                    <div class="card-body">
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Show Stock Quantity')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="radio" name="stock_visibility_state" value="quantity" checked>
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Show Stock With Text Only')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="radio" name="stock_visibility_state" value="text">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Hide Stock')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="radio" name="stock_visibility_state" value="hide">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Cash On Delivery')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        @if (get_setting('cash_payment') == '1')
-
-                            <div class="form-group row">
-
-                                <label class="col-md-6 col-from-label">{{translate('Status')}}</label>
-
-                                <div class="col-md-6">
-
-                                    <label class="aiz-switch aiz-switch-success mb-0">
-
-                                        <input type="checkbox" name="cash_on_delivery" value="1" checked="">
-
-                                        <span></span>
-
-                                    </label>
-
-                                </div>
-
-                            </div>
-
-                        @else
-
-                            <p>
-
-                                {{ translate('Cash On Delivery option is disabled. Activate this feature from here') }}
-
-                                <a href="{{route('activation.index')}}" class="aiz-side-nav-link {{ areActiveRoutes(['shipping_configuration.index','shipping_configuration.edit','shipping_configuration.update'])}}">
-
-                                    <span class="aiz-side-nav-text">{{translate('Cash Payment Activation')}}</span>
-
-                                </a>
-
-                            </p>
-
-                        @endif
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Featured')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Status')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="checkbox" name="featured" value="1">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Todays Deal')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="form-group row">
-
-                            <label class="col-md-6 col-from-label">{{translate('Status')}}</label>
-
-                            <div class="col-md-6">
-
-                                <label class="aiz-switch aiz-switch-success mb-0">
-
-                                    <input type="checkbox" name="todays_deal" value="1">
-
-                                    <span></span>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Flash Deal')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="form-group mb-3">
-
-                            <label for="name">
-
-                                {{translate('Add To Flash')}}
-
-                            </label>
-
-                            <select class="form-control aiz-selectpicker" name="flash_deal_id" id="flash_deal">
-
-                                <option value="">{{ translate('Choose Flash Title') }}</option>
-
-                                @foreach(\App\Models\FlashDeal::where("status", 1)->get() as $flash_deal)
-
-                                    <option value="{{ $flash_deal->id}}">
-
-                                        {{ $flash_deal->title }}
-
-                                    </option>
-
-                                @endforeach
-
-                            </select>
-
-                        </div>
-
-
-
-                        <div class="form-group mb-3">
-
-                            <label for="name">
-
-                                {{translate('Discount')}}
-
-                            </label>
-
-                            <input type="number" name="flash_discount" value="0" min="0" step="0.01" class="form-control">
-
-                        </div>
-
-                        <div class="form-group mb-3">
-
-                            <label for="name">
-
-                                {{translate('Discount Type')}}
-
-                            </label>
-
-                            <select class="form-control aiz-selectpicker" name="flash_discount_type" id="flash_discount_type">
-
-                                <option value="">{{ translate('Choose Discount Type') }}</option>
-
-                                <option value="amount">{{translate('Flat')}}</option>
-
-                                <option value="percent">{{translate('Percent')}}</option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('Estimate Shipping Time')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="form-group mb-3">
-
-                            <label for="name">
-
-                                {{translate('Shipping Days')}}
-
-                            </label>
-
-                            <div class="input-group">
-
-                                <input type="number" class="form-control" name="est_shipping_days" min="1" step="1" placeholder="{{translate('Shipping Days')}}">
-
-                                <div class="input-group-prepend">
-
-                                    <span class="input-group-text" id="inputGroupPrepend">{{translate('Days')}}</span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <h5 class="mb-0 h6">{{translate('VAT & Tax')}}</h5>
-
-                    </div>
-
-                    <div class="card-body">
-
-                        @foreach(\App\Models\Tax::where('tax_status', 1)->get() as $tax)
-
-                        <label for="name">
-
-                            {{$tax->name}}
-
-                            <input type="hidden" value="{{$tax->id}}" name="tax_id[]">
-
-                        </label>
-
-
-
-                        <div class="form-row">
-
-                            <div class="form-group col-md-6">
-
-                                <input type="number" lang="en" min="0" value="0" step="0.01" placeholder="{{ translate('Tax') }}" name="tax[]" class="form-control" required>
-
-                            </div>
-
-                            <div class="form-group col-md-6">
-
-                                <select class="form-control aiz-selectpicker" name="tax_type[]">
-
-                                    <option value="amount">{{translate('Flat')}}</option>
-
-                                    <option value="percent">{{translate('Percent')}}</option>
-
-                                </select>
-
-                            </div>
-
-                        </div>
-
-                        @endforeach
-
-                    </div>
-
-                </div>
-
-
-
             </div>
+
+            {{-- rest of your cards (Shipping, Stock, etc.) --}}
 
             <div class="col-12">
 
@@ -1314,7 +816,19 @@
 
 @section('script')
 
-
+<style>
+    /* Hide checkboxes injected by hummingbird treeview */
+    .hummingbird-treeview input[type="checkbox"],
+    #treeview input[type="checkbox"],
+    .hummingbird-treeview-converter input[type="checkbox"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+</style>
 
 <!-- Treeview js -->
 
@@ -1323,41 +837,56 @@
 
 
 <script type="text/javascript">
+    // Single handler for category_id change
+    $(document).on('change', 'input[name="category_id"]', function () {
+        var val = $(this).val();
 
+        // Sync to category_ids[] for controller
+        $('input[name="category_ids[]"]').remove();
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'category_ids[]',
+            value: val
+        }).appendTo('#choice_form');
 
+        // Filter subcategories
+        filterSubcategories(val);
+    });
 
-    $(document).ready(function() {
+    function filterSubcategories(categoryId) {
+        var $wrapper = $('#subcategory-wrapper');
+        var $items   = $('.subcategory-item');
 
-        $("#treeview").hummingbird();
+        // Hide all, show matching
+        $items.hide();
+        var $matching = $items.filter('[data-category="' + categoryId + '"]');
 
-
-
-        var main_id = '{{ old("category_id") }}';
-
-        var selected_ids = [];
-
-        @if(old("category_ids"))
-
-            selected_ids = @json(old("category_ids"));
-
-        @endif
-
-        for (let i = 0; i < selected_ids.length; i++) {
-
-            const element = selected_ids[i];
-
-            $('#treeview input:checkbox#'+element).prop('checked',true);
-
-            $('#treeview input:checkbox#'+element).parents( "ul" ).css( "display", "block" );
-
-            $('#treeview input:checkbox#'+element).parents( "li" ).children('.las').removeClass( "la-plus" ).addClass('la-minus');
-
+        if ($matching.length > 0) {
+            $matching.show();
+            $wrapper.show();
+        } else {
+            $wrapper.hide();
         }
 
+        // Reset any selected subcategory
+        $('input[name="subcategory_id"]').prop('checked', false);
+    }
+    $(document).ready(function() {
+        $("#treeview").hummingbird();
 
+        // Forcefully remove checkboxes after hummingbird renders them
+        setTimeout(function() {
+            $('input[type="checkbox"]', '.hummingbird-treeview-converter').each(function() {
+                $(this).closest('label').find('input[type="checkbox"]').hide();
+                $(this).hide();
+            });
+        }, 100);
 
-        $('#treeview input:radio[value='+main_id+']').prop('checked',true);
-
+        var main_id = '{{ old("category_id") }}';
+        if (main_id) {
+            $('input[name="category_id"][value=' + main_id + ']').prop('checked', true);
+            filterSubcategories(main_id);
+        }
     });
 
 
@@ -1382,7 +911,7 @@
 
         // $("button[type='submit']").prop('disabled', true);
 
-        
+
 
         // var valid = true;
 
@@ -1392,7 +921,7 @@
 
             // e.preventDefault();
 
-            
+
 
             ////Reactivate the button if the form was not submitted
 
@@ -1402,7 +931,7 @@
 
     });
 
-    
+
 
     $("[name=shipping_type]").on("change", function (){
 

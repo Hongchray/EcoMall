@@ -30,8 +30,11 @@ class ProductRequest extends FormRequest
         $rules = [];
 
         $rules['name']          = 'required|max:255';
-        $rules['category_ids']  = 'required';
-        $rules['category_id']   = ['required', Rule::in($this->category_ids)];
+        // $rules['category_ids']  = 'required';
+        $rules['category_id'] = 'nullable|numeric';
+        $rules['category_ids'] = 'required_without:category_id|array';
+        $rules['category_ids.*'] = 'numeric';
+        $rules['subcategory_id'] = 'nullable|numeric'; // ← add this
         $rules['unit']         = 'sometimes|required';
         $rules['min_qty']      = 'sometimes|required|numeric';
         $rules['unit_price']    = 'sometimes|required|numeric';
@@ -56,9 +59,12 @@ class ProductRequest extends FormRequest
     {
         return [
             'name.required'             => translate('Product name is required'),
-            'category_ids.required'     => translate('Product category is required'),
-            'category_id.required'      => translate('Main Category is required'),
-            'category_id.in'            => translate('Main Category must be within selected categories'),
+            // 'category_ids.required'     => translate('Product category is required'),
+            'category_id.nullable'      => translate('Product category is optional'),
+
+            'category_id.numeric'         => translate('Product category must be a number'),
+            'subcategory_id.nullable'   => translate('Subcategory is optional'),
+            'subcategory_id.numeric'    => translate('Subcategory must be a number'),
             'unit.required'             => translate('Product unit is required'),
             'min_qty.required'          => translate('Minimum purchase quantity is required'),
             'min_qty.numeric'           => translate('Minimum purchase must be numeric'),

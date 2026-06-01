@@ -51,7 +51,7 @@ use App\Services\ProductFlashDealService;
 use App\Services\ProductStockService;
 
 use Illuminate\Support\Facades\Notification;
-
+use App\Models\SubCategory;
 
 
 class ProductController extends Controller
@@ -343,25 +343,17 @@ class ProductController extends Controller
      */
 
     public function create()
-
     {
-
         CoreComponentRepository::initializeCache();
 
-
-
         $categories = Category::where('parent_id', 0)
-
             ->where('digital', 0)
-
             ->with('childrenCategories')
-
             ->get();
 
+        $subcategories = SubCategory::all(); // ← already there
 
-
-        return view('backend.product.products.create', compact('categories'));
-
+        return view('backend.product.products.create', compact('categories', 'subcategories')); // ← ADD subcategories here
     }
 
 
@@ -405,83 +397,56 @@ class ProductController extends Controller
      */
 
     public function store(ProductRequest $request)
-
     {
 
+        // dd($request->all());
         $product = $this->productService->store($request->except([
-
             '_token', 'sku', 'choice', 'tax_id', 'tax', 'tax_type', 'flash_deal_id', 'flash_discount', 'flash_discount_type'
-
         ]));
-
         $request->merge(['product_id' => $product->id]);
 
-
-
         //Product categories
+        $categoryId = $request->input('category_id')
+           ?: (is_array($request->input('category_ids')) ? $request->input('category_ids')[0] : null);
 
-        $product->categories()->attach($request->category_ids);
-
-
-
-        //VAT & Tax
-
-        if ($request->tax_id) {
-
-            $this->productTaxService->store($request->only([
-
-                'tax_id', 'tax', 'tax_type', 'product_id'
-
-            ]));
-
+        if ($categoryId) {
+            $product->categories()->attach([$categoryId]);
         }
 
+        if ($request->filled('subcategory_id')) {
+            $product->subcategory_id = $request->subcategory_id;
+            $product->save();
+        }
 
+        //VAT & Tax
+        if ($request->tax_id) {
+            $this->productTaxService->store($request->only([
+                'tax_id', 'tax', 'tax_type', 'product_id'
+            ]));
+        }
 
         //Flash Deal
-
         $this->productFlashDealService->store($request->only([
-
             'flash_deal_id', 'flash_discount', 'flash_discount_type'
-
         ]), $product);
-
-
 
         //Product Stock
-
         $this->productStockService->store($request->only([
-
             'colors_active', 'colors', 'choice_no', 'unit_price', 'sku', 'current_stock', 'product_id'
-
         ]), $product);
 
-
-
         // Product Translations
-
         $request->merge(['lang' => env('DEFAULT_LANGUAGE', config('app.locale', 'en'))]);
-
         ProductTranslation::create($request->only([
-
             'lang', 'name', 'unit', 'description', 'product_id'
-
         ]));
-
-
 
         flash(translate('Product has been inserted successfully'))->success();
 
-
-
         Artisan::call('view:clear');
-
         Artisan::call('cache:clear');
 
-
-
         return redirect()->route('admin.dashboard');
-
     }
 
 
