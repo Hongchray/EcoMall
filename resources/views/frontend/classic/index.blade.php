@@ -762,51 +762,6 @@
 
 
 
-    @if (count($featured_categories) > 0)
-        @foreach($featured_categories as $category)
-            @if(count($category->products) > 0)
-            @php
-                $featured_category_section_id = 'section_featured_category_' . $category->id;
-            @endphp
-            <section class="mb-2 mb-md-3 mt-2 mt-md-3">
-                <div class="container">
-                    <div class="bg-white">
-                        <!-- Top Section -->
-                        <div class="d-flex mb-2 mb-md-3 align-items-baseline justify-content-between">
-                            <!-- Title -->
-                            <h3 class="fs-16 fs-md-20 fw-700 mb-2 mb-sm-0">
-                                <span class="">{{ $category->getTranslation('name') }}</span>
-                            </h3>
-                            <!-- Links -->
-                            <div class="d-flex align-items-center">
-                                <a type="button" class="arrow-prev slide-arrow link-disable text-secondary mr-2" onclick="clickToSlide('slick-prev','{{ $featured_category_section_id }}')"><i class="las la-angle-left fs-20 fw-600"></i></a>
-                                <a class="text-blue fs-12 fw-700 hov-text-primary mx-2"
-                                    href="{{ route('products.category', $category->slug) }}">{{ translate('View All') }}</a>
-                                <a type="button" class="arrow-next slide-arrow text-secondary ml-2" onclick="clickToSlide('slick-next','{{ $featured_category_section_id }}')"><i class="las la-angle-right fs-20 fw-600"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Products Section -->
-                    <div id="{{ $featured_category_section_id }}" class="px-sm-3">
-                        <div class="aiz-carousel arrow-none sm-gutters-16" data-items="6" data-xl-items="5" data-lg-items="4"  data-md-items="3" data-sm-items="2" data-xs-items="2" data-arrows='true' data-infinite='false'>
-                            @foreach ($category->products as $key => $new_product)
-                            <div class="carousel-box px-3 position-relative has-transition border-right border-top border-bottom @if($key == 0) border-left @endif hov-animate-outline">
-                                @include('frontend.partials.product_box_1',['product' => $new_product])
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </section>
-            @endif
-        @endforeach
-    @endif
-
-
-
-
-
-
     <!-- Banner section 1 -->
 
 <!--     @if (get_setting('home_banner1_images') != null)
@@ -1160,16 +1115,6 @@
 
 
 
-    <!-- Category wise Products -->
-
-    <div id="section_home_categories" class="mb-2 mb-md-3 mt-2 mt-md-3">
-
-
-
-    </div>
-
-
-
     <!-- Classified Product -->
 
     @if (get_setting('classified_product') == 1)
@@ -1344,7 +1289,7 @@
 
     <!-- Top Sellers -->
 
-    @if (get_setting('vendor_system_activation') == 1)
+    @if (false && get_setting('vendor_system_activation') == 1)
 
         @php
 

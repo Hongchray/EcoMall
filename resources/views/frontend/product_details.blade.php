@@ -158,7 +158,7 @@
 
                 <!-- Reviews & Ratings -->
 
-                {{-- @include('frontend.product_details.review_section') --}}
+                @include('frontend.product_details.review_section')
 
 
 
@@ -206,7 +206,7 @@
 
                         <!-- Reviews & Ratings -->
 
-                        {{-- @include('frontend.product_details.review_section') --}}
+                        @include('frontend.product_details.review_section')
 
 
 

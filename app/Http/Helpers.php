@@ -2497,7 +2497,7 @@ if (!function_exists('getFileBaseURL')) {
 
 
 
-        return getBaseURL() . 'public/';
+        return getBaseURL();
 
     }
 

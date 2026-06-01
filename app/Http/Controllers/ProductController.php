@@ -762,7 +762,7 @@ class ProductController extends Controller
 
 
 
-            return back();
+            return redirect()->route('products.admin');
 
         } else {
 

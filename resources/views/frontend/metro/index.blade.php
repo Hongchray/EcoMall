@@ -217,6 +217,11 @@
 
     @include('frontend.partials.category_product_sections')
 
+    <!-- Featured Products -->
+    <div id="section_featured" class="pt-2 pt-md-3" style="background: #f5f5fa;">
+
+    </div>
+
     <!-- Featured Categories -->
     @if (count($featured_categories) > 0)
         <section class="mb-2 mb-md-3 mt-2 mt-md-3">
@@ -336,11 +341,6 @@
         </div>
     @endif
 
-    <!-- Featured Products -->
-    <div id="section_featured" class="pt-2 pt-md-3" style="background: #f5f5fa;">
-
-    </div>
-
     <!-- Banner Section 3 -->
     @if (get_setting('home_banner3_images') != null)
         <div class="mb-2 mb-md-3 mt-2 mt-md-3">
@@ -459,11 +459,6 @@
         </div>
     @endif
 
-    <!-- Category wise Products -->
-    <div id="section_home_categories" style="background: #f5f5fa;">
-
-    </div>
-
     <!-- Classified Product -->
     @if (get_setting('classified_product') == 1)
         @php
@@ -551,7 +546,7 @@
     @endif
 
     <!-- Top Sellers -->
-    @if (get_setting('vendor_system_activation') == 1)
+    @if (false && get_setting('vendor_system_activation') == 1)
         @php
             $best_selers = get_best_sellers(5);
         @endphp

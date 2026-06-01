@@ -527,6 +527,16 @@
 
 
 
+    <!-- New Products -->
+
+    <div id="section_newest">
+
+
+
+    </div>
+
+
+
     <!-- Best Selling  -->
 
     <div id="section_best_selling">
@@ -534,6 +544,8 @@
 
 
     </div>
+
+    @include('frontend.partials.category_product_sections')
 
 
 
@@ -544,18 +556,6 @@
 
 
     </div>
-
-
-
-    <!-- New Products -->
-
-    <div id="section_newest">
-
-
-
-    </div>
-
-    @include('frontend.partials.category_product_sections')
 
 
 
@@ -785,16 +785,6 @@
 
 
 
-    <!-- Category wise Products -->
-
-    <div id="section_home_categories" class="mb-2 mb-md-3 mt-2 mt-md-3">
-
-
-
-    </div>
-
-
-
     <!-- Classified Product -->
 
     @if (get_setting('classified_product') == 1)
@@ -969,7 +959,7 @@
 
     <!-- Top Sellers -->
 
-    @if (get_setting('vendor_system_activation') == 1)
+    @if (false && get_setting('vendor_system_activation') == 1)
 
         @php
 
@@ -1328,20 +1318,6 @@
             }, function(data) {
 
                 $('#auction_products').html(data);
-
-                AIZ.plugins.slickCarousel();
-
-            });
-
-
-
-            $.post('{{ route('home.section.home_categories') }}', {
-
-                _token: '{{ csrf_token() }}'
-
-            }, function(data) {
-
-                $('#section_home_categories').html(data);
 
                 AIZ.plugins.slickCarousel();
 

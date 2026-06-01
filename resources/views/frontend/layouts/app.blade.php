@@ -580,18 +580,6 @@
 
 
 
-            $.post('{{ route('home.section.home_categories') }}', {
-
-                _token: '{{ csrf_token() }}'
-
-            }, function(data) {
-
-                $('#section_home_categories').html(data);
-
-                AIZ.plugins.slickCarousel();
-
-            });
-
         @endif
 
 
