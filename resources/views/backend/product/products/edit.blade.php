@@ -808,8 +808,7 @@
 
                         {{-- Category Tree --}}
                         <div class="h-300px overflow-auto c-scrollbar-light mb-3">
-                            <ul class="hummingbird-treeview-converter list-unstyled"
-                                data-checkbox-name="category_ids[]"
+                            <ul id="treeview" class="hummingbird-treeview-converter list-unstyled"
                                 data-radio-name="category_id">
 
                                 @foreach ($categories as $category)
@@ -1466,6 +1465,19 @@
 
 @section('script')
 
+<style>
+    /* Hide checkboxes injected by hummingbird treeview */
+    .hummingbird-treeview input[type="checkbox"],
+    #treeview input[type="checkbox"],
+    .hummingbird-treeview-converter input[type="checkbox"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+</style>
 <!-- Treeview js -->
 
 <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
@@ -1477,35 +1489,26 @@
     $(document).ready(function () {
 
         function loadSubcategories() {
+            var selectedCategory = $('input[name="category_id"]:checked').val();
 
-            let selectedCategories = [];
-
-            $('input[name="category_ids[]"]:checked').each(function () {
-                selectedCategories.push($(this).val());
-            });
-
-            if (selectedCategories.length > 0) {
-
+            if (selectedCategory) {
                 $('#subcategory-wrapper').show();
-
                 $('.subcategory-item').hide();
-
                 $('.subcategory-item').each(function () {
-
-                    let categoryId = $(this).data('category').toString();
-
-                    if (selectedCategories.includes(categoryId)) {
+                    if ($(this).data('category').toString() === selectedCategory.toString()) {
                         $(this).show();
                     }
                 });
-
             } else {
-
                 $('#subcategory-wrapper').hide();
-
-                $('.subcategory-item').hide();
             }
         }
+
+        setTimeout(function () { loadSubcategories(); }, 500);
+
+        $(document).on('change', 'input[name="category_id"]', function () {
+            loadSubcategories();
+        });
 
         // Initial load for edit form
         setTimeout(function () {
@@ -1532,21 +1535,13 @@
         var selected_ids = '{{ implode(",",$old_categories) }}';
 
         if (selected_ids != '') {
-
             const myArray = selected_ids.split(",");
-
             for (let i = 0; i < myArray.length; i++) {
-
                 const element = myArray[i];
-
                 $('#treeview input:checkbox#'+element).prop('checked',true);
-
                 $('#treeview input:checkbox#'+element).parents( "ul" ).css( "display", "block" );
-
                 $('#treeview input:checkbox#'+element).parents( "li" ).children('.las').removeClass( "la-plus" ).addClass('la-minus');
-
             }
-
         }
 
         $('#treeview input:radio[value='+main_id+']').prop('checked',true);
