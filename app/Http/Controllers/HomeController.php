@@ -691,7 +691,7 @@ class HomeController extends Controller
 
                     $q->where('user_id', Auth::id());
 
-                }])->where('product_id', $detailedProduct->id)->where('delivery_status', 'delivered')->first();
+                }])->where('product_id', $detailedProduct->id)->first();
 
                 $review_status = $OrderDetail ? 1 : 0;
 

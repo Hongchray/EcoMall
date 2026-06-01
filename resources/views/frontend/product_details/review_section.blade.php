@@ -1,39 +1,120 @@
-<div class="bg-white border mb-4">
-    <div class="p-3 p-sm-4">
-        <h3 class="fs-16 fw-700 mb-0">
-            <span class="mr-4">{{ translate('Reviews & Ratings') }}</span>
-        </h3>
+<style>
+    .ec-review-panel {
+        border: 1px solid #dcecf6;
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .ec-review-panel__header {
+        padding: 18px 24px;
+        border-bottom: 1px solid #edf5fa;
+    }
+
+    .ec-review-summary {
+        margin: 0 24px 28px;
+        padding: 24px 26px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        border: 1px solid #35a3e2;
+        border-radius: 10px;
+        background: #eef9ff;
+    }
+
+    .ec-review-summary__score {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .ec-review-summary__value {
+        color: #071429;
+        font-size: 38px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .ec-review-summary__text {
+        color: #263345;
+        font-size: 14px;
+    }
+
+    .ec-review-summary .rating {
+        display: inline-flex;
+        align-items: center;
+        font-size: 18px;
+    }
+
+    .ec-review-summary__count {
+        color: #263345;
+        font-size: 14px;
+    }
+
+    .ec-review-summary__button {
+        min-width: 260px;
+        padding: 14px 22px;
+        border: 0;
+        border-radius: 6px;
+        background: #3498d3;
+        color: #fff;
+        font-weight: 700;
+        text-align: center;
+        transition: background .2s ease, transform .2s ease;
+    }
+
+    .ec-review-summary__button:hover,
+    .ec-review-summary__button:focus {
+        background: #2387c4;
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+
+    @media (max-width: 767.98px) {
+        .ec-review-panel__header {
+            padding: 16px;
+        }
+
+        .ec-review-summary {
+            margin: 0 16px 22px;
+            padding: 18px;
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .ec-review-summary__button {
+            width: 100%;
+            min-width: 0;
+        }
+    }
+</style>
+
+<div class="ec-review-panel mb-4">
+    <div class="ec-review-panel__header">
+        <h3 class="fs-16 fw-700 mb-0">{{ translate('Reviews & Ratings') }}</h3>
     </div>
-    <!-- Ratting -->
-    <div class="px-3 px-sm-4 mb-4">
-        <div class="border border-secondary-base bg-soft-secondary-base p-3 p-sm-4">
-            <div class="row align-items-center">
-                <div class="col-md-8 mb-3">
-                    <div class="d-flex align-items-center justify-content-between justify-content-md-start">
-                        <div class="w-100 w-sm-auto">
-                            <span class="fs-36 mr-3">{{ $detailedProduct->rating }}</span>
-                            <span class="fs-14 mr-3">{{ translate('out of 5.0') }}</span>
-                        </div>
-                        <div class="mt-sm-3 w-100 w-sm-auto d-flex flex-wrap justify-content-end justify-content-md-start">
-                            @php
-                                $total = 0;
-                                $total += $detailedProduct->reviews->count();
-                            @endphp
-                            <span class="rating rating-mr-1">
-                                {{ renderStarRating($detailedProduct->rating) }}
-                            </span>
-                            <span class="ml-1 fs-14">({{ $total }}
-                                {{ translate('reviews') }})</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 text-right">
-                    <a  href="javascript:void(0);" onclick="product_review('{{ $detailedProduct->id }}')" 
-                        class="btn btn-secondary-base fw-400 rounded-0 text-white">
-                        <span class="d-md-inline-block"> {{ translate('Rate this Product') }}</span>
-                    </a>
-                </div>
+    <!-- Rating -->
+    <div class="pt-4">
+        <div class="ec-review-summary">
+            <div class="ec-review-summary__score">
+                @php
+                    $total = $detailedProduct->reviews->where('status', 1)->count();
+                @endphp
+                <span class="ec-review-summary__value">{{ number_format((float) $detailedProduct->rating, 1) }}</span>
+                <span class="ec-review-summary__text">{{ translate('out of 5.0') }}</span>
+                <span class="rating rating-mr-1">
+                    {{ renderStarRating($detailedProduct->rating) }}
+                </span>
+                <span class="ec-review-summary__count">({{ $total }} {{ translate('reviews') }})</span>
             </div>
+            <a href="javascript:void(0);" onclick="product_review('{{ $detailedProduct->id }}')"
+                class="ec-review-summary__button">
+                {{ translate('Rate this Product') }}
+            </a>
         </div>
     </div>
     <!-- Reviews -->

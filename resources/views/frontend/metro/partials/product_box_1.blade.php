@@ -94,6 +94,9 @@
             <a href="{{ $product_url }}" class="d-block text-reset hov-text-primary"
                 title="{{ $product->getTranslation('name') }}">{{ $product->getTranslation('name') }}</a>
         </h3>
+        <div class="rating rating-sm rating-mr-1 d-flex justify-content-center align-items-center mt-2">
+            {{ renderStarRating($product->rating) }}
+        </div>
         <div class="fs-14 d-flex justify-content-center mt-3">
             @if ($product->auction_product == 0)
                 <!-- Previous price -->

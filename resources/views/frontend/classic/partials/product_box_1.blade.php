@@ -170,6 +170,23 @@
     text-decoration: none;
 }
 
+.ec-product-card__rating {
+    min-height: 20px;
+    margin: 0 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #8a8f98;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.ec-product-card__rating .rating {
+    display: inline-flex;
+    align-items: center;
+}
+
 .ec-product-card__price-row {
     min-height: 36px;
     margin: 0 4px 16px;
@@ -311,6 +328,10 @@
             title="{{ $product->getTranslation('name') }}">
             {{ $product->getTranslation('name') }}
         </a>
+
+        <div class="ec-product-card__rating">
+            <span class="rating rating-sm rating-mr-1">{{ renderStarRating($product->rating) }}</span>
+        </div>
 
         {{-- Price row --}}
         <div class="ec-product-card__price-row">
