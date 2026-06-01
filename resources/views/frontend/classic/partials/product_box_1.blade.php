@@ -116,8 +116,8 @@
 }
 
 .ec-product-card__image-wrap {
-    width: 72%;
-    max-width: 126px;
+    width: 78%;
+    max-width: 142px;
     aspect-ratio: 1 / 1;
     margin: 0 auto 18px;
     display: flex;
@@ -132,7 +132,7 @@
 .ec-product-card__image {
     width: 100%;
     height: 100%;
-    padding: 8px;
+    padding: 5px;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
@@ -168,6 +168,23 @@
 .ec-product-card__name:focus {
     color: #227eb8;
     text-decoration: none;
+}
+
+.ec-product-card__rating {
+    min-height: 20px;
+    margin: 0 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #8a8f98;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.ec-product-card__rating .rating {
+    display: inline-flex;
+    align-items: center;
 }
 
 .ec-product-card__price-row {
@@ -235,7 +252,7 @@
 
 @media (max-width: 575.98px) {
     .ec-product-card { padding: 14px 12px 12px; }
-    .ec-product-card__image-wrap { width: 76%; margin-bottom: 14px; }
+    .ec-product-card__image-wrap { width: 82%; margin-bottom: 14px; }
     .ec-product-card__content { margin: 0 -12px -12px; padding: 14px 12px 12px; }
     .ec-product-card__action { min-height: 38px; font-size: 12px; }
 }
@@ -312,6 +329,10 @@
             {{ $product->getTranslation('name') }}
         </a>
 
+        <div class="ec-product-card__rating">
+            <span class="rating rating-sm rating-mr-1">{{ renderStarRating($product->rating) }}</span>
+        </div>
+
         {{-- Price row --}}
         <div class="ec-product-card__price-row">
             @if ($product->auction_product == 0)
@@ -343,9 +364,10 @@
                     $cart_added = $carts->pluck('product_id')->toArray();
                 }
             @endphp
-            <a class="ec-product-card__action @if (in_array($product->id, $cart_added)) active @endif"
+            <a class="ec-product-card__action js-add-to-cart-trigger @if (in_array($product->id, $cart_added)) active @endif"
                 href="javascript:void(0)"
-                onclick="showAddToCartModal({{ $product->id }})">
+                data-product-id="{{ $product->id }}"
+                @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
                 <i class="las la-shopping-cart"></i>
                 <span>{{ translate('Add to Cart') }}</span>
             </a>

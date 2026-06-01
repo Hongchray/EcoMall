@@ -55,8 +55,9 @@
                 </a>
             </div>
             <!-- add to cart -->
-            <a class="cart-btn absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
+            <a class="cart-btn js-add-to-cart-trigger absolute-bottom-left w-100 h-35px aiz-p-hov-icon text-white fs-13 fw-700 d-flex flex-column justify-content-center align-items-center @if (in_array($product->id, $cart_added)) active @endif"
                 href="javascript:void(0)"
+                data-product-id="{{ $product->id }}"
                 @if (Auth::check()) onclick="showAddToCartModal({{ $product->id }})" @else onclick="showLoginModal()" @endif>
                 <span class="cart-btn-text">
                     {{ translate('Add to Cart') }}
@@ -92,6 +93,9 @@
             <a href="{{ $product_url }}" class="d-block text-reset hov-text-primary"
                 title="{{ $product->getTranslation('name') }}">{{ $product->getTranslation('name') }}</a>
         </h3>
+        <div class="rating rating-sm rating-mr-1 d-flex justify-content-center align-items-center mt-2">
+            {{ renderStarRating($product->rating) }}
+        </div>
         <div class="fs-14 d-flex justify-content-center mt-2">
             @if ($product->auction_product == 0)
                 <!-- Previous price -->

@@ -108,17 +108,25 @@ class HomeController extends Controller
                     ->orderBy('created_at', 'asc')
                     ->get();
 
-                $home_section_category_names = ['Structure', 'PVC Pipe'];
-                $home_section_categories = Category::whereIn('name', $home_section_category_names)
-                    ->orWhereHas('category_translations', function ($query) use ($home_section_category_names) {
-                        $query->whereIn('name', $home_section_category_names);
+                $home_section_category_names = [
+                    'Structure',
+                    'Foundation piling machine',
+                    'PVC Pipe',
+                    'Decoration',
+                    'Accessory',
+                ];
+                $home_section_categories = Category::where(function ($query) {
+                        $query->whereIn('id', Product::select('category_id'))
+                            ->orWhereHas('products');
                     })
                     ->get()
                     ->sortBy(function ($category) use ($home_section_category_names) {
                         $name = $category->getTranslation('name');
                         $index = array_search($name, $home_section_category_names);
 
-                        return $index === false ? count($home_section_category_names) : $index;
+                        return $index === false
+                            ? count($home_section_category_names) + strtotime($category->created_at)
+                            : $index;
                     })
                     ->values();
 
@@ -599,14 +607,6 @@ class HomeController extends Controller
 
         if ($detailedProduct != null && $detailedProduct->published) {
 
-            if((get_setting('vendor_system_activation') != 1) && $detailedProduct->added_by == 'seller'){
-
-                abort(404);
-
-            }
-
-
-
             if($detailedProduct->added_by == 'seller' && $detailedProduct->user->banned == 1){
 
                 abort(404);
@@ -691,7 +691,7 @@ class HomeController extends Controller
 
                     $q->where('user_id', Auth::id());
 
-                }])->where('product_id', $detailedProduct->id)->where('delivery_status', 'delivered')->first();
+                }])->where('product_id', $detailedProduct->id)->first();
 
                 $review_status = $OrderDetail ? 1 : 0;
 

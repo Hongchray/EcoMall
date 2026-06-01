@@ -134,6 +134,7 @@ x
                     foreach ($product->stocks as $key => $stock) {
                         $qty += $stock->qty;
                     }
+                    $is_out_of_stock = $product->digital != 1 && $qty < $product->min_qty;
                 @endphp
 
                 <!-- Product Choice options form -->
@@ -212,7 +213,7 @@ x
                                         <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="minus" data-field="quantity" disabled="">
                                             <i class="las la-minus"></i>
                                         </button>
-                                        <input type="number" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ $product->min_qty }}" min="{{ $product->min_qty }}" max="10" lang="en">
+                                        <input type="number" name="quantity" class="col border-0 text-center flex-grow-1 fs-16 input-number" placeholder="1" value="{{ min($product->min_qty, max($qty, 1)) }}" min="{{ $product->min_qty }}" max="{{ max($qty, 1) }}" lang="en" @if($is_out_of_stock) readonly @endif>
                                         <button class="btn col-auto btn-icon btn-sm btn-light rounded-0" type="button" data-type="plus" data-field="quantity">
                                             <i class="las la-plus"></i>
                                         </button>

@@ -169,11 +169,12 @@ class AizUploadController extends Controller
                     }
                 }
 
-                if (env('FILESYSTEM_DRIVER') != 'local') {
+                $filesystem_driver = env('FILESYSTEM_DRIVER', 'local');
+                if ($filesystem_driver != 'local') {
 
-                    Storage::disk(env('FILESYSTEM_DRIVER'))->put(
+                    Storage::disk($filesystem_driver)->put(
                         $path,
-                        file_get_contents(base_path('public/') . $path),
+                         file_get_contents(base_path('public/') . $path),
                         [
                             'visibility' => 'public',
                             'ContentType' =>  $extension == 'svg' ? 'image/svg+xml' : $file_mime
@@ -233,8 +234,9 @@ class AizUploadController extends Controller
             return back();
         }
         try {
-            if (env('FILESYSTEM_DRIVER') != 'local') {
-                Storage::disk(env('FILESYSTEM_DRIVER'))->delete($upload->file_name);
+            $filesystem_driver = env('FILESYSTEM_DRIVER', 'local');
+            if ($filesystem_driver != 'local') {
+                Storage::disk($filesystem_driver)->delete($upload->file_name);
                 if (file_exists(public_path() . '/' . $upload->file_name)) {
                     unlink(public_path() . '/' . $upload->file_name);
                 }
@@ -247,7 +249,7 @@ class AizUploadController extends Controller
             $upload->delete();
             flash(translate('File deleted successfully'))->success();
         }
-        return back();
+        return redirect()->route('uploaded-files.index');
     }
 
     public function bulk_uploaded_files_delete(Request $request)

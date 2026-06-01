@@ -1674,6 +1674,26 @@ function translate($key, $lang = null, $addslashes = false)
 
 
 
+if (!function_exists('localized_date')) {
+
+    function localized_date($timestamp, $format = 'd M Y')
+
+    {
+
+        if ($format == 'd M Y') {
+
+            return date('d', $timestamp) . ' ' . translate(date('M', $timestamp)) . ' ' . date('Y', $timestamp);
+
+        }
+
+        return date($format, $timestamp);
+
+    }
+
+}
+
+
+
 function remove_invalid_charcaters($str)
 
 {
@@ -2477,7 +2497,7 @@ if (!function_exists('getFileBaseURL')) {
 
 
 
-        return getBaseURL() . 'public/';
+        return getBaseURL();
 
     }
 

@@ -406,7 +406,7 @@
 
                 </div>
 
-                <button type="button" class="close absolute-top-right btn-icon close z-1 btn-circle bg-gray mr-2 mt-2 d-flex justify-content-center align-items-center" data-dismiss="modal" aria-label="Close" style="background: #ededf2; width: calc(2rem + 2px); height: calc(2rem + 2px);">
+                <button type="button" class="close absolute-top-right btn-icon close z-1 btn-circle bg-gray mr-2 mt-2 d-flex justify-content-center align-items-center" data-dismiss="modal" onclick="$('#addToCart').modal('hide')" aria-label="Close" style="background: #ededf2; width: calc(2rem + 2px); height: calc(2rem + 2px);">
 
                     <span aria-hidden="true" class="fs-24 fw-700" style="margin-left: 2px;">&times;</span>
 
@@ -579,18 +579,6 @@
             });
 
 
-
-            $.post('{{ route('home.section.home_categories') }}', {
-
-                _token: '{{ csrf_token() }}'
-
-            }, function(data) {
-
-                $('#section_home_categories').html(data);
-
-                AIZ.plugins.slickCarousel();
-
-            });
 
         @endif
 
@@ -835,9 +823,27 @@
 
         function showLoginModal() {
 
-            $('#login_modal').modal();
+            $('#addToCart').modal('hide');
+
+            $('#login_modal').modal('show');
 
         }
+
+        $(document).on('click', '.js-add-to-cart-trigger', function (e) {
+
+            @if (!Auth::check())
+
+                e.preventDefault();
+
+                e.stopImmediatePropagation();
+
+                showLoginModal();
+
+                return false;
+
+            @endif
+
+        });
 
 
 
@@ -908,6 +914,14 @@
 
 
         function showAddToCartModal(id){
+
+            @if (!Auth::check())
+
+                showLoginModal();
+
+                return false;
+
+            @endif
 
             if(!$('#modal-size').hasClass('modal-lg')){
 

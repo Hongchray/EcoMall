@@ -158,7 +158,7 @@
 
                 <!-- Reviews & Ratings -->
 
-                {{-- @include('frontend.product_details.review_section') --}}
+                @include('frontend.product_details.review_section')
 
 
 
@@ -206,7 +206,7 @@
 
                         <!-- Reviews & Ratings -->
 
-                        {{-- @include('frontend.product_details.review_section') --}}
+                        @include('frontend.product_details.review_section')
 
 
 
@@ -484,7 +484,7 @@
 
     <div class="modal fade" id="product-review-modal">
 
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered ec-review-modal-dialog">
 
             <div class="modal-content" id="product-review-modal-content">
 

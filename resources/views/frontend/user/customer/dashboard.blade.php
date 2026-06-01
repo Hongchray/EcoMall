@@ -621,7 +621,7 @@
                             </span>
                             <div class="ml-3">
                                 <h6 class="fw-800 fs-16 mb-1 text-dark">{{ translate('need_help_or_updates') }}</h6>
-                                <p class="fs-14 ecm-dashboard-muted mb-0">{{ translate('follow_sellers_check_conversations_or_create_a_support_ticket_from_one_place') }}</p>
+                                <p class="fs-14 ecm-dashboard-muted mb-0">{{ translate('dashboard_help_text') }}</p>
                             </div>
                         </div>
                         <div class="d-flex flex-wrap" style="gap: 10px;">
@@ -696,7 +696,7 @@
                     @else
                         <div class="bg-soft-light p-4 text-center mb-4">
                             <i class="las la-map-marked-alt fs-36 text-primary mb-2"></i>
-                            <p class="mb-0 fs-14 ecm-dashboard-muted">{{ translate('No default address found') }}</p>
+                            <p class="mb-0 fs-14 ecm-dashboard-muted">{{ translate('no_default_address_found') }}</p>
                         </div>
                     @endif
 

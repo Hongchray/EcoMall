@@ -445,7 +445,7 @@
                     </div>
                     <div class="ecm-order-summary-item">
                         <span class="ecm-order-summary-label">{{ translate('Order date') }}</span>
-                        <span class="ecm-order-summary-value">{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, H:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</span>
+                        <span class="ecm-order-summary-value">{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, h:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</span>
                     </div>
                     <div class="ecm-order-summary-item">
                         <span class="ecm-order-summary-label">{{ translate('Order status') }}</span>
@@ -509,7 +509,7 @@
                     <table class="table-borderless table ecm-order-info-table">
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Order date') }}:</td>
-                            <td>{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, H:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</td>
+                            <td>{{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y, h:i', $order->date) }} {{ translate(strtolower(date('A', $order->date))) }}</td>
                         </tr>
                         <tr>
                             <td class="w-50 fw-600">{{ translate('Order status') }}:</td>

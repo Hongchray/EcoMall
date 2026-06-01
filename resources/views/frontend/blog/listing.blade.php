@@ -77,9 +77,9 @@
                                 </div>
 
                                 <div class="ecm-news-side-card mb-3 mt-3 mx-3 mt-xl-0 mx-xl-0">
-                                    <h3>{{ translate('Search') }}</h3>
+                                    <h3>{{ translate('search') }}</h3>
                                     <div class="input-group w-100 ecm-news-search">
-                                        <input type="text" class="fs-14 flex-grow-1" name="search" value="{{ $search }}" placeholder="{{ translate('Search...') }}" autocomplete="off">
+                                        <input type="text" class="fs-14 flex-grow-1" name="search" value="{{ $search }}" placeholder="{{ translate('search') }}" autocomplete="off">
                                         <div class="input-group-append">
                                             <button class="btn" type="submit">
                                                 <i class="la la-search la-flip-horizontal"></i>

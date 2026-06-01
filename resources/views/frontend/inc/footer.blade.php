@@ -392,7 +392,7 @@ col-md-6 col-sm-6" : "col-md-4 col-sm-6";
                             </a>
                 </div> 
                 <div style="background-color: #1a73b5;">
-                    <p style="color: #b9d8ee; font-size: 18px; line-height: 1.85; font-weight: 400; margin: 0;">
+                    <p style="color: #fff; font-size: 18px; line-height: 1.85; font-weight: 400; margin: 0;">
                         {{ translate('eco_mall_description') }}
                     </p>
                 </div>
