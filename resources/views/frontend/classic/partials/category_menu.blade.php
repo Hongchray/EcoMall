@@ -1,9 +1,23 @@
 <div class="aiz-category-menu bg-white rounded-0 border-top" id="category-sidebar" style="width:270px;">
     <ul class="list-unstyled categories no-scrollbar mb-0 text-left">
+        @php
+            $placeholder_image = static_asset('assets/img/placeholder.jpg');
+            $category_image_url = function ($image) use ($placeholder_image) {
+                if (empty($image)) {
+                    return $placeholder_image;
+                }
+
+                if (filter_var($image, FILTER_VALIDATE_URL)) {
+                    return $image;
+                }
+
+                return is_numeric($image) ? uploaded_asset($image) : my_asset($image);
+            };
+        @endphp
         @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $key => $category)
             @php
                 $category_name = $category->getTranslation('name');
-                $category_icon = $category->icon ?: static_asset('assets/img/placeholder.jpg');
+                $category_icon = $category_image_url($category->icon);
             @endphp
             <li class="category-nav-element border border-top-0" data-id="{{ $category->id }}">
                 <a href="{{ route('products.category', $category->slug) }}"
@@ -17,7 +31,7 @@
                     <ul class="list-unstyled mb-2">
                         @foreach ($category->subcategories as $subcategory)
                             @php
-                                $subcategory_image = $subcategory->image ?: static_asset('assets/img/placeholder.jpg');
+                                $subcategory_image = $category_image_url($subcategory->image);
                             @endphp
                             <li>
                                 <a href="{{ route('products.subcategory', [$category->slug, $subcategory->slug]) }}"

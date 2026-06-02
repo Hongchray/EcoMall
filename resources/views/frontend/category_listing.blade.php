@@ -299,6 +299,12 @@
                                 $isActive = request('subcategory') == $sub->slug;
                                 $url = route('products.category', $category->slug)
                                     . '?' . http_build_query(array_merge(request()->query(), ['subcategory' => $sub->slug]));
+                                $sub_image = null;
+                                if (!empty($sub->image)) {
+                                    $sub_image = filter_var($sub->image, FILTER_VALIDATE_URL)
+                                        ? $sub->image
+                                        : uploaded_asset($sub->image);
+                                }
                             @endphp
                             <a href="{{ $url }}" class="sub-card {{ $isActive ? 'active' : '' }}">
 
@@ -307,8 +313,8 @@
                                 @endif
 
                                 <div class="icon-wrap" style="background: {{ $sub->icon_bg ?? '#F3F3F3' }}">
-                                    @if ($sub->image)
-                                        <img src="{{ $sub->image }}" alt="{{ $sub->name }}"
+                                    @if ($sub_image)
+                                        <img src="{{ $sub_image }}" alt="{{ $sub->name }}"
                                             style="width:24px;height:24px;object-fit:contain;">
                                     @else
                                         <i class="ti ti-package" style="color:#888;font-size:20px" aria-hidden="true"></i>
@@ -370,11 +376,20 @@
                             <h2 class="fs-16 fw-700 mb-3">{{ translate('Subcategories') }}</h2>
                             <div class="row gutters-10 row-cols-xxl-6 row-cols-xl-4 row-cols-lg-4 row-cols-md-3 row-cols-3">
                                 @foreach ($category->childrenCategories as $sub)
+                                    @php
+                                        $sub_image = null;
+                                        $sub_image_id = $sub->icon ?? $sub->image ?? null;
+                                        if (!empty($sub_image_id)) {
+                                            $sub_image = filter_var($sub_image_id, FILTER_VALIDATE_URL)
+                                                ? $sub_image_id
+                                                : uploaded_asset($sub_image_id);
+                                        }
+                                    @endphp
                                     <div class="col mb-3">
                                         <a href="{{ route('products.category', $category->slug) }}?subcategory={{ $sub->slug }}"
                                             class="d-block text-center p-3 bg-white border hov-shadow-out has-transition">
-                                            @if ($sub->icon)
-                                                <img src="{{ uploaded_asset($sub->icon) }}"
+                                            @if ($sub_image)
+                                                <img src="{{ $sub_image }}"
                                                     alt="{{ $sub->getTranslation('name') }}"
                                                     class="img-fluid mb-2"
                                                     style="max-height: 50px; object-fit: contain;">

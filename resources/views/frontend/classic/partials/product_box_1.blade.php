@@ -267,6 +267,20 @@
     $is_in_wishlist = Auth::check()
         && Auth::user()->user_type == 'customer'
         && Auth::user()->wishlists->contains('product_id', $product->id);
+
+    $product_image = static_asset('assets/img/placeholder.jpg');
+    if (!empty($product->thumbnail_img)) {
+        $product_image = filter_var($product->thumbnail_img, FILTER_VALIDATE_URL)
+            ? $product->thumbnail_img
+            : uploaded_asset($product->thumbnail_img);
+    } elseif (!empty($product->photos)) {
+        $first_photo = current(array_filter(explode(',', $product->photos)));
+        if ($first_photo) {
+            $product_image = filter_var($first_photo, FILTER_VALIDATE_URL)
+                ? $first_photo
+                : uploaded_asset($first_photo);
+        }
+    }
 @endphp
 
 @once
@@ -314,7 +328,7 @@
     {{-- Product image --}}
     <a href="{{ $product_url }}" class="ec-product-card__image-wrap" title="{{ $product->getTranslation('name') }}">
         <img class="lazyload ec-product-card__image"
-            src="{{ $product->photos ?? get_image($product->thumbnail_img) }}"
+            src="{{ $product_image }}"
             alt="{{ $product->getTranslation('name') }}"
             title="{{ $product->getTranslation('name') }}"
             onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
