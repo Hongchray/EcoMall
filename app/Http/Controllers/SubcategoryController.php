@@ -9,6 +9,10 @@ use Illuminate\Support\Str;
 use App\Models\SubCategoryTranslation;
 class SubcategoryController extends Controller
 {
+    private function defaultLanguage()
+    {
+        return env('DEFAULT_LANGUAGE', config('app.locale', 'en'));
+    }
 
     public function __construct() {
 
@@ -72,7 +76,7 @@ class SubcategoryController extends Controller
 
         $translation->subcategory_id = $subcategory->id;
         $translation->name = $request->name;
-        $translation->lang = env('DEFAULT_LANGUAGE');
+        $translation->lang = $this->defaultLanguage();
 
         $translation->save();
 
@@ -117,7 +121,7 @@ class SubcategoryController extends Controller
 
         $translation = SubCategoryTranslation::firstOrNew([
             'subcategory_id' => $subcategory->id,
-            'lang' => $request->lang ?? env('DEFAULT_LANGUAGE'),
+            'lang' => $request->lang ?? $this->defaultLanguage(),
         ]);
 
         $translation->name = $request->name;

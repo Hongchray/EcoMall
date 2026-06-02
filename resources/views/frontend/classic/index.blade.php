@@ -419,6 +419,14 @@
                                 @foreach($category->subcategories as $index => $sub)
 
                                     @if($index < 12)
+                                        @php
+                                            $sub_image = null;
+                                            if (!empty($sub->image)) {
+                                                $sub_image = filter_var($sub->image, FILTER_VALIDATE_URL)
+                                                    ? $sub->image
+                                                    : uploaded_asset($sub->image);
+                                            }
+                                        @endphp
 
                                         <div style="min-width: 90px; text-align: center;">
 
@@ -428,7 +436,7 @@
                                                 <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1"
                                                     style="width: 50px; height: 50px;">
 
-                                                    <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
+                                                    <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
                                                         style="width: 30px; height: 30px; object-fit: contain;">
                                                 </div>
 
@@ -499,6 +507,14 @@
                             <div class="d-flex flex-wrap gap-4">
 
                                 @forelse($category->subcategories as $sub)
+                                    @php
+                                        $sub_image = null;
+                                        if (!empty($sub->image)) {
+                                            $sub_image = filter_var($sub->image, FILTER_VALIDATE_URL)
+                                                ? $sub->image
+                                                : uploaded_asset($sub->image);
+                                        }
+                                    @endphp
                                     <div class="text-center text-white" style="width: 120px;">
 
                                         <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
@@ -507,7 +523,7 @@
                                             <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
                                                 style="width: 60px; height: 60px;">
 
-                                                <img src="{{ $sub->image ?? 'https://via.placeholder.com/40' }}"
+                                                <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
                                                     style="width: 35px; height: 35px; object-fit: contain;">
                                             </div>
 
