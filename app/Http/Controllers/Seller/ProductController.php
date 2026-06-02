@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductTax;
 use App\Models\ProductTranslation;
+use App\Models\SubCategory;
 use App\Models\Wishlist;
 use App\Models\User;
 use App\Notifications\ShopProductNotification;
@@ -70,7 +71,10 @@ class ProductController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('seller.product.products.create', compact('categories'));
+
+        $subcategories = SubCategory::all();
+        // dd($subcategories);
+        return view('seller.product.products.create', compact('categories', 'subcategories'));
     }
 
     public function store(ProductRequest $request)
@@ -136,7 +140,10 @@ class ProductController extends Controller
             ->where('digital', 0)
             ->with('childrenCategories')
             ->get();
-        return view('seller.product.products.edit', compact('product', 'categories', 'tags', 'lang'));
+
+        $subcategories = SubCategory::all();
+        return view('seller.product.products.edit', compact('product', 'categories', 'tags', 'lang',
+            'subcategories'));
     }
 
     public function update(ProductRequest $request, Product $product)
