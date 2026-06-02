@@ -515,7 +515,9 @@ class ProductController extends Controller
 
             ->get();
 
-        return view('backend.product.products.edit', compact('product', 'categories', 'tags', 'lang'));
+        $subcategories = Subcategory::all();
+
+        return view('backend.product.products.edit', compact('product', 'categories', 'tags', 'lang', 'subcategories'));
 
     }
 
