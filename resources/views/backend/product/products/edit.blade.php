@@ -780,7 +780,7 @@
 
             <div class="col-lg-4">
 
-               <div class="card">
+                <div class="card">
                     <div class="card-header">
                         <h5 class="mb-0 h6">{{ translate('Product Category') }}</h5>
 

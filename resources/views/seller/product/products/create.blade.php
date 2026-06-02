@@ -394,17 +394,58 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        <div class="h-300px overflow-auto c-scrollbar-light">
-                            <ul class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
+
+                        {{-- Category Treeview --}}
+                        <div class="h-300px overflow-auto c-scrollbar-light mb-3">
+                           <ul id="treeview"
+                                class="hummingbird-treeview-converter list-unstyled"
+
+                                data-radio-name="category_id">
+
                                 @foreach ($categories as $category)
-                                <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}</li>
-                                    @foreach ($category->childrenCategories as $childCategory)
-                                        @include('backend.product.products.child_category', ['child_category' => $childCategory])
-                                    @endforeach
+                                    <li id="{{ $category->id }}">
+                                        {{ $category->getTranslation('name') }}
+
+                                        @if($category->childrenCategories->count() > 0)
+                                            <ul>
+                                                @foreach ($category->childrenCategories as $childCategory)
+                                                    @include('backend.product.products.child_category', [
+                                                        'child_category' => $childCategory
+                                                    ])
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
                                 @endforeach
+
                             </ul>
                         </div>
+
+                        {{-- Subcategory List (hidden until category selected) --}}
+                        <div id="subcategory-wrapper" style="display:none;">
+                            <hr class="my-2">
+                            <label class="col-from-label mb-2">
+                                {{ translate('Sub Category') }}
+                            </label>
+                            <div class="h-200px overflow-auto c-scrollbar-light mt-2">
+                                <ul class="list-unstyled" id="subcategory_list">
+                                    @foreach($subcategories as $sub)
+                                        <li class="subcategory-item py-1 px-2"
+                                            data-category="{{ $sub->category_id }}"
+                                            style="display:none;">
+                                            <label class="d-flex align-items-center mb-0" style="cursor:pointer; gap:8px;">
+                                                <input type="radio"
+                                                    name="subcategory_id"
+                                                    value="{{ $sub->id }}"
+                                                    style="margin-right:6px;">
+                                                {{ $sub->name }}
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
                     </div>
+
                 </div>
 
                 <div class="card">
@@ -604,10 +645,62 @@
 @endsection
 
 @section('script')
+
+<style>
+    /* Hide checkboxes injected by hummingbird treeview */
+    .hummingbird-treeview input[type="checkbox"],
+    #treeview input[type="checkbox"],
+    .hummingbird-treeview-converter input[type="checkbox"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+</style>
+
 <!-- Treeview js -->
 <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
 
 <script type="text/javascript">
+
+
+    $(document).on('change', 'input[name="category_id"]', function () {
+        var val = $(this).val();
+
+        // Sync to category_ids[] for controller
+        $('input[name="category_ids[]"]').remove();
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'category_ids[]',
+            value: val
+        }).appendTo('#choice_form');
+
+        // Filter subcategories
+        filterSubcategories(val);
+    });
+
+    function filterSubcategories(categoryId) {
+        var $wrapper = $('#subcategory-wrapper');
+        var $items   = $('.subcategory-item');
+
+        // Hide all, show matching
+        $items.hide();
+        var $matching = $items.filter('[data-category="' + categoryId + '"]');
+
+        if ($matching.length > 0) {
+            $matching.show();
+            $wrapper.show();
+        } else {
+            $wrapper.hide();
+        }
+
+        // Reset any selected subcategory
+        $('input[name="subcategory_id"]').prop('checked', false);
+    }
+
+
     $(document).ready(function() {
         $("#treeview").hummingbird();
     });

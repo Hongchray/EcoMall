@@ -94,7 +94,7 @@
                                 data-role="tagsinput">
                         </div>
                     </div>
-                    
+
                     @if (addon_is_activated('pos_system'))
                     <div class="form-group row">
                         <label class="col-lg-3 col-from-label">{{translate('Barcode')}}</label>
@@ -432,33 +432,92 @@
 
         <div class="col-lg-4">
             <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 h6">{{ translate('Product Category') }}</h5>
-                    <h6 class="float-right fs-13 mb-0">
-                        {{ translate('Select Main') }}
-                        <span class="position-relative main-category-info-icon">
-                            <i class="las la-question-circle fs-18 text-info"></i>
-                            <span class="main-category-info bg-soft-info p-2 position-absolute d-none border">{{ translate('This will be used for commission based calculations and homepage category wise product Show') }}</span>
-                        </span>
-                    </h6>
-                </div>
-                <div class="card-body ">
-                    <div class="h-300px overflow-auto c-scrollbar-light">
+                    <div class="card-header">
+                        <h5 class="mb-0 h6">{{ translate('Product Category') }}</h5>
+
+                        <h6 class="float-right fs-13 mb-0">
+                            {{ translate('Select Main') }}
+
+                            <span class="position-relative main-category-info-icon">
+                                <i class="las la-question-circle fs-18 text-info"></i>
+
+                                <span class="main-category-info bg-soft-info p-2 position-absolute d-none border">
+                                    {{ translate('This will be used for commission based calculations and homepage category wise product Show.') }}
+                                </span>
+                            </span>
+                        </h6>
+                    </div>
+
+                    <div class="card-body">
+
                         @php
                             $old_categories = $product->categories()->pluck('category_id')->toArray();
+
+                            // saved subcategory id
+                            $selected_subcategory = $product->subcategory_id ?? null;
                         @endphp
-                        <ul class="hummingbird-treeview-converter list-unstyled" data-checkbox-name="category_ids[]" data-radio-name="category_id">
-                            @foreach ($categories as $category)
-                            <li id="{{ $category->id }}">{{ $category->getTranslation('name') }}</li>
-                                @foreach ($category->childrenCategories as $childCategory)
-                                    @include('backend.product.products.child_category', ['child_category' => $childCategory])
+
+                        {{-- Category Tree --}}
+                        <div class="h-300px overflow-auto c-scrollbar-light mb-3">
+                            <ul id="treeview" class="hummingbird-treeview-converter list-unstyled"
+                                data-radio-name="category_id">
+
+                                @foreach ($categories as $category)
+
+                                    <li id="{{ $category->id }}">
+                                        {{ $category->getTranslation('name') }}
+                                    </li>
+
+                                    @foreach ($category->childrenCategories as $childCategory)
+                                        @include('backend.product.products.child_category', [
+                                            'child_category' => $childCategory
+                                        ])
+                                    @endforeach
+
                                 @endforeach
-                            @endforeach
-                        </ul>
+                            </ul>
+                        </div>
+
+                        {{-- Subcategory --}}
+                        <div id="subcategory-wrapper" style="display:none;">
+                            <hr class="my-2">
+
+                            <label class="col-from-label mb-2">
+                                {{ translate('Sub Category') }}
+                            </label>
+
+                            <div class="h-200px overflow-auto c-scrollbar-light mt-2">
+                                <ul class="list-unstyled" id="subcategory_list">
+
+                                    @foreach($subcategories as $sub)
+
+                                        <li class="subcategory-item py-1 px-2"
+                                            data-category="{{ $sub->category_id }}"
+                                            style="display:none;">
+
+                                            <label class="d-flex align-items-center mb-0"
+                                                style="cursor:pointer; gap:8px;">
+
+                                                <input type="radio"
+                                                    name="subcategory_id"
+                                                    value="{{ $sub->id }}"
+                                                    {{ $selected_subcategory == $sub->id ? 'checked' : '' }}
+                                                    style="margin-right:6px;">
+
+                                                {{ $sub->name }}
+                                            </label>
+
+                                        </li>
+
+                                    @endforeach
+
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            
+
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0 h6" class="dropdown-toggle" data-toggle="collapse" data-target="#collapse_2">
@@ -680,10 +739,62 @@
 @endsection
 
 @section('script')
+
+<style>
+    /* Hide checkboxes injected by hummingbird treeview */
+    .hummingbird-treeview input[type="checkbox"],
+    #treeview input[type="checkbox"],
+    .hummingbird-treeview-converter input[type="checkbox"] {
+        display: none !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+</style>
+
 <!-- Treeview js -->
 <script src="{{ static_asset('assets/js/hummingbird-treeview.js') }}"></script>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        function loadSubcategories() {
+            var selectedCategory = $('input[name="category_id"]:checked').val();
+
+            if (selectedCategory) {
+                $('#subcategory-wrapper').show();
+                $('.subcategory-item').hide();
+                $('.subcategory-item').each(function () {
+                    if ($(this).data('category').toString() === selectedCategory.toString()) {
+                        $(this).show();
+                    }
+                });
+            } else {
+                $('#subcategory-wrapper').hide();
+            }
+        }
+
+        setTimeout(function () { loadSubcategories(); }, 500);
+
+        $(document).on('change', 'input[name="category_id"]', function () {
+            loadSubcategories();
+        });
+
+        // Initial load for edit form
+        setTimeout(function () {
+            loadSubcategories();
+        }, 500);
+
+        // When category changes
+        $(document).on('change', 'input[name="category_ids[]"]', function () {
+            loadSubcategories();
+        });
+
+    });
+
+
     $(document).ready(function (){
         show_hide_shipping_div();
 
