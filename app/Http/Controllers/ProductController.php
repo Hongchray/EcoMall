@@ -503,7 +503,7 @@ class ProductController extends Controller
 
 
 
-        $lang = $request->lang;
+        $lang = $request->lang ?: env('DEFAULT_LANGUAGE', config('app.locale', 'en'));
 
         $tags = json_decode($product->tags);
 
@@ -547,7 +547,7 @@ class ProductController extends Controller
 
         }
 
-        $lang = $request->lang;
+        $lang = $request->lang ?: env('DEFAULT_LANGUAGE', config('app.locale', 'en'));
 
         $tags = json_decode($product->tags);
 
@@ -586,6 +586,9 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
 
     {
+        if (!$request->filled('lang')) {
+            $request->merge(['lang' => env('DEFAULT_LANGUAGE', config('app.locale', 'en'))]);
+        }
 
         //Product
 
@@ -675,7 +678,7 @@ class ProductController extends Controller
 
 
 
-        return back();
+        return redirect()->route('products.all');
 
     }
 
