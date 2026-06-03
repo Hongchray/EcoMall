@@ -91,22 +91,23 @@ class HomeController extends Controller
         {
             try {
 
-                $featured_categories = Category::with([
-                    'bannerImage',
-                    'subcategories' => function ($query) {
-                        $query->orderBy('created_at', 'asc');
-                    },
-                    'products' => function ($query) {
-                        $query->orderBy('created_at', 'asc');
-                    }
-                ])
-                ->where('featured', 1)
-                ->orderBy('created_at', 'asc')
-                ->get();
-
-                $banners = Banner::where('status', 1)
+                $featured_categories = Cache::remember('home.featured_categories', 3600, function () {
+                    return Category::with([
+                        'bannerImage',
+                        'subcategories' => function ($query) {
+                            $query->orderBy('created_at', 'asc');
+                        },
+                    ])
+                    ->where('featured', 1)
                     ->orderBy('created_at', 'asc')
                     ->get();
+                });
+
+                $banners = Cache::remember('home.banners', 3600, function () {
+                    return Banner::where('status', 1)
+                        ->orderBy('created_at', 'asc')
+                        ->get();
+                });
 
                 $home_section_category_names = [
                     'Structure',
@@ -115,20 +116,22 @@ class HomeController extends Controller
                     'Decoration',
                     'Accessory',
                 ];
-                $home_section_categories = Category::where(function ($query) {
-                        $query->whereIn('id', Product::select('category_id'))
-                            ->orWhereHas('products');
-                    })
-                    ->get()
-                    ->sortBy(function ($category) use ($home_section_category_names) {
-                        $name = $category->getTranslation('name');
-                        $index = array_search($name, $home_section_category_names);
+                $home_section_categories = Cache::remember('home.section_categories', 3600, function () use ($home_section_category_names) {
+                    return Category::where(function ($query) {
+                            $query->whereIn('id', Product::select('category_id'))
+                                ->orWhereHas('products');
+                        })
+                        ->get()
+                        ->sortBy(function ($category) use ($home_section_category_names) {
+                            $name = $category->getTranslation('name');
+                            $index = array_search($name, $home_section_category_names);
 
-                        return $index === false
-                            ? count($home_section_category_names) + strtotime($category->created_at)
-                            : $index;
-                    })
-                    ->values();
+                            return $index === false
+                                ? count($home_section_category_names) + strtotime($category->created_at)
+                                : $index;
+                        })
+                        ->values();
+                });
 
                 return view(
                     'frontend.' . get_setting('homepage_select') . '.index',
@@ -592,6 +595,16 @@ class HomeController extends Controller
     public function product(Request $request, $slug)
 
     {
+        if (is_numeric($slug)) {
+            $product = Product::where('id', $slug)
+                ->where('auction_product', 0)
+                ->where('approved', 1)
+                ->first();
+
+            if ($product && $product->published) {
+                return redirect()->route('product', $product->slug);
+            }
+        }
 
         if (!Auth::check()) {
 
@@ -601,7 +614,11 @@ class HomeController extends Controller
 
 
 
-        $detailedProduct  = Product::with('reviews', 'brand', 'stocks', 'user', 'user.shop')->where('auction_product', 0)->where('slug', $slug)->where('approved', 1)->first();
+        $detailedProduct = Product::with('brand', 'stocks', 'taxes', 'thumbnail', 'user', 'user.shop')
+            ->where('auction_product', 0)
+            ->where('slug', $slug)
+            ->where('approved', 1)
+            ->first();
 
 
 
@@ -628,6 +645,22 @@ class HomeController extends Controller
             $total_query = ProductQuery::where('product_id', $detailedProduct->id)->count();
 
             $reviews = $detailedProduct->reviews()->paginate(3);
+
+            $top_selling_products = filter_products(
+                    Product::with('taxes', 'thumbnail')
+                        ->where('user_id', $detailedProduct->user_id)
+                        ->orderBy('num_of_sale', 'desc')
+                )
+                ->limit(6)
+                ->get();
+
+            $related_products = filter_products(
+                    Product::with('taxes', 'thumbnail')
+                        ->where('id', '!=', $detailedProduct->id)
+                        ->where('category_id', $detailedProduct->category_id)
+                )
+                ->limit(10)
+                ->get();
 
 
 
@@ -725,7 +758,7 @@ class HomeController extends Controller
 
             }
 
-            return view('frontend.product_details', compact('detailedProduct', 'product_queries', 'total_query', 'reviews', 'review_status'));
+            return view('frontend.product_details', compact('detailedProduct', 'product_queries', 'total_query', 'reviews', 'review_status', 'top_selling_products', 'related_products'));
 
         }
 

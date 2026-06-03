@@ -107,7 +107,7 @@
     </div>
     <div class="ec-top-selling__body">
         <ul class="list-group list-group-flush">
-            @foreach (get_best_selling_products(6, $detailedProduct->user_id) as $key => $top_product)
+            @foreach ($top_selling_products as $key => $top_product)
                 @php
                     $top_product_image = filter_var($top_product->thumbnail_img, FILTER_VALIDATE_URL)
                         ? $top_product->thumbnail_img

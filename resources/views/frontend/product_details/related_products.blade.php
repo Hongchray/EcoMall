@@ -128,7 +128,7 @@
         <div class="aiz-carousel gutters-5 half-outside-arrow ec-related-products__carousel" data-items="5" data-xl-items="3"
             data-lg-items="4" data-md-items="3" data-sm-items="2" data-xs-items="2"
             data-arrows='true' data-infinite='true'>
-            @foreach (get_related_products($detailedProduct) as $key => $related_product)
+            @foreach ($related_products as $key => $related_product)
                 @php
                     $related_product_image = filter_var($related_product->thumbnail_img, FILTER_VALIDATE_URL)
                         ? $related_product->thumbnail_img
