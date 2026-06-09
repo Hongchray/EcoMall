@@ -288,7 +288,7 @@
     <!-- Back to shopping & Checkout buttons -->
     <div class="ec-added-actions row gutters-5">
         <div class="col-sm-6">
-            <button class="ec-added-actions__back btn btn-warning mb-3 mb-sm-0 btn-block rounded-0 text-white" data-dismiss="modal">{{ translate('Back to shopping')}}</button>
+            <button type="button" class="js-back-to-shopping ec-added-actions__back btn btn-warning mb-3 mb-sm-0 btn-block rounded-0 text-white" data-dismiss="modal">{{ translate('Back to shopping')}}</button>
         </div>
         <div class="col-sm-6">
             <a href="{{ route('cart') }}" class="ec-added-actions__checkout btn btn-primary mb-3 mb-sm-0 btn-block rounded-0">{{ translate('Proceed to Checkout')}}</a>

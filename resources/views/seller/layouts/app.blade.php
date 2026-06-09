@@ -111,8 +111,15 @@
                 $(this).on('click', function(e){
                     e.preventDefault();
                     var $this = $(this);
+                    var href = $this.attr('href');
+
+                    if (href && href !== 'javascript:void(0)' && href !== 'javascript:void(0);') {
+                        window.location.href = href;
+                        return;
+                    }
+
                     var locale = $this.data('flag');
-                    $.post('{{ route('language.change') }}',{_token:'{{ csrf_token() }}', locale:locale}, function(data){
+                    $.post('{{ route('language.change', [], false) }}',{_token:'{{ csrf_token() }}', locale:locale}, function(data){
                         location.reload();
                     });
 

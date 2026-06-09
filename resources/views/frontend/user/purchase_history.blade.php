@@ -2,6 +2,22 @@
 
 @section('panel_content')
 
+@php
+    $format_purchase_date = function ($date, $format = 'd M Y') {
+        $timestamp = is_numeric($date) ? (int) $date : strtotime($date);
+
+        if (!$timestamp) {
+            return '';
+        }
+
+        if ($format == 'd F Y') {
+            return date('d', $timestamp) . ' ' . translate(date('F', $timestamp)) . ' ' . date('Y', $timestamp);
+        }
+
+        return date('d', $timestamp) . ' ' . translate(date('M', $timestamp)) . ' ' . date('Y', $timestamp);
+    };
+@endphp
+
 <style>
     .purchase-card {
         border: 1px solid #edf2f7;
@@ -380,7 +396,7 @@
                             <!-- DATE -->
                             <td data-label="{{ translate('Date')}}">
                                 <span class="order-date">
-                                    {{ localized_date($order->date) }}
+                                    {{ $format_purchase_date($order->date) }}
                                 </span>
                             </td>
 
@@ -528,7 +544,7 @@
                                 {{ $order->code }}
                             </a>
                             <span class="purchase-mobile-date">
-                                {{ date('d', $order->date) }} {{ translate(date('F', $order->date)) }} {{ date('Y', $order->date) }}
+                                {{ $format_purchase_date($order->date, 'd F Y') }}
                             </span>
                         </div>
                         <div class="purchase-mobile-amount">{{ single_price($order->grand_total) }}</div>

@@ -4,6 +4,6 @@
         <h3>{{translate('This Auction Product is Alreday Added to Cart.')}}</h3>
     </div>
     <div class="text-center mt-5">
-        <button class="btn btn-outline-primary" data-dismiss="modal">{{translate('Back to shopping')}}</button>
+        <button type="button" class="js-back-to-shopping btn btn-outline-primary" data-dismiss="modal">{{translate('Back to shopping')}}</button>
     </div>
 </div>

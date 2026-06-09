@@ -1965,6 +1965,10 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
         },
         clickCategoryMenu: function(){
             var menu = $("#click-category-menu");
+            if ($("#category-menu-bar").length && menu.length) {
+                menu.hide().removeClass('d-none');
+                return;
+            }
             menu.hide();
             menu.removeClass('d-none');
             $("#category-menu-bar")

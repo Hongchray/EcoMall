@@ -182,6 +182,7 @@ Route::controller(HomeController::class)->group(function () {
 
 // Language Switch
 Route::post('/language', [LanguageController::class, 'changeLanguage'])->name('language.change');
+Route::get('/language/{locale}', [LanguageController::class, 'changeLanguage'])->name('language.change.get');
 
 // Currency Switch
 Route::post('/currency', [CurrencyController::class, 'changeCurrency'])->name('currency.change');

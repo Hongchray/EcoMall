@@ -1,11 +1,10 @@
 @extends('frontend.layouts.app')
 @section('content')
 
-    <!-- Sliders -->
-<style>
+<style id="ecm-slider-design">
+.home-slider .carousel-box img { border-bottom: 1px solid #eee; }
 
-
-    #homeCarousel .carousel-inner {
+#homeCarousel .carousel-inner {
         position: relative;
     }
 
@@ -197,8 +196,10 @@
         }
     }
 
-
 </style>
+
+    <!-- Sliders -->
+
     <div class="home-banner-area mb-3 " style="padding: 12px">
         <div class="container mt-4">
 
@@ -1596,6 +1597,8 @@
 
 
 @endsection
+
+
 
 
 
