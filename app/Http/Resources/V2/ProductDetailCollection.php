@@ -85,6 +85,7 @@ class ProductDetailCollection extends ResourceCollection
                     'unit' => $data->unit ?? "",
                     'rating' => (float)$data->rating,
                     'rating_count' => (int)Review::where(['product_id' => $data->id])->count(),
+                    'sales' => (int)$data->num_of_sale,
                     'earn_point' => (float)$data->earn_point,
                     'description' => $data->getTranslation('description'),
                     'downloads' => $data->pdf ? uploaded_asset($data->pdf) : null,
