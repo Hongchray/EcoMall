@@ -19,6 +19,7 @@ use App\Http\Resources\V2\ProductDetailCollection;
 use App\Http\Resources\V2\DigitalProductDetailCollection;
 use App\Models\Category;
 use App\Models\CustomerProduct;
+use App\Models\SubCategory;
 
 class ProductController extends Controller
 {
@@ -171,6 +172,18 @@ class ProductController extends Controller
         return new ProductMiniCollection(filter_products($products)->latest()->paginate(10));
     }
 
+
+    public function subCategory($id, Request $request)
+    {
+        $subCategory = SubCategory::findOrFail($id);
+        $products = $subCategory->products()->physical();
+
+        if ($request->name != "" || $request->name != null) {
+            $products = $products->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        return new ProductMiniCollection(filter_products($products)->latest()->paginate(10));
+    }
 
     public function brand($id, Request $request)
     {

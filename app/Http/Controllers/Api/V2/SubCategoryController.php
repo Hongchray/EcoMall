@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api\V2;
 
-use App\Http\Resources\V2\CategoryCollection;
-use App\Models\Category;
+use App\Http\Resources\V2\SubCategoryCollection;
+use App\Models\SubCategory;
 
 class SubCategoryController extends Controller
 {
     public function index($id)
     {
-        return new CategoryCollection(Category::where('parent_id', $id)->get());
+        return new SubCategoryCollection(SubCategory::where('category_id', $id)->get());
     }
 }

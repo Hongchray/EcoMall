@@ -176,6 +176,12 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
 
         Route::get('delivery-info', 'App\Http\Controllers\Api\V2\ShippingController@getDeliveryInfo')->middleware('auth:sanctum');
 
+        Route::get('notifications', 'App\Http\Controllers\Api\V2\NotificationController@index')->middleware('auth:sanctum');
+
+        Route::post('notifications/{id}/read', 'App\Http\Controllers\Api\V2\NotificationController@markAsRead')->middleware('auth:sanctum');
+
+        Route::post('notifications/read-all', 'App\Http\Controllers\Api\V2\NotificationController@markAllAsRead')->middleware('auth:sanctum');
+
 
 
 
