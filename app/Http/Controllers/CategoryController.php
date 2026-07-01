@@ -197,7 +197,7 @@ class CategoryController extends Controller
 
         $category_translation->save();
 
-
+        $this->clearCategoryCache();
 
         flash(translate('Category has been inserted successfully'))->success();
 
@@ -393,10 +393,7 @@ class CategoryController extends Controller
 
         $category_translation->save();
 
-
-
-        Cache::forget('featured_categories');
-        Cache::forget('is_home_categories');
+        $this->clearCategoryCache();
 
         flash(translate('Category has been updated successfully'))->success();
 
@@ -449,11 +446,7 @@ class CategoryController extends Controller
 
 
         CategoryUtility::delete_category($id);
-
-        Cache::forget('featured_categories');
-        Cache::forget('is_home_categories');
-
-
+        $this->clearCategoryCache();
 
         flash(translate('Category has been deleted successfully'))->success();
 
@@ -462,6 +455,30 @@ class CategoryController extends Controller
     }
 
 
+
+    private function clearCategoryCache()
+    {
+        // Clear admin caches
+        Cache::forget('featured_categories');
+        Cache::forget('is_home_categories');
+
+        // Clear frontend website caches
+        Cache::forget('home.featured_categories');
+        Cache::forget('home.section_categories');
+
+        // Clear API caches (app.categories-{parent_id} for all possible parent IDs)
+        Cache::forget('app.featured_categories');
+        Cache::forget('app.home_categories');
+        Cache::forget('app.top_categories');
+        Cache::forget('app.filter_categories');
+
+        // Clear per-parent category caches
+        $parentIds = Category::distinct()->pluck('parent_id')->toArray();
+        $parentIds[] = 0;
+        foreach (array_unique($parentIds) as $pid) {
+            Cache::forget("app.categories-$pid");
+        }
+    }
 
     public function updateFeatured(Request $request)
 
@@ -473,7 +490,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        Cache::forget('featured_categories');
+        $this->clearCategoryCache();
 
         return 1;
 
@@ -489,7 +506,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        Cache::forget('is_home_categories');
+        $this->clearCategoryCache();
 
         return 1;
 

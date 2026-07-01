@@ -405,7 +405,7 @@
                         <!-- LEFT 30% -->
                         <div style="width: 30%;" class="">
                             <div class="position-relative">
-                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/200' }}"
+                                <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="rounded-3"
                                     style="width: 60px; height: 60px; object-fit: cover;">
                             </div>
@@ -479,7 +479,7 @@
                         <div class="col-md-3 bg-dark text-white d-flex flex-column justify-content-between">
 
                             <div class="p-3">
-                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/80' }}"
+                                <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="mb-3 rounded"
                                     style="width: 60px; height: 60px; object-fit: cover;">
 
