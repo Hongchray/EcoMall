@@ -180,6 +180,18 @@
                 </div>
             @endforeach
 
+            @foreach ($detailedProduct->imageDetails as $detail)
+                @php
+                    $detail_image = uploaded_asset($detail->upload_id);
+                @endphp
+                <div class="carousel-box img-zoom rounded-0">
+                    <img class="img-fluid h-auto lazyload mx-auto"
+                        alt="{{ $detailedProduct->getTranslation('name') }}"
+                        src="{{ $detail_image }}" data-src="{{ $detail_image }}"
+                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                </div>
+            @endforeach
+
         </div>
     </div>
     <!-- Thumbnail Images -->
@@ -224,6 +236,18 @@
                     <img class="lazyload mw-100 size-60px mx-auto border p-1"
                         alt="{{ $detailedProduct->getTranslation('name') }}"
                         src="{{ $photo_thumb }}" data-src="{{ $photo_thumb }}"
+                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                </div>
+            @endforeach
+
+            @foreach ($detailedProduct->imageDetails as $detail)
+                @php
+                    $detail_thumb = uploaded_asset($detail->upload_id);
+                @endphp
+                <div class="carousel-box c-pointer rounded-0">
+                    <img class="lazyload mw-100 size-60px mx-auto border p-1"
+                        alt="{{ $detailedProduct->getTranslation('name') }}"
+                        src="{{ $detail_thumb }}" data-src="{{ $detail_thumb }}"
                         onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
                 </div>
             @endforeach

@@ -28,6 +28,8 @@ use App\Models\Wishlist;
 
 use App\Models\User;
 
+use App\Models\ProductImageDetail;
+
 use App\Notifications\ShopProductNotification;
 
 use Carbon\Carbon;
@@ -441,6 +443,18 @@ class ProductController extends Controller
             'lang', 'name', 'unit', 'description', 'product_id'
         ]));
 
+        // Detail Images
+        if ($request->image_details) {
+            $ids = array_filter(explode(',', $request->image_details));
+            foreach ($ids as $order => $upload_id) {
+                ProductImageDetail::create([
+                    'product_id' => $product->id,
+                    'upload_id'  => $upload_id,
+                    'sort_order' => $order,
+                ]);
+            }
+        }
+
         flash(translate('Product has been inserted successfully'))->success();
 
         Artisan::call('view:clear');
@@ -666,7 +680,18 @@ class ProductController extends Controller
 
         );
 
-
+        // Detail Images
+        $product->imageDetails()->delete();
+        if ($request->image_details) {
+            $ids = array_filter(explode(',', $request->image_details));
+            foreach ($ids as $order => $upload_id) {
+                ProductImageDetail::create([
+                    'product_id' => $product->id,
+                    'upload_id'  => $upload_id,
+                    'sort_order' => $order,
+                ]);
+            }
+        }
 
         flash(translate('Product has been updated successfully'))->success();
 

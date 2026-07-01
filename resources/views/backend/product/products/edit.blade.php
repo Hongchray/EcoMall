@@ -264,6 +264,34 @@
 
                         </div>
 
+                        <div class="form-group row">
+
+                            <label class="col-md-3 col-form-label">{{ translate('Detail Images') }}</label>
+
+                            <div class="col-md-8">
+
+                                <div class="input-group" data-toggle="aizuploader" data-type="image" data-multiple="true">
+
+                                    <div class="input-group-prepend">
+
+                                        <div class="input-group-text bg-soft-secondary font-weight-medium">{{ translate('Browse') }}</div>
+
+                                    </div>
+
+                                    <div class="form-control file-amount">{{ translate('Choose File') }}</div>
+
+                                    <input type="hidden" name="image_details" value="{{ $product->imageDetails->pluck('upload_id')->implode(',') }}" class="selected-files">
+
+                                </div>
+
+                                <div class="file-preview box sm">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
