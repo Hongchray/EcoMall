@@ -119,16 +119,20 @@
     .pd-wrap {
         display: grid;
         grid-template-columns: 480px 1fr;
+        grid-template-areas:
+            "gallery right"
+            "tabs    right";
         gap: 14px;
         align-items: start;
         padding-bottom: 40px;
     }
 
-    /* LEFT — scrolls naturally */
-    .pd-left { min-width: 0; }
+    .pd-gallery-block { grid-area: gallery; min-width: 0; }
+    .pd-tabs-block { grid-area: tabs; min-width: 0; }
 
     /* RIGHT — sticky: follows scroll but never goes below its column */
     .pd-right {
+        grid-area: right;
         position: sticky;
         top: 120px;        /* clears the fixed header + nav (~110px) */
         align-self: start; /* essential: don't stretch to left-col height */
@@ -226,7 +230,13 @@
         .pd-wrap { grid-template-columns: 1fr 360px; }
     }
     @media (max-width: 991px) {
-        .pd-wrap { grid-template-columns: 1fr; }
+        .pd-wrap {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+                "gallery"
+                "right"
+                "tabs";
+        }
         .pd-right { position: static; }
         .pd-rec-grid { grid-template-columns: repeat(3, 1fr); }
     }
@@ -263,10 +273,8 @@
                 {{-- ── Taobao 2-column layout ── --}}
                 <div class="pd-wrap">
 
-                    {{-- LEFT: gallery + shopbar + scrollable content --}}
-                    <div class="pd-left">
-
-                        {{-- Seller / Shop bar — only for external sellers --}}
+                    {{-- Seller / Shop bar + Gallery --}}
+                    <div class="pd-gallery-block">
                         @if ($detailedProduct->added_by == 'seller' && $detailedProduct->user->shop != null && get_setting('vendor_system_activation') == 1)
                             <div class="pd-shopbar">
                                 <div class="pd-shopbar__ico">
@@ -287,12 +295,24 @@
                             </div>
                         @endif
 
-                        {{-- Gallery --}}
                         <div class="mb-3">
                             @include('frontend.product_details.image_gallery')
                         </div>
+                    </div>
 
-                        {{-- Tab nav --}}
+                    {{-- RIGHT: sticky details + buy panel --}}
+                    <div class="pd-right">
+                        @include('frontend.product_details.details')
+
+                        {{-- Seller info card (desktop only, inside sticky right) --}}
+                        <div class="d-none d-lg-block mt-3">
+                            @include('frontend.product_details.seller_info')
+                            @include('frontend.product_details.top_selling_products')
+                        </div>
+                    </div>
+
+                    {{-- Tab nav + scrollable panel --}}
+                    <div class="pd-tabs-block">
                         <div class="pd-tabnav" id="pd-tabnav">
                             <div class="pd-tab active" onclick="scrollToPdPane('pd-reviews')">{{ translate('Reviews') }}</div>
                             <div class="pd-tab" onclick="scrollToPdPane('pd-description')">{{ translate('Description') }}</div>
@@ -301,7 +321,6 @@
                             @endif
                         </div>
 
-                        {{-- Scrollable panel --}}
                         <div class="pd-panel">
 
                             {{-- Reviews --}}
@@ -335,17 +354,6 @@
                                 @include('frontend.product_details.product_queries')
                             </div>
 
-                        </div>
-                    </div>
-
-                    {{-- RIGHT: sticky details + buy panel --}}
-                    <div class="pd-right">
-                        @include('frontend.product_details.details')
-
-                        {{-- Seller info card (desktop only, inside sticky right) --}}
-                        <div class="d-none d-lg-block mt-3">
-                            @include('frontend.product_details.seller_info')
-                            @include('frontend.product_details.top_selling_products')
                         </div>
                     </div>
 

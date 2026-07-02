@@ -97,6 +97,7 @@
         color: #fff;
         font-size: 14px;
         font-weight: 700;
+        line-height: 1.2;
         text-align: center;
         white-space: nowrap;
         transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
@@ -117,28 +118,66 @@
 
     @media (max-width: 767.98px) {
         .ec-review-panel__header {
-            padding: 16px;
+            padding: 12px 14px;
+        }
+
+        .ec-review-panel__header h3 {
+            font-size: 14px;
         }
 
         .ec-review-summary {
-            margin: 16px 16px 22px;
-            padding: 20px;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 18px;
+            margin: 12px 14px 16px;
+            padding: 14px;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            border-radius: 10px;
         }
 
         .ec-review-summary__score {
-            gap: 16px;
+            flex: 1 1 auto;
+            align-items: center;
+            gap: 10px;
         }
 
         .ec-review-summary__value {
-            font-size: 38px;
+            font-size: 26px;
+        }
+
+        .ec-review-summary__text {
+            font-size: 10px;
+        }
+
+        .ec-review-summary__divider {
+            display: none;
+        }
+
+        .ec-review-summary__meta {
+            gap: 3px;
+        }
+
+        .ec-review-summary .rating {
+            font-size: 13px;
+        }
+
+        .ec-review-summary__count {
+            font-size: 10px;
         }
 
         .ec-review-summary__button {
-            width: 100%;
+            flex: none;
+            width: auto;
+            max-width: none;
             min-width: 0;
+            padding: 8px 14px;
+            font-size: 11px;
+            border-radius: 6px;
+        }
+
+        .ec-review-summary__button i {
+            font-size: 12px;
         }
     }
 </style>
