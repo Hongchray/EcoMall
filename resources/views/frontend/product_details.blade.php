@@ -114,139 +114,271 @@
 
 @section('content')
 
-    <section class="mb-4 pt-3">
+<style>
+    /* ── Taobao-style 2-column layout ── */
+    .pd-wrap {
+        display: grid;
+        grid-template-columns: 480px 1fr;
+        gap: 14px;
+        align-items: start;
+        padding-bottom: 40px;
+    }
 
-        <div class="container">
+    /* LEFT — scrolls naturally */
+    .pd-left { min-width: 0; }
 
-            <div class="bg-white py-3">
+    /* RIGHT — sticky: follows scroll but never goes below its column */
+    .pd-right {
+        position: sticky;
+        top: 120px;        /* clears the fixed header + nav (~110px) */
+        align-self: start; /* essential: don't stretch to left-col height */
+        min-width: 0;
+    }
 
-                <div class="row">
+    /* Shop / seller bar at top of left */
+    .pd-shopbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        margin-bottom: 14px;
+        background: #fff;
+        border: 1px solid #dceef8;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(34,126,184,.07);
+    }
+    .pd-shopbar__ico {
+        width: 40px; height: 40px; flex: 0 0 40px;
+        border-radius: 8px;
+        background: linear-gradient(120deg,#3c9bd3,#5bb8ef);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 700; font-size: 15px;
+    }
+    .pd-shopbar__name { font-weight: 700; font-size: 14px; color: #17212b; }
+    .pd-shopbar__sub  { font-size: 12px; color: #7b8494; margin-top: 2px; }
+    .pd-shopbar__btns { margin-left: auto; display: flex; gap: 8px; }
+    .pd-shopbar__btn  {
+        border: 1px solid #dceef8; border-radius: 20px;
+        padding: 6px 16px; font-size: 12px; font-weight: 600;
+        color: #3c9bd3; background: #fff; cursor: pointer; white-space: nowrap;
+        transition: background .2s, border-color .2s, color .2s;
+    }
+    .pd-shopbar__btn:hover { background: #eef8fd; border-color: #3c9bd3; }
 
-                    <!-- Product Image Gallery -->
+    /* Tab nav (sticky inside left col) */
+    .pd-tabnav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        background: #fff;
+        border: 1px solid #dceef8;
+        border-radius: 12px 12px 0 0;
+        border-bottom: none;
+        overflow-x: auto;
+    }
+    .pd-tab {
+        padding: 13px 20px;
+        font-size: 14px; font-weight: 600;
+        color: #6f7d89; cursor: pointer;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        transition: color .2s, border-color .2s;
+    }
+    .pd-tab.active, .pd-tab:hover { color: #3c9bd3; border-bottom-color: #3c9bd3; }
 
-                    <div class="col-xl-5 col-lg-6 mb-4">
+    /* Panel that holds all tab content */
+    .pd-panel {
+        background: #fff;
+        border: 1px solid #dceef8;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        padding: 0 24px 24px;
+    }
+    .pd-pane {
+        padding: 24px 0;
+        border-top: 1px solid #edf5f9;
+        scroll-margin-top: 56px;
+    }
+    .pd-pane:first-child { border-top: none; }
 
-                        @include('frontend.product_details.image_gallery')
+    .pd-sec-h {
+        font-size: 15px; font-weight: 700;
+        padding-left: 10px;
+        border-left: 3px solid #3c9bd3;
+        margin-bottom: 18px;
+        color: #17212b;
+    }
 
-                    </div>
+    /* Detail images stacked (Taobao 图文详情 style) */
+    .pd-dstack { display: flex; flex-direction: column; align-items: center; }
+    .pd-dimg   { width: 100%; }
+    .pd-dimg img { width: 100%; display: block; }
 
+    /* Recommendation grids */
+    .pd-rec-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
 
+    @media (max-width: 1199px) {
+        .pd-wrap { grid-template-columns: 1fr 360px; }
+    }
+    @media (max-width: 991px) {
+        .pd-wrap { grid-template-columns: 1fr; }
+        .pd-right { position: static; }
+        .pd-rec-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 575px) {
+        .pd-rec-grid { grid-template-columns: repeat(2, 1fr); }
+        .pd-shopbar { flex-wrap: wrap; }
+        .pd-shopbar__btns { margin-left: 0; }
+        .pd-tab { padding: 11px 14px; font-size: 13px; }
+    }
+</style>
 
-                    <!-- Product Details -->
-
-                    <div class="col-xl-7 col-lg-6">
-
-                        @include('frontend.product_details.details')
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <section class="mb-4">
-
+    <section class="pt-3 pb-2">
         <div class="container">
 
             @if ($detailedProduct->auction_product)
 
-                <!-- Reviews & Ratings -->
-
+                {{-- ── Auction layout: simple stacked ── --}}
+                <div class="bg-white rounded p-3 mb-4">
+                    <div class="row">
+                        <div class="col-lg-5 mb-4">
+                            @include('frontend.product_details.image_gallery')
+                        </div>
+                        <div class="col-lg-7">
+                            @include('frontend.product_details.details')
+                        </div>
+                    </div>
+                </div>
                 @include('frontend.product_details.review_section')
-
-
-
-                <!-- Description, Video, Downloads -->
-
                 @include('frontend.product_details.description')
-
-
-
-                <!-- Product Query -->
-
                 @include('frontend.product_details.product_queries')
 
             @else
 
-                <div class="row gutters-16">
+                {{-- ── Taobao 2-column layout ── --}}
+                <div class="pd-wrap">
 
-                    <!-- Left side -->
+                    {{-- LEFT: gallery + shopbar + scrollable content --}}
+                    <div class="pd-left">
 
-                    <div class="col-lg-3">
+                        {{-- Seller / Shop bar — only for external sellers --}}
+                        @if ($detailedProduct->added_by == 'seller' && $detailedProduct->user->shop != null && get_setting('vendor_system_activation') == 1)
+                            <div class="pd-shopbar">
+                                <div class="pd-shopbar__ico">
+                                    {{ strtoupper(substr($detailedProduct->user->shop->name, 0, 2)) }}
+                                </div>
+                                <div>
+                                    <div class="pd-shopbar__name">{{ $detailedProduct->user->shop->name }}</div>
+                                    <div class="pd-shopbar__sub">
+                                        <span class="text-warning">{{ renderStarRating($detailedProduct->user->shop->rating) }}</span>
+                                        &nbsp;{{ $detailedProduct->user->shop->num_of_reviews }} {{ translate('reviews') }}
+                                    </div>
+                                </div>
+                                <div class="pd-shopbar__btns">
+                                    <a href="{{ route('shop.visit', $detailedProduct->user->shop->slug) }}" class="pd-shopbar__btn">
+                                        🏬 {{ translate('Visit Store') }}
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
 
-                        <!-- Seller Info -->
-
-                        @include('frontend.product_details.seller_info')
-
-
-
-                        <!-- Top Selling Products -->
-
-                       <div class="d-none d-lg-block">
-
-                            @include('frontend.product_details.top_selling_products')
-
-                       </div>
-
-                    </div>
-
-
-
-                    <!-- Right side -->
-
-                    <div class="col-lg-9">
-
-
-
-                        <!-- Reviews & Ratings -->
-
-                        @include('frontend.product_details.review_section')
-
-
-
-                        <!-- Description, Video, Downloads -->
-
-                        @include('frontend.product_details.description')
-
-
-
-                        <!-- Related products -->
-
-                        @include('frontend.product_details.related_products')
-
-
-
-                        <!-- Product Query -->
-
-                        @include('frontend.product_details.product_queries')
-
-
-
-                        <!-- Top Selling Products -->
-
-                        <div class="d-lg-none">
-
-                             @include('frontend.product_details.top_selling_products')
-
+                        {{-- Gallery --}}
+                        <div class="mb-3">
+                            @include('frontend.product_details.image_gallery')
                         </div>
 
+                        {{-- Tab nav --}}
+                        <div class="pd-tabnav" id="pd-tabnav">
+                            <div class="pd-tab active" onclick="scrollToPdPane('pd-reviews')">{{ translate('Reviews') }}</div>
+                            <div class="pd-tab" onclick="scrollToPdPane('pd-description')">{{ translate('Description') }}</div>
+                            @if ($detailedProduct->imageDetails->count() > 0)
+                                <div class="pd-tab" onclick="scrollToPdPane('pd-detail-images')">{{ translate('Product Details') }}</div>
+                            @endif
+                        </div>
 
+                        {{-- Scrollable panel --}}
+                        <div class="pd-panel">
 
+                            {{-- Reviews --}}
+                            <div class="pd-pane" id="pd-reviews">
+                                @include('frontend.product_details.review_section')
+                            </div>
+
+                            {{-- Description --}}
+                            <div class="pd-pane" id="pd-description">
+                                @include('frontend.product_details.description')
+                            </div>
+
+                            {{-- Detail images (图文详情) --}}
+                            @if ($detailedProduct->imageDetails->count() > 0)
+                                <div class="pd-pane" id="pd-detail-images">
+                                    <div class="pd-sec-h">{{ translate('Product Details') }}</div>
+                                    <div class="pd-dstack">
+                                        @foreach ($detailedProduct->imageDetails as $detail)
+                                            <div class="pd-dimg">
+                                                <img src="{{ uploaded_asset($detail->upload_id) }}"
+                                                    alt="{{ $detailedProduct->getTranslation('name') }}"
+                                                    onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- Product Query --}}
+                            <div class="pd-pane">
+                                @include('frontend.product_details.product_queries')
+                            </div>
+
+                        </div>
                     </div>
 
+                    {{-- RIGHT: sticky details + buy panel --}}
+                    <div class="pd-right">
+                        @include('frontend.product_details.details')
+
+                        {{-- Seller info card (desktop only, inside sticky right) --}}
+                        <div class="d-none d-lg-block mt-3">
+                            @include('frontend.product_details.seller_info')
+                            @include('frontend.product_details.top_selling_products')
+                        </div>
+                    </div>
+
+                </div>{{-- /.pd-wrap --}}
+
+                {{-- Related products — separate full-width section, not sticky, not nested in tabs --}}
+                <div class="mt-4" id="pd-related">
+                    @include('frontend.product_details.related_products')
+                </div>
+
+                {{-- Top Selling Products — mobile only, shown after Related products --}}
+                <div class="mt-4 d-lg-none">
+                    @include('frontend.product_details.top_selling_products')
                 </div>
 
             @endif
 
         </div>
-
     </section>
+
+<script>
+    function scrollToPdPane(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var navH = document.getElementById('pd-tabnav') ? document.getElementById('pd-tabnav').offsetHeight : 0;
+        var top = el.getBoundingClientRect().top + window.pageYOffset - navH - 10;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+
+        // update active tab
+        document.querySelectorAll('.pd-tab').forEach(function(t) { t.classList.remove('active'); });
+        event.currentTarget.classList.add('active');
+    }
+</script>
 
 @endsection
 

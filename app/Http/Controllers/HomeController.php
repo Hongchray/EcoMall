@@ -654,13 +654,28 @@ class HomeController extends Controller
                 ->limit(6)
                 ->get();
 
+            $related_products_limit = 28;
+
             $related_products = filter_products(
                     Product::with('taxes', 'thumbnail')
                         ->where('id', '!=', $detailedProduct->id)
                         ->where('category_id', $detailedProduct->category_id)
                 )
-                ->limit(10)
+                ->limit($related_products_limit)
                 ->get();
+
+            if ($related_products->count() < $related_products_limit) {
+                $more_products = filter_products(
+                        Product::with('taxes', 'thumbnail')
+                            ->where('id', '!=', $detailedProduct->id)
+                            ->whereNotIn('id', $related_products->pluck('id'))
+                            ->orderBy('num_of_sale', 'desc')
+                    )
+                    ->limit($related_products_limit - $related_products->count())
+                    ->get();
+
+                $related_products = $related_products->concat($more_products);
+            }
 
 
 

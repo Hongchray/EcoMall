@@ -3,9 +3,9 @@
         position: sticky;
         top: 20px;
         z-index: 3;
-        padding: 22px;
+        padding: 8px;
         border: 1px solid #dceef8;
-        border-radius: 18px;
+        border-radius: 14px;
         background:
             linear-gradient(145deg, rgba(60, 155, 211, 0.1), rgba(255, 255, 255, 0) 38%),
             #ffffff;
@@ -16,7 +16,7 @@
         position: relative;
         overflow: hidden;
         border: 1px solid #e4f2fa;
-        border-radius: 16px;
+        border-radius: 12px;
         background: #f8fbfe;
     }
 
@@ -31,20 +31,18 @@
     }
 
     .ec-gallery-main .carousel-box {
-        min-height: 430px;
         display: flex !important;
         align-items: center;
         justify-content: center;
-        padding: 30px;
-        background:
-            radial-gradient(circle at 50% 45%, #ffffff 0, #ffffff 34%, rgba(238, 248, 253, 0.75) 68%, #f8fbfe 100%);
+        padding: 10px;
+        background: #ffffff;
     }
 
     .ec-gallery-main img {
-        max-height: 390px;
-        width: auto;
+        width: 100% !important;
+        height: 260px !important;
         object-fit: contain;
-        filter: drop-shadow(0 18px 24px rgba(23, 33, 43, 0.12));
+        filter: drop-shadow(0 6px 12px rgba(23, 33, 43, 0.08));
         transition: transform .28s ease, filter .28s ease;
     }
 
@@ -117,7 +115,7 @@
     }
 </style>
 
-<div class="ec-gallery-panel row gutters-10">
+<div class="ec-gallery-panel">
     @php
         $photos = [];
         $thumbnail_image = null;
@@ -137,7 +135,7 @@
     <!-- Gallery Images -->
     <div class="col-12">
         <div class="aiz-carousel product-gallery arrow-inactive-transparent arrow-lg-none ec-gallery-main"
-            data-nav-for='.product-gallery-thumb' data-fade='true' data-auto-height='true' data-arrows='true'>
+            data-nav-for='.product-gallery-thumb' data-fade='true' data-arrows='true'>
             @if ($thumbnail_image != null)
                 <div class="carousel-box img-zoom rounded-0">
                     <img class="img-fluid h-auto lazyload mx-auto"
@@ -180,17 +178,6 @@
                 </div>
             @endforeach
 
-            @foreach ($detailedProduct->imageDetails as $detail)
-                @php
-                    $detail_image = uploaded_asset($detail->upload_id);
-                @endphp
-                <div class="carousel-box img-zoom rounded-0">
-                    <img class="img-fluid h-auto lazyload mx-auto"
-                        alt="{{ $detailedProduct->getTranslation('name') }}"
-                        src="{{ $detail_image }}" data-src="{{ $detail_image }}"
-                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                </div>
-            @endforeach
 
         </div>
     </div>
@@ -240,17 +227,6 @@
                 </div>
             @endforeach
 
-            @foreach ($detailedProduct->imageDetails as $detail)
-                @php
-                    $detail_thumb = uploaded_asset($detail->upload_id);
-                @endphp
-                <div class="carousel-box c-pointer rounded-0">
-                    <img class="lazyload mw-100 size-60px mx-auto border p-1"
-                        alt="{{ $detailedProduct->getTranslation('name') }}"
-                        src="{{ $detail_thumb }}" data-src="{{ $detail_thumb }}"
-                        onerror="this.onerror=null;this.src='{{ static_asset('assets/img/placeholder.jpg') }}';">
-                </div>
-            @endforeach
 
         </div>
     </div>

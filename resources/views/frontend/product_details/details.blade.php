@@ -474,21 +474,21 @@
     --ec-text: #17212b;
     --ec-muted: #6f7d89;
     position: relative;
-    padding: 26px;
+    padding: 16px 18px;
     border: 1px solid var(--ec-border);
-    border-radius: 18px;
+    border-radius: 14px;
     background:
-        linear-gradient(135deg, rgba(60, 155, 211, 0.08), rgba(255, 255, 255, 0) 42%),
+        linear-gradient(135deg, rgba(60, 155, 211, 0.06), rgba(255, 255, 255, 0) 42%),
         #ffffff;
-    box-shadow: 0 16px 46px rgba(34, 126, 184, 0.1);
+    box-shadow: 0 8px 24px rgba(34, 126, 184, 0.08);
 }
 
 .ec-detail-title {
-    margin: 0 0 14px;
+    margin: 0 0 10px;
     color: var(--ec-text) !important;
-    font-size: 27px;
-    font-weight: 800;
-    line-height: 1.25;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
     letter-spacing: 0;
 }
 
@@ -590,7 +590,7 @@
 .ec-detail-panel .fs-16.fw-700,
 .ec-detail-panel .h3.fw-600 {
     color: var(--ec-blue) !important;
-    font-size: 28px !important;
+    font-size: 20px !important;
     line-height: 1.15;
 }
 
@@ -1547,7 +1547,7 @@
 
                     <div class="product-price">
 
-                        <strong id="chosen_price" class="fs-20 fw-700 text-danger">
+                        <strong id="chosen_price" class="fs-20 fw-700" style="color:#3c9bd3">
 
 
 
