@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AizUploadController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
@@ -118,6 +119,12 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(VerificationController::class)->group(function () {
     Route::get('/email/resend', 'resend')->name('verification.resend');
     Route::get('/verification-confirmation/{code}', 'verification_confirmation')->name('email.verification.confirmation');
+});
+
+Route::controller(OtpVerificationController::class)->group(function () {
+    Route::get('/verify-otp', 'show')->name('otp.verify.show');
+    Route::post('/verify-otp', 'verify')->name('otp.verify');
+    Route::post('/resend-otp', 'resend')->name('otp.resend');
 });
 
 Route::controller(HomeController::class)->group(function () {

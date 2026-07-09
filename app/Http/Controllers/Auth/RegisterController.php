@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 
 use App\Models\Customer;
 use App\OtpConfiguration;
+use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use App\Http\Controllers\Controller;
@@ -54,6 +55,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('throttle:10,1')->only('register');
     }
 
     /**
@@ -66,6 +68,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email',
             'password' => 'required|string|min:6|confirmed',
             'g-recaptcha-response' => [
                 Rule::when(get_setting('google_recaptcha') == 1, ['required', new Recaptcha()], ['sometimes'])
@@ -139,26 +142,31 @@ class RegisterController extends Controller
 
         $this->validator($request->all())->validate();
 
+        if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+            $otpService = new OtpService();
+
+            $result = $otpService->initiateSignup([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'temp_user_id' => session('temp_user_id'),
+                'referral_code' => Cookie::has('referral_code') ? Cookie::get('referral_code') : null,
+            ]);
+
+            if (!$result['success']) {
+                flash(translate('Registration failed. Please try again later.'))->error();
+                return back();
+            }
+
+            session(['otp_pending_email' => $request->email]);
+            flash(translate('Please check your email for the verification code.'))->success();
+
+            return redirect()->route('otp.verify.show');
+        }
+
         $user = $this->create($request->all());
 
         $this->guard()->login($user);
-
-        if($user->email != null){
-            if(BusinessSetting::where('type', 'email_verification')->first()->value != 1){
-                $user->email_verified_at = date('Y-m-d H:m:s');
-                $user->save();
-                flash(translate('Registration successful.'))->success();
-            }
-            else {
-                try {
-                    $user->sendEmailVerificationNotification();
-                    flash(translate('Registration successful. Please verify your email.'))->success();
-                } catch (\Throwable $th) {
-                    $user->delete();
-                    flash(translate('Registration failed. Please try again later.'))->error();
-                }
-            }
-        }
 
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());
