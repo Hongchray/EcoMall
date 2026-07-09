@@ -5,6 +5,7 @@ namespace App\Http\Resources\V2;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Models\Review;
 use App\Models\Attribute;
+use App\Models\Color;
 
 
 class ProductDetailCollection extends ResourceCollection
@@ -61,6 +62,24 @@ class ProductDetailCollection extends ResourceCollection
                 if (addon_is_activated('wholesale')) {
                     $whole_sale =  ProductWholesaleResource::collection($data->stocks->first()->wholesalePrices);
                 }
+
+                $color_codes = json_decode($data->colors) ?? [];
+                $colors = collect($color_codes)->map(function ($code) {
+                    $color = Color::where('code', $code)->first();
+                    return [
+                        'code' => $code,
+                        'name' => $color->name ?? $code,
+                    ];
+                })->values();
+
+                $image_details = $data->imageDetails->map(function ($detail) {
+                    return [
+                        'id' => (int) $detail->id,
+                        'image' => uploaded_asset($detail->upload_id),
+                        'sort_order' => (int) $detail->sort_order,
+                    ];
+                })->values();
+
                 return [
                     'id' => (int)$data->id,
                     'name' => $data->getTranslation('name'),
@@ -74,7 +93,7 @@ class ProductDetailCollection extends ResourceCollection
                     'tags' => explode(',', $data->tags),
                     'price_high_low' => (float)explode('-', home_discounted_base_price($data, false))[0] == (float)explode('-', home_discounted_price($data, false))[1] ? format_price((float)explode('-', home_discounted_price($data, false))[0]) : "From " . format_price((float)explode('-', home_discounted_price($data, false))[0]) . " to " . format_price((float)explode('-', home_discounted_price($data, false))[1]),
                     'choice_options' => $this->convertToChoiceOptions(json_decode($data->choice_options)),
-                    'colors' => json_decode($data->colors) ?? [],
+                    'colors' => $colors,
                     'has_discount' => home_base_price($data, false) != home_discounted_base_price($data, false),
                     'discount' => "-" . discount_in_percentage($data) . "%",
                     'stroked_price' => home_base_price($data),
@@ -94,6 +113,7 @@ class ProductDetailCollection extends ResourceCollection
                     'link' => route('product', $data->slug),
                     'wholesale' => $whole_sale,
                     'est_shipping_time' => (int)$data->est_shipping_days,
+                    'image_details' => $image_details,
 
                 ];
             })

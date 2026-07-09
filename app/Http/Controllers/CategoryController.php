@@ -18,7 +18,11 @@ use App\Utility\CategoryUtility;
 
 use Illuminate\Support\Str;
 
+use App\Models\Language;
+
 use Cache;
+
+use App;
 
 
 
@@ -191,7 +195,7 @@ class CategoryController extends Controller
 
 
 
-        $category_translation = CategoryTranslation::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'category_id' => $category->id]);
+        $category_translation = CategoryTranslation::firstOrNew(['lang' => config('app.locale'), 'category_id' => $category->id]);
 
         $category_translation->name = $request->name;
 
@@ -466,17 +470,27 @@ class CategoryController extends Controller
         Cache::forget('home.featured_categories');
         Cache::forget('home.section_categories');
 
-        // Clear API caches (app.categories-{parent_id} for all possible parent IDs)
-        Cache::forget('app.featured_categories');
-        Cache::forget('app.home_categories');
-        Cache::forget('app.top_categories');
-        Cache::forget('app.filter_categories');
+        // API caches are keyed per-locale (app.categories-{parent_id}-{locale}), so
+        // every locale-suffixed variant must be forgotten or stale entries survive
+        // until the 24h TTL expires.
+        $locales = Language::where('status', 1)->pluck('code')->toArray();
+        $locales[] = App::getLocale();
+        $locales[] = config('app.locale');
+        $locales = array_unique(array_filter($locales));
 
-        // Clear per-parent category caches
         $parentIds = Category::distinct()->pluck('parent_id')->toArray();
         $parentIds[] = 0;
-        foreach (array_unique($parentIds) as $pid) {
-            Cache::forget("app.categories-$pid");
+        $parentIds = array_unique($parentIds);
+
+        foreach ($locales as $locale) {
+            Cache::forget("app.featured_categories-$locale");
+            Cache::forget("app.home_categories-$locale");
+            Cache::forget("app.top_categories-$locale");
+            Cache::forget('app.filter_categories');
+
+            foreach ($parentIds as $pid) {
+                Cache::forget("app.categories-$pid-$locale");
+            }
         }
     }
 

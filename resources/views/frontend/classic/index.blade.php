@@ -407,7 +407,7 @@
                             <div class="position-relative">
                                 <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="rounded-3"
-                                    style="width: 60px; height: 60px; object-fit: cover;">
+                                    style="width: 90px; height: 90px; object-fit: cover;">
                             </div>
                         </div>
 
@@ -429,7 +429,7 @@
                                             }
                                         @endphp
 
-                                        <div style="min-width: 90px; text-align: center;">
+                                        <div style="width: 90px; text-align: center;">
 
                                             <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
                                             class="text-decoration-none text-dark d-block">
@@ -441,7 +441,7 @@
                                                         style="width: 30px; height: 30px; object-fit: contain;">
                                                 </div>
 
-                                                <small class="fw-semibold d-block text-truncate">
+                                                <small class="fw-semibold d-block text-truncate" style="font-size: 13px;" title="{{ $sub->getTranslation('name') }}">
                                                     {{ $sub->getTranslation('name') }}
                                                 </small>
 
@@ -481,7 +481,7 @@
                             <div class="p-3">
                                 <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="mb-3 rounded"
-                                    style="width: 60px; height: 60px; object-fit: cover;">
+                                    style="width: 100px; height: 100px; object-fit: cover;">
 
                                 <h5 class="fw-bold">
                                     {{ $category->getTranslation('name') }}
@@ -528,7 +528,7 @@
                                                     style="width: 35px; height: 35px; object-fit: contain;">
                                             </div>
 
-                                            <p class="fw-semibold mb-0" style="font-size: 14px;">
+                                            <p class="fw-semibold mb-0" style="font-size: 16px;">
                                                 {{ $sub->getTranslation('name') }}
                                             </p>
 
