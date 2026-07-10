@@ -1539,61 +1539,6 @@ class HomeController extends Controller
 
 
 
-    public function reset_password_with_code(Request $request)
-
-    {
-
-
-
-        if (($user = User::where('email', $request->email)->where('verification_code', $request->code)->first()) != null) {
-
-            if ($request->password == $request->password_confirmation) {
-
-                $user->password = Hash::make($request->password);
-
-                $user->email_verified_at = date('Y-m-d h:m:s');
-
-                $user->save();
-
-                event(new PasswordReset($user));
-
-                auth()->login($user, true);
-
-
-
-                flash(translate('Password updated successfully'))->success();
-
-
-
-                if (auth()->user()->user_type == 'admin' || auth()->user()->user_type == 'staff') {
-
-                    return redirect()->route('admin.dashboard');
-
-                }
-
-                return redirect()->route('home');
-
-            } else {
-
-                flash(translate("Password and confirm password didn't match"))->warning();
-
-                return view('auth.passwords.reset');
-
-            }
-
-        } else {
-
-            flash(translate("Verification code mismatch"))->error();
-
-            return view('auth.passwords.reset');
-
-        }
-
-    }
-
-
-
-
 
     public function all_flash_deals()
 

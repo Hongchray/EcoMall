@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\User;
+use App\Notifications\OtpPasswordResetNotification;
 use App\Notifications\OtpSignupNotification;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +20,11 @@ class OtpService
     protected function cacheKey(string $email): string
     {
         return 'otp:signup:' . strtolower($email);
+    }
+
+    protected function resetCacheKey(string $email): string
+    {
+        return 'otp:reset:' . strtolower($email);
     }
 
     public function initiateSignup(array $data): array
@@ -147,5 +153,99 @@ class OtpService
         }
 
         return ['success' => true];
+    }
+
+    public function initiatePasswordReset(string $email): array
+    {
+        $key = $this->resetCacheKey($email);
+        $existing = Cache::get($key);
+
+        if ($existing && now()->diffInSeconds($existing['last_sent_at']) < self::RESEND_COOLDOWN_SECONDS) {
+            return [
+                'success' => false,
+                'reason' => 'cooldown',
+                'seconds_remaining' => self::RESEND_COOLDOWN_SECONDS - now()->diffInSeconds($existing['last_sent_at']),
+            ];
+        }
+
+        $code = (string) random_int(100000, 999999);
+
+        $payload = [
+            'code_hash' => Hash::make($code),
+            'email' => $email,
+            'attempts' => 0,
+            'max_attempts' => self::MAX_ATTEMPTS,
+            'last_sent_at' => now(),
+            'code_verified' => false,
+            'created_at' => now(),
+        ];
+
+        Cache::put($key, $payload, now()->addMinutes(self::TTL_MINUTES));
+
+        try {
+            Notification::route('mail', $email)->notify(new OtpPasswordResetNotification($email, $code));
+        } catch (\Throwable $th) {
+            Cache::forget($key);
+            return ['success' => false, 'reason' => 'mail_failed'];
+        }
+
+        return ['success' => true];
+    }
+
+    public function verifyResetCode(string $email, string $code): array
+    {
+        $key = $this->resetCacheKey($email);
+        $payload = Cache::get($key);
+
+        if (!$payload) {
+            return ['success' => false, 'reason' => 'expired'];
+        }
+
+        if ($payload['attempts'] >= $payload['max_attempts']) {
+            return ['success' => false, 'reason' => 'max_attempts'];
+        }
+
+        if (!Hash::check($code, $payload['code_hash'])) {
+            $payload['attempts']++;
+            Cache::put($key, $payload, now()->addMinutes(self::TTL_MINUTES));
+
+            return [
+                'success' => false,
+                'reason' => 'invalid_code',
+                'attempts_remaining' => $payload['max_attempts'] - $payload['attempts'],
+            ];
+        }
+
+        $payload['code_verified'] = true;
+        Cache::put($key, $payload, now()->addMinutes(self::TTL_MINUTES));
+
+        return ['success' => true];
+    }
+
+    public function completePasswordReset(string $email, string $newPassword): array
+    {
+        $key = $this->resetCacheKey($email);
+        $payload = Cache::get($key);
+
+        if (!$payload) {
+            return ['success' => false, 'reason' => 'expired'];
+        }
+
+        if (empty($payload['code_verified'])) {
+            return ['success' => false, 'reason' => 'code_not_verified'];
+        }
+
+        $user = User::where('email', $payload['email'])->first();
+        if (!$user) {
+            Cache::forget($key);
+            return ['success' => false, 'reason' => 'user_not_found'];
+        }
+
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        Cache::forget($key);
+
+        return ['success' => true, 'user' => $user];
     }
 }

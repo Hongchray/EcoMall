@@ -26,6 +26,15 @@ Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function
 
     Route::post('password/resend_code', 'App\Http\Controllers\Api\V2\PasswordResetController@resendCode');
 
+    // OTP password reset (email, 3-step: request code / verify code / reset password)
+    Route::post('otp-password/request-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@requestCode');
+
+    Route::post('otp-password/verify-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@verifyCode');
+
+    Route::post('otp-password/reset-password', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@resetPassword');
+
+    Route::post('otp-password/resend-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@resendCode');
+
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('logout', 'App\Http\Controllers\Api\V2\AuthController@logout');

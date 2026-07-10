@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AizUploadController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -105,6 +106,18 @@ Route::group(['middleware' => ['prevent-back-history','handle-demo-login']], fun
     Auth::routes(['verify' => true]);
 });
 
+foreach (Route::getRoutes() as $route) {
+    if ($route->getName() === 'password.reset') {
+        // Laravel's native password.reset route uses an unconstrained
+        // {token} wildcard that would otherwise greedily match our custom
+        // /password/reset/verify-code and /password/reset/new-password
+        // routes (registered below), since routes dispatch in
+        // registration order and this one is registered first.
+        $route->where('token', '[A-Za-z0-9]{20,}');
+        break;
+    }
+}
+
 // Login
 Route::controller(LoginController::class)->group(function () {
     Route::get('/logout', 'logout');
@@ -127,9 +140,16 @@ Route::controller(OtpVerificationController::class)->group(function () {
     Route::post('/resend-otp', 'resend')->name('otp.resend');
 });
 
+Route::controller(ForgotPasswordController::class)->group(function () {
+    Route::get('/password/reset/verify-code', 'showVerifyCode')->name('password.reset.verify_code');
+    Route::post('/password/reset/verify-code', 'verifyCode')->name('password.reset.verify_code.submit');
+    Route::post('/password/reset/resend-code', 'resendCode')->name('password.reset.resend_code');
+    Route::get('/password/reset/new-password', 'showSetNewPassword')->name('password.reset.set_new_password');
+    Route::post('/password/reset/new-password', 'completeReset')->name('password.reset.complete');
+});
+
 Route::controller(HomeController::class)->group(function () {
     Route::get('/email-change/callback', 'email_change_callback')->name('email_change.callback');
-    Route::post('/password/reset/email/submit', 'reset_password_with_code')->name('password.update');
 
     Route::get('/users/login', 'login')->name('user.login')->middleware('handle-demo-login');
     Route::get('/seller/login', 'login')->name('seller.login')->middleware('handle-demo-login');
