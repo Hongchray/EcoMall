@@ -14,11 +14,10 @@ class ProductDetailCollection extends ResourceCollection
     {
         return [
             'data' => $this->collection->map(function ($data) {
-                $precision = 2;
+                $precision = get_setting('no_of_decimals');
                 $calculable_price = home_discounted_base_price($data, false);
                 $calculable_price = number_format($calculable_price, $precision, '.', '');
                 $calculable_price = floatval($calculable_price);
-                // $calculable_price = round($calculable_price, 2);
                 $photo_paths = get_images_path($data->photos);
 
                 $photos = [];

@@ -52,7 +52,7 @@
 					<label for="" class="control-label">{{ $str }}</label>
 				</td>
 				<td>
-					<input type="number" lang="en" name="price_{{ $str }}" value="{{ $unit_price }}" min="0" step="0.01" class="form-control" required>
+					<input type="number" lang="en" name="price_{{ $str }}" value="{{ $unit_price }}" min="0" step="0.01" class="form-control" required oninput="if(this.value.includes('.') && this.value.split('.')[1].length > 2) this.value = parseFloat(this.value).toFixed(2);">
 				</td>
 				<td>
 					<input type="text" name="sku_{{ $str }}" value="" class="form-control">

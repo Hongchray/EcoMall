@@ -1726,7 +1726,11 @@
 
 
 
+    var update_sku_request_id = 0;
+
     function update_sku(){
+
+        var current_request_id = ++update_sku_request_id;
 
         $.ajax({
 
@@ -1737,6 +1741,10 @@
            data:$('#choice_form').serialize(),
 
            success: function(data){
+
+                if (current_request_id !== update_sku_request_id) {
+                    return;
+                }
 
                 $('#sku_combination').html(data);
 

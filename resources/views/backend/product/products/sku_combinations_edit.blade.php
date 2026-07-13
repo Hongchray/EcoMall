@@ -70,7 +70,7 @@
                             else{
                                 echo $unit_price;
                             }
-                           @endphp" min="0" step="0.01" class="form-control" required>
+                           @endphp" min="0" step="0.01" class="form-control" required oninput="if(this.value.includes('.') && this.value.split('.')[1].length > 2) this.value = parseFloat(this.value).toFixed(2);">
                 </td>
                 <td>
                     <input type="text" name="sku_{{ $str }}" value="@php
