@@ -70,6 +70,16 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/migrate_attribute_values', 'migrate_attribute_values');
 });
 
+Route::match(['get', 'post'], '/aba-payway/return',
+    [App\Http\Controllers\Payment\AbaPaywayController::class, 'paymentReturn']
+)->name('aba_payway.return');
+
+// ABA PayWay cancel
+Route::get('/aba-payway/cancel',
+    [App\Http\Controllers\Payment\AbaPaywayController::class, 'paymentCancel']
+)->name('aba_payway.cancel');
+
+
 Route::get('/refresh-csrf', function () {
     return csrf_token();
 });

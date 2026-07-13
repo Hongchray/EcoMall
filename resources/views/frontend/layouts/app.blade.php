@@ -109,11 +109,8 @@
             font-weight: normal;
             src: url("{{ static_asset('assets/fonts/Siemreap-Regular.woff') }}") format("woff"), url("{{ static_asset('assets/fonts/Siemreap-Regular.ttf') }}") format("ttf") format("truetype");
         }
-        @font-face {
-            font-family: "Siemreap";
-            font-weight: bold;
-            src: url("{{ static_asset('assets/fonts/Siemreap-Bold.woff') }}") format("woff"), url("{{ static_asset('assets/fonts/Siemreap-Bold.ttf') }}") format("ttf") format("truetype");
-        }
+
+
 
         :root{
             --blue: #3490f3;
@@ -141,7 +138,7 @@
         }
 
         body{
-            font-family: 'DM Sans', 'Siemreap', sans-serif;
+            font-family: "DM Sans", "Siemreap", "EcoMall Chinese", "Microsoft YaHei", Arial, sans-serif !important;
             font-weight: 400;
         }
 
