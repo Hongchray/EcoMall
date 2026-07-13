@@ -1674,26 +1674,6 @@ function translate($key, $lang = null, $addslashes = false)
 
 
 
-if (!function_exists('localized_date')) {
-
-    function localized_date($timestamp, $format = 'd M Y')
-
-    {
-
-        if ($format == 'd M Y') {
-
-            return date('d', $timestamp) . ' ' . translate(date('M', $timestamp)) . ' ' . date('Y', $timestamp);
-
-        }
-
-        return date($format, $timestamp);
-
-    }
-
-}
-
-
-
 function remove_invalid_charcaters($str)
 
 {
@@ -2360,15 +2340,7 @@ if (!function_exists('uploaded_asset')) {
 
         if (($asset = Upload::find($id)) != null) {
 
-            if ($asset->external_link != null) {
-                return $asset->external_link;
-            }
-
-            $file_name = preg_replace('#^/?public/#', '', $asset->file_name);
-
-            if (env('FILESYSTEM_DRIVER', 'local') != 'local' || is_file(public_path($file_name))) {
-                return my_asset($file_name);
-            }
+            return $asset->external_link == null ? my_asset($asset->file_name) : $asset->external_link;
 
         }
 
@@ -2399,15 +2371,6 @@ if (!function_exists('my_asset')) {
     function my_asset($path, $secure = null)
     {
         $path = preg_replace('#^/?public/#', '', $path);
-
-        if (
-            env('FILESYSTEM_DRIVER', 'local') == 'local' &&
-            preg_match('#^uploads/all/.+\.(jpe?g|png|webp|gif|svg)$#i', $path) &&
-            !is_file(public_path($path))
-        ) {
-            return static_asset('assets/img/placeholder.jpg', $secure);
-        }
-
         return asset($path, $secure);
     }
 
@@ -2487,17 +2450,15 @@ if (!function_exists('getFileBaseURL')) {
 
     {
 
-        $filesystem_driver = env('FILESYSTEM_DRIVER', 'local');
+        if (env('FILESYSTEM_DRIVER') != 'local') {
 
-        if ($filesystem_driver != 'local') {
-
-            return env(Str::upper($filesystem_driver).'_URL') . '/';
+            return env(Str::upper(env('FILESYSTEM_DRIVER')).'_URL') . '/';
 
         }
 
 
 
-        return getBaseURL();
+        return getBaseURL() . 'public/';
 
     }
 
