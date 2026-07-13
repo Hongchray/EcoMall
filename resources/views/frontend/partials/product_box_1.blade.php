@@ -367,10 +367,8 @@
         </div>
 
         @if ($product->auction_product == 0)
-            <a class="ec-product-card__action js-add-to-cart-trigger" href="javascript:void(0)"
-                data-product-id="{{ $product->id }}"
-                onclick="{{ $cart_onclick }}">
-                   <img src="{{ asset('icons/cartBeforehover.png') }}" alt="Add to Cart"  class="w-20px" >
+            <a class="ec-product-card__action" href="javascript:void(0)" onclick="{{ $cart_onclick }}">
+                <i class="las la-shopping-cart"></i>
                 <span>{{ translate('Add to Cart') }}</span>
             </a>
         @elseif ($product->auction_start_date <= strtotime('now') && $product->auction_end_date >= strtotime('now'))

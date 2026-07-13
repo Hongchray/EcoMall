@@ -26,6 +26,15 @@ Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function
 
     Route::post('password/resend_code', 'App\Http\Controllers\Api\V2\PasswordResetController@resendCode');
 
+    // OTP password reset (email, 3-step: request code / verify code / reset password)
+    Route::post('otp-password/request-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@requestCode');
+
+    Route::post('otp-password/verify-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@verifyCode');
+
+    Route::post('otp-password/reset-password', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@resetPassword');
+
+    Route::post('otp-password/resend-code', 'App\Http\Controllers\Api\V2\OtpPasswordResetController@resendCode');
+
     Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('logout', 'App\Http\Controllers\Api\V2\AuthController@logout');
@@ -175,6 +184,12 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
         Route::post('carts', 'App\Http\Controllers\Api\V2\CartController@getList')->middleware('auth:sanctum');
 
         Route::get('delivery-info', 'App\Http\Controllers\Api\V2\ShippingController@getDeliveryInfo')->middleware('auth:sanctum');
+
+        Route::get('notifications', 'App\Http\Controllers\Api\V2\NotificationController@index')->middleware('auth:sanctum');
+
+        Route::post('notifications/{id}/read', 'App\Http\Controllers\Api\V2\NotificationController@markAsRead')->middleware('auth:sanctum');
+
+        Route::post('notifications/read-all', 'App\Http\Controllers\Api\V2\NotificationController@markAllAsRead')->middleware('auth:sanctum');
 
 
 
@@ -403,7 +418,7 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
     Route::get('categories/top', 'App\Http\Controllers\Api\V2\CategoryController@top');
     Route::get('categories/home-category', 'App\Http\Controllers\Api\V2\CategoryController@homeCategories');
 
-    Route::apiResource('categories', 'App\Http\Controllers\Api\V2\CategoryController')->only('index');
+    Route::apiResource('categories', 'App\Http\Controllers\Api\V2\CategoryController')->only('index')->names(['index' => 'api.categories.index']);
 
     Route::get('sub-categories/{id}', 'App\Http\Controllers\Api\V2\SubCategoryController@index')->name('subCategories.index');
 

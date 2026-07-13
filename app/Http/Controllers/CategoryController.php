@@ -18,7 +18,11 @@ use App\Utility\CategoryUtility;
 
 use Illuminate\Support\Str;
 
+use App\Models\Language;
+
 use Cache;
+
+use App;
 
 
 
@@ -191,13 +195,13 @@ class CategoryController extends Controller
 
 
 
-        $category_translation = CategoryTranslation::firstOrNew(['lang' => env('DEFAULT_LANGUAGE'), 'category_id' => $category->id]);
+        $category_translation = CategoryTranslation::firstOrNew(['lang' => config('app.locale'), 'category_id' => $category->id]);
 
         $category_translation->name = $request->name;
 
         $category_translation->save();
 
-
+        $this->clearCategoryCache();
 
         flash(translate('Category has been inserted successfully'))->success();
 
@@ -393,10 +397,7 @@ class CategoryController extends Controller
 
         $category_translation->save();
 
-
-
-        Cache::forget('featured_categories');
-        Cache::forget('is_home_categories');
+        $this->clearCategoryCache();
 
         flash(translate('Category has been updated successfully'))->success();
 
@@ -449,11 +450,7 @@ class CategoryController extends Controller
 
 
         CategoryUtility::delete_category($id);
-
-        Cache::forget('featured_categories');
-        Cache::forget('is_home_categories');
-
-
+        $this->clearCategoryCache();
 
         flash(translate('Category has been deleted successfully'))->success();
 
@@ -462,6 +459,40 @@ class CategoryController extends Controller
     }
 
 
+
+    private function clearCategoryCache()
+    {
+        // Clear admin caches
+        Cache::forget('featured_categories');
+        Cache::forget('is_home_categories');
+
+        // Clear frontend website caches
+        Cache::forget('home.featured_categories');
+        Cache::forget('home.section_categories');
+
+        // API caches are keyed per-locale (app.categories-{parent_id}-{locale}), so
+        // every locale-suffixed variant must be forgotten or stale entries survive
+        // until the 24h TTL expires.
+        $locales = Language::where('status', 1)->pluck('code')->toArray();
+        $locales[] = App::getLocale();
+        $locales[] = config('app.locale');
+        $locales = array_unique(array_filter($locales));
+
+        $parentIds = Category::distinct()->pluck('parent_id')->toArray();
+        $parentIds[] = 0;
+        $parentIds = array_unique($parentIds);
+
+        foreach ($locales as $locale) {
+            Cache::forget("app.featured_categories-$locale");
+            Cache::forget("app.home_categories-$locale");
+            Cache::forget("app.top_categories-$locale");
+            Cache::forget('app.filter_categories');
+
+            foreach ($parentIds as $pid) {
+                Cache::forget("app.categories-$pid-$locale");
+            }
+        }
+    }
 
     public function updateFeatured(Request $request)
 
@@ -473,7 +504,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        Cache::forget('featured_categories');
+        $this->clearCategoryCache();
 
         return 1;
 
@@ -489,7 +520,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        Cache::forget('is_home_categories');
+        $this->clearCategoryCache();
 
         return 1;
 

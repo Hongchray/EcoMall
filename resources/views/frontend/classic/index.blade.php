@@ -1,11 +1,10 @@
 @extends('frontend.layouts.app')
 @section('content')
 
-    <!-- Sliders -->
-<style>
+<style id="ecm-slider-design">
+.home-slider .carousel-box img { border-bottom: 1px solid #eee; }
 
-
-    #homeCarousel .carousel-inner {
+#homeCarousel .carousel-inner {
         position: relative;
     }
 
@@ -197,8 +196,10 @@
         }
     }
 
-
 </style>
+
+    <!-- Sliders -->
+
     <div class="home-banner-area mb-3 " style="padding: 12px">
         <div class="container mt-4">
 
@@ -404,9 +405,9 @@
                         <!-- LEFT 30% -->
                         <div style="width: 30%;" class="">
                             <div class="position-relative">
-                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/200' }}"
+                                <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="rounded-3"
-                                    style="width: 60px; height: 60px; object-fit: cover;">
+                                    style="width: 90px; height: 90px; object-fit: cover;">
                             </div>
                         </div>
 
@@ -428,7 +429,7 @@
                                             }
                                         @endphp
 
-                                        <div style="min-width: 90px; text-align: center;">
+                                        <div style="width: 90px; text-align: center;">
 
                                             <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
                                             class="text-decoration-none text-dark d-block">
@@ -440,7 +441,7 @@
                                                         style="width: 30px; height: 30px; object-fit: contain;">
                                                 </div>
 
-                                                <small class="fw-semibold d-block text-truncate">
+                                                <small class="fw-semibold d-block text-truncate" style="font-size: 13px;" title="{{ $sub->getTranslation('name') }}">
                                                     {{ $sub->getTranslation('name') }}
                                                 </small>
 
@@ -478,9 +479,9 @@
                         <div class="col-md-3 bg-dark text-white d-flex flex-column justify-content-between">
 
                             <div class="p-3">
-                                <img src="{{ $category->icon ?? 'https://via.placeholder.com/80' }}"
+                                <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
                                     class="mb-3 rounded"
-                                    style="width: 60px; height: 60px; object-fit: cover;">
+                                    style="width: 100px; height: 100px; object-fit: cover;">
 
                                 <h5 class="fw-bold">
                                     {{ $category->getTranslation('name') }}
@@ -527,7 +528,7 @@
                                                     style="width: 35px; height: 35px; object-fit: contain;">
                                             </div>
 
-                                            <p class="fw-semibold mb-0" style="font-size: 14px;">
+                                            <p class="fw-semibold mb-0" style="font-size: 16px;">
                                                 {{ $sub->getTranslation('name') }}
                                             </p>
 
@@ -1596,6 +1597,8 @@
 
 
 @endsection
+
+
 
 
 

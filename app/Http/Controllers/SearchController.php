@@ -14,6 +14,7 @@ use App\Models\AttributeCategory;
 use App\Utility\CategoryUtility;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 
 class SearchController extends Controller
@@ -193,7 +194,9 @@ class SearchController extends Controller
             $selected_attribute_values = $request->selected_attribute_values ?? [];
             $selected_color = $request->color ?? null;
 
-            $colors = Color::all();
+            $colors = Cache::remember('filters.colors', 3600, function () {
+                return Color::all();
+            });
 
             // ATTRIBUTES
             $category_ids = CategoryUtility::children_ids($category->id);
@@ -203,7 +206,7 @@ class SearchController extends Controller
                 ->pluck('attribute_id')
                 ->toArray();
 
-            $attributes = Attribute::whereIn('id', $attribute_ids)->get();
+            $attributes = Attribute::with('attribute_values')->whereIn('id', $attribute_ids)->get();
 
             // PRODUCTS
             $products = Product::query();
@@ -220,6 +223,15 @@ class SearchController extends Controller
             } else {
                 $products->where('category_id', $category->id);
             }
+
+            $price_range_query = clone $products;
+            $product_count = (clone $price_range_query)->isApprovedPublished()->count();
+            $product_min_unit_price = $product_count < 1
+                ? 0
+                : (clone $price_range_query)->isApprovedPublished()->min('unit_price');
+            $product_max_unit_price = $product_count < 1
+                ? 0
+                : (clone $price_range_query)->isApprovedPublished()->max('unit_price');
 
             // PRICE
             if ($min_price !== null && $max_price !== null && $min_price !== '' && $max_price !== '') {
@@ -273,7 +285,10 @@ class SearchController extends Controller
                 'selected_attribute_values',
                 'colors',
                 'selected_color',
-                'subCategory'
+                'subCategory',
+                'product_count',
+                'product_min_unit_price',
+                'product_max_unit_price'
             ));
 
         } catch (\Exception $e) {

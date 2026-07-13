@@ -6,8 +6,8 @@
         background: linear-gradient(135deg, #f8f9ff 0%, #eef2ff 100%);
         min-height: 100vh;
         display: flex;
-        align-items: center;
-        padding: 60px 0;
+        align-items: flex-start;
+        padding: 24px 0;
     }
 
     .auth-card {
@@ -19,39 +19,39 @@
     }
 
     .auth-card .row {
-        min-height: 720px;
+        min-height: 560px;
     }
 
     .auth-left {
-        padding: 50px;
+        padding: 32px 40px;
     }
 
     .auth-title {
-        font-size: 32px;
+        font-size: 24px;
         font-weight: 800;
         color: #111827;
-        margin-bottom: 10px;
+        margin-bottom: 6px;
     }
 
     .auth-subtitle {
         color: #6b7280;
-        font-size: 15px;
-        margin-bottom: 30px;
+        font-size: 13px;
+        margin-bottom: 20px;
     }
 
     .auth-label {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         color: #374151;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
 
     .auth-input {
-        height: 52px;
-        border-radius: 14px !important;
+        height: 42px;
+        border-radius: 12px !important;
         border: 1px solid #e5e7eb;
-        padding: 0 18px;
-        font-size: 14px;
+        padding: 0 14px;
+        font-size: 13px;
         transition: all .25s ease;
         box-shadow: none !important;
     }
@@ -63,9 +63,9 @@
     }
 
     .auth-btn {
-        height: 54px;
-        border-radius: 14px;
-        font-size: 15px;
+        height: 42px;
+        border-radius: 12px;
+        font-size: 13px;
         font-weight: 700;
         border: 0;
         transition: all .25s ease;
@@ -91,7 +91,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        min-height: 720px;
+        min-height: 560px;
         overflow: hidden;
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     }
@@ -190,7 +190,7 @@
                                 <form id="reg-form" class="form-default" role="form" action="{{ route('register') }}" method="POST">
                                     @csrf
 
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-2">
                                         <label for="name" class="auth-label">{{ translate('Full Name') }}</label>
                                         <input type="text" class="form-control auth-input {{ $errors->has('name') ? 'is-invalid' : '' }}" value="{{ old('name') }}" placeholder="{{ translate('Full Name') }}" name="name" id="name">
                                         @if ($errors->has('name'))
@@ -201,14 +201,14 @@
                                     </div>
 
                                     @if (addon_is_activated('otp_system'))
-                                        <div class="form-group phone-form-group mb-3">
+                                        <div class="form-group phone-form-group mb-2">
                                             <label for="phone" class="auth-label">{{ translate('Phone') }}</label>
                                             <input type="tel" id="phone-code" class="form-control auth-input {{ $errors->has('phone') ? 'is-invalid' : '' }}" value="{{ old('phone') }}" name="phone" autocomplete="off">
                                         </div>
 
                                         <input type="hidden" name="country_code" value="">
 
-                                        <div class="form-group email-form-group mb-3 d-none">
+                                        <div class="form-group email-form-group mb-2 d-none">
                                             <label for="email" class="auth-label">{{ translate('Email') }}</label>
                                             <input type="email" class="form-control auth-input {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email') }}" name="email" autocomplete="off">
                                             @if ($errors->has('email'))
@@ -224,7 +224,7 @@
                                             </button>
                                         </div>
                                     @else
-                                        <div class="form-group mb-3">
+                                        <div class="form-group mb-2">
                                             <label for="email" class="auth-label">{{ translate('Email') }}</label>
                                             <input type="email" class="form-control auth-input {{ $errors->has('email') ? 'is-invalid' : '' }}" value="{{ old('email') }}" placeholder="{{ translate('Email') }}" name="email" id="email">
                                             @if ($errors->has('email'))
@@ -235,7 +235,7 @@
                                         </div>
                                     @endif
 
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-2">
                                         <label for="password" class="auth-label">{{ translate('Password') }}</label>
                                         <input type="password" class="form-control auth-input {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="{{ translate('Password') }}" name="password" id="password">
                                         <div class="text-right mt-1">
@@ -248,13 +248,13 @@
                                         @endif
                                     </div>
 
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-2">
                                         <label for="password_confirmation" class="auth-label">{{ translate('Confirm Password') }}</label>
                                         <input type="password" class="form-control auth-input" placeholder="{{ translate('Confirm Password') }}" name="password_confirmation" id="password_confirmation">
                                     </div>
 
                                     @if(get_setting('google_recaptcha') == 1)
-                                        <div class="form-group mb-3">
+                                        <div class="form-group mb-2">
                                             <div class="g-recaptcha" data-sitekey="{{ env('CAPTCHA_KEY') }}"></div>
                                         </div>
                                         @if ($errors->has('g-recaptcha-response'))

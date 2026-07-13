@@ -12,12 +12,13 @@
 			</div>
 			<div class="card-body">
 				<div class="alert alert-info">
+					{{ translate('Minimum 664 px or higher X 490px') }}.
 					{{ translate('We have limited banner height to maintain UI. We had to crop from both left & right side in view for different devices to make it responsive. Before designing banner keep these points in mind.') }}
 				</div>
 				<form action="{{ route('business_settings.update') }}" method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="form-group">
-						<label>{{ translate('Photos & Links') }}</label>
+						<label>{{ translate('Photos & Links') }} <small class="text-muted">({{ translate('Minimum') }} 664 x 490px)</small></label>
 						<div class="home-slider-target">
 							<input type="hidden" name="types[]" value="home_slider_images">
 							<input type="hidden" name="types[]" value="home_slider_links">

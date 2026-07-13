@@ -89,6 +89,11 @@ class Product extends Model
         return $this->belongsTo(Upload::class, 'thumbnail_img');
     }
 
+    public function imageDetails()
+    {
+        return $this->hasMany(ProductImageDetail::class)->orderBy('sort_order');
+    }
+
     public function scopePhysical($query)
     {
         return $query->where('digital', 0);

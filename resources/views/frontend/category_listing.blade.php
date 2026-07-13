@@ -161,11 +161,10 @@
                             <div class="bg-white border mb-3">
                                 <div class="fs-16 fw-700 p-3">{{ translate('Price range') }}</div>
                                 <div class="p-3 mr-3">
-                                    @php $product_count = get_products_count() @endphp
                                     <div class="aiz-range-slider">
                                         <div id="input-slider-range"
-                                            data-range-value-min="@if($product_count < 1) 0 @else {{ get_product_min_unit_price() }} @endif"
-                                            data-range-value-max="@if($product_count < 1) 0 @else {{ get_product_max_unit_price() }} @endif">
+                                            data-range-value-min="{{ $product_count < 1 ? 0 : $product_min_unit_price }}"
+                                            data-range-value-max="{{ $product_count < 1 ? 0 : $product_max_unit_price }}">
                                         </div>
                                         <div class="row mt-2">
                                             <div class="col-6">

@@ -11,8 +11,9 @@ class SubCategoryCollection extends ResourceCollection
         return [
             'data' => $this->collection->map(function($data) {
                 return [
-                    'name' => $data->name,
-                    'subSubCategories' => new SubSubCategoryCollection($data->subSubCategories),
+                    'id' => $data->id,
+                    'name' => $data->getTranslation('name'),
+                    'image' => uploaded_asset($data->image),
                     'links' => [
                         'products' => route('products.subCategory', $data->id)
                     ]

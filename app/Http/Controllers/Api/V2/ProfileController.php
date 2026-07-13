@@ -26,6 +26,7 @@ class ProfileController extends Controller
             'cart_item_count' => Cart::where('user_id', auth()->user()->id)->count(),
             'wishlist_item_count' => Wishlist::where('user_id', auth()->user()->id)->count(),
             'order_count' => Order::where('user_id', auth()->user()->id)->count(),
+            'total_expenditure' => Order::where('user_id', auth()->user()->id)->where('payment_status', 'paid')->sum('grand_total'),
         ]);
     }
 
@@ -39,11 +40,31 @@ class ProfileController extends Controller
             ]);
         }
 
+        $rules = [
+            'name' => 'sometimes|string|max:191',
+            'email' => 'sometimes|email|max:191|unique:users,email,' . $user->id,
+            'password' => 'sometimes|nullable|min:6',
+        ];
+        if (isset($request->password) && $request->password != "" && $request->filled('password_confirmation')) {
+            $rules['password'] .= '|confirmed';
+        }
+
+        $validator = validator($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'result' => false,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
         if(isset($request->name)){
             $user->name = $request->name;
         }
         if(isset($request->phone)){
             $user->phone = $request->phone;
+        }
+        if(isset($request->email)){
+            $user->email = $request->email;
         }
 
         if(isset($request->password)){

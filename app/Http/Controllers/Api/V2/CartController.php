@@ -166,6 +166,13 @@ class CartController extends Controller
 
         $product_stock = $product->stocks->where('variant', $variant)->first();
 
+        if (!$product_stock) {
+            return response()->json([
+                'result' => false,
+                'message' => translate("The selected variant is not available for this product.")
+            ], 422);
+        }
+
         $cart = Cart::firstOrNew([
             'variation' => $variant,
             'user_id' => auth()->user()->id,

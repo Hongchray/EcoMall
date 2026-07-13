@@ -8,6 +8,7 @@ use App\Models\Language;
 use App\Models\Translation;
 use App\Models\User;
 use Cache;
+use Cookie;
 use Storage;
 use Session;
 
@@ -18,12 +19,34 @@ class LanguageController extends Controller
         $this->middleware(['permission:language_setup'])->only('index','create','edit','destroy');
     }
 
-    public function changeLanguage(Request $request)
+    public function changeLanguage(Request $request, $locale = null)
     {
-    	$request->session()->put('locale', $request->locale);
-        $language = Language::where('code', $request->locale)->first();
+        $locale = $locale ?? $request->locale;
+
+        $language = Language::where('code', $locale)
+            ->where('status', 1)
+            ->first();
+
+        if ($language == null) {
+            if ($request->ajax()) {
+                return response()->json(['message' => translate('Language not found')], 404);
+            }
+
+            flash(translate('Language not found'))->error();
+            return back();
+        }
+
+        $request->session()->put('locale', $language->code);
         $request->session()->put('langcode', $language->app_lang_code);
-    	flash(translate('Language changed to ').$language->name)->success();
+        Cookie::queue('locale', $language->code, 60 * 24 * 30);
+        Cookie::queue('langcode', $language->app_lang_code, 60 * 24 * 30);
+        flash(translate('Language changed to ').$language->name)->success();
+
+        if ($request->ajax()) {
+            return response()->json(['locale' => $language->code]);
+        }
+
+        return back();
     }
 
     public function index(Request $request)

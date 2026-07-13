@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
+use App\Models\Upload;
 use Artisan;
 use CoreComponentRepository;
 use Illuminate\Support\Facades\Redirect;
@@ -389,8 +390,38 @@ class BusinessSettingsController extends Controller
         }
     }
 
+    const SLIDER_MIN_WIDTH = 664;
+    const SLIDER_MIN_HEIGHT = 490;
+
     public function update(Request $request)
     {
+        if (in_array('home_slider_images', $request->types ?? []) && $request->has('home_slider_images')) {
+            foreach ($request->home_slider_images as $upload_id) {
+                $upload = Upload::find($upload_id);
+                if ($upload == null || $upload->external_link != null) {
+                    continue;
+                }
+
+                $file_name = preg_replace('#^/?public/#', '', $upload->file_name);
+                $full_path = public_path($file_name);
+
+                if (!is_file($full_path)) {
+                    continue;
+                }
+
+                $size = @getimagesize($full_path);
+                if ($size === false) {
+                    continue;
+                }
+
+                [$width, $height] = $size;
+                if ($width < self::SLIDER_MIN_WIDTH || $height < self::SLIDER_MIN_HEIGHT) {
+                    flash(translate('Slider image must be at least ') . self::SLIDER_MIN_WIDTH . 'x' . self::SLIDER_MIN_HEIGHT . translate('px. Uploaded image is ') . "{$width}x{$height}px.")->error();
+                    return redirect()->back();
+                }
+            }
+        }
+
         foreach ($request->types as $key => $type) {
             if($type == 'site_name'){
                 $this->overWriteEnvFile('APP_NAME', $request[$type]);
