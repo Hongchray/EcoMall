@@ -1322,7 +1322,7 @@
 
     @if ($detailedProduct->auction_product != 1)
 
-        <form id="option-choice-form" class="ec-buy-form">
+        <form id="option-choice-form" class="ec-buy-form" data-stock-map="{{ $detailedProduct->stocks->pluck('qty', 'variant')->toJson() }}">
 
             @csrf
 
@@ -1340,6 +1340,20 @@
                 @endphp
 
                 <!-- Choice Options -->
+
+                @php
+                    $stock_variants = $detailedProduct->stocks->pluck('qty', 'variant');
+                    $value_has_stock = function ($value) use ($stock_variants) {
+                        $token = str_replace(' ', '', $value);
+                        foreach ($stock_variants as $variant => $qty) {
+                            $segments = explode('-', $variant);
+                            if (in_array($token, $segments, true) && $qty > 0) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                @endphp
 
                 @if ($detailedProduct->choice_options != null)
 
@@ -1361,7 +1375,11 @@
 
                                 <div class="aiz-radio-inline">
 
+                                    @php $first_checked = false; @endphp
+
                                     @foreach ($choice->values as $key => $value)
+
+                                        @continue(!$value_has_stock($value))
 
                                         <label class="aiz-megabox pl-0 mr-2 mb-1">
 
@@ -1369,7 +1387,7 @@
 
                                                 value="{{ $value }}"
 
-                                                @if ($key == 0) checked @endif>
+                                                @if (!$first_checked) checked @php $first_checked = true; @endphp @endif>
 
                                             <span
 
@@ -1411,17 +1429,23 @@
 
                             <div class="aiz-radio-inline">
 
+                                @php $first_color_checked = false; @endphp
+
                                 @foreach (json_decode($detailedProduct->colors) as $key => $color)
+
+                                    @php $color_name = get_single_color_name($color); @endphp
+
+                                    @continue(!$value_has_stock($color_name))
 
                                     <label class="aiz-megabox pl-0 mr-2 mb-0" data-toggle="tooltip"
 
-                                        data-title="{{ get_single_color_name($color) }}">
+                                        data-title="{{ $color_name }}">
 
                                         <input type="radio" name="color"
 
-                                            value="{{ get_single_color_name($color) }}"
+                                            value="{{ $color_name }}"
 
-                                            @if ($key == 0) checked @endif>
+                                            @if (!$first_color_checked) checked @php $first_color_checked = true; @endphp @endif>
 
                                         <span
 

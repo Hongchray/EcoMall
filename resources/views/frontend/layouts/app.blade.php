@@ -973,6 +973,8 @@
 
                 AIZ.extra.plusMinus();
 
+                filterAvailableOptions();
+
                 getVariantPrice();
 
             }).fail(function(){
@@ -985,11 +987,89 @@
 
 
 
-        $('#option-choice-form input').on('change', function(){
+        $('#option-choice-form').on('change', 'input:radio[name="color"], input:radio[name^="attribute_id_"]', function(){
+
+            filterAvailableOptions($(this).attr('name'));
 
             getVariantPrice();
 
         });
+
+
+
+        // Only the LAST attribute group (e.g. "SIZE") is filtered dynamically, based on
+        // whichever earlier group (e.g. "SN HDPE") the user just picked. Earlier groups are
+        // never hidden/shown based on a later group's selection, so switching sizes never
+        // makes SN4/SN8 disappear.
+        function filterAvailableOptions(changedGroupName){
+
+            var $form = $('#option-choice-form');
+
+            var stockMapRaw = $form.data('stock-map');
+
+            if(!stockMapRaw){
+                return;
+            }
+
+            // Ordered list of radio group names: color (if present) first, then attribute_id_* groups in DOM order
+            var groupNames = [];
+            $form.find('input:radio').each(function(){
+                var name = $(this).attr('name');
+                if(name && groupNames.indexOf(name) === -1 && (name === 'color' || name.indexOf('attribute_id_') === 0)){
+                    groupNames.push(name);
+                }
+            });
+            groupNames.sort(function(a, b){
+                if(a === 'color') return -1;
+                if(b === 'color') return 1;
+                return 0;
+            });
+
+            if(groupNames.length < 2){
+                return; // nothing to cross-filter against
+            }
+
+            // Only ever filter the last group in the chain; every earlier group stays as-is.
+            var targetName = groupNames[groupNames.length - 1];
+            if(changedGroupName === targetName){
+                return;
+            }
+
+            var otherSegments = groupNames.slice(0, -1).map(function(name){
+                var $checked = $form.find('input:radio[name="' + name + '"]:checked');
+                var val = $checked.length ? $checked.val() : $form.find('input:radio[name="' + name + '"]').first().val();
+                return (val || '').replace(/\s+/g, '');
+            });
+
+            var $targetInputs = $form.find('input:radio[name="' + targetName + '"]');
+
+            $targetInputs.each(function(){
+                var $input = $(this);
+                var candidateValue = $input.val().replace(/\s+/g, '');
+                var qty = stockMapRaw[otherSegments.concat([candidateValue]).join('-')];
+                var available = !!qty && parseInt(qty) > 0;
+
+                $input.closest('label').toggleClass('d-none', !available);
+            });
+
+            // If the currently checked size became unavailable, switch to the first available one
+            var $checked = $targetInputs.filter(':checked');
+            var checkedHidden = $checked.length && $checked.closest('label').hasClass('d-none');
+            if(!$checked.length || checkedHidden){
+                var $firstAvailable = $targetInputs.filter(function(){
+                    return !$(this).closest('label').hasClass('d-none');
+                }).first();
+                if($firstAvailable.length){
+                    $firstAvailable.prop('checked', true);
+                }
+            }
+        }
+
+
+
+        if($('#option-choice-form').length){
+            filterAvailableOptions();
+        }
 
 
 
