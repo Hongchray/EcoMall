@@ -549,9 +549,6 @@
                             </div>
 
                         </div>
-
-
-
                         @if(addon_is_activated('club_point'))
 
                             <div class="form-group row">
@@ -572,7 +569,7 @@
 
                         @endif
 
-
+    
 
                         <div id="show-hide-div">
 
