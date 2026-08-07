@@ -129,7 +129,12 @@ class AttributeController extends Controller
      */
     public function destroy($id)
     {
-        $attribute = Attribute::findOrFail($id);
+        $attribute = Attribute::find($id);
+
+        if ($attribute == null) {
+            flash(translate('Attribute not found, it may have already been deleted'))->warning();
+            return redirect()->route('attributes.index');
+        }
 
         foreach ($attribute->attribute_translations as $key => $attribute_translation) {
             $attribute_translation->delete();
@@ -173,11 +178,18 @@ class AttributeController extends Controller
 
     public function destroy_attribute_value($id)
     {
-        $attribute_values = AttributeValue::findOrFail($id);
+        $attribute_value = AttributeValue::find($id);
+
+        if ($attribute_value == null) {
+            flash(translate('Attribute value not found, it may have already been deleted'))->warning();
+            return redirect()->route('attributes.index');
+        }
+
+        $attribute_id = $attribute_value->attribute_id;
         AttributeValue::destroy($id);
-        
+
         flash(translate('Attribute value has been deleted successfully'))->success();
-        return redirect()->route('attributes.show', $attribute_values->attribute_id);
+        return redirect()->route('attributes.show', $attribute_id);
 
     }
     

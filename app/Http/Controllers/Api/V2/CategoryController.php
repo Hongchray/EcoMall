@@ -12,10 +12,6 @@ use App\Models\BusinessSetting;
 
 use App\Models\Category;
 
-use Cache;
-
-use App;
-
 
 
 class CategoryController extends Controller
@@ -34,15 +30,9 @@ class CategoryController extends Controller
 
         }
 
-        
 
-        $locale = App::getLocale();
 
-        return Cache::remember("app.categories-$parent_id-$locale", 86400, function() use ($parent_id){
-
-            return new CategoryCollection(Category::where('parent_id', $parent_id)->get());
-
-        });
+        return new CategoryCollection(Category::where('parent_id', $parent_id)->get());
 
     }
 
@@ -52,13 +42,7 @@ class CategoryController extends Controller
 
     {
 
-        $locale = App::getLocale();
-
-        return Cache::remember("app.featured_categories-$locale", 86400, function(){
-
-            return new CategoryCollection(Category::where('featured', 1)->get());
-
-        });
+        return new CategoryCollection(Category::where('featured', 1)->get());
 
     }
 
@@ -68,13 +52,7 @@ class CategoryController extends Controller
 
     {
 
-        $locale = App::getLocale();
-
-        return Cache::remember("app.home_categories-$locale", 86400, function(){
-
-            return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->get());
-
-        });
+        return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->get());
 
     }
 
@@ -84,13 +62,7 @@ class CategoryController extends Controller
 
     {
 
-        $locale = App::getLocale();
-
-        return Cache::remember("app.top_categories-$locale", 86400, function(){
-
-            return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->limit(20)->get());
-
-        });
+        return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->limit(20)->get());
 
     }
 

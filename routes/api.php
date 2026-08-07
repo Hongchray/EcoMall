@@ -18,6 +18,13 @@ Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function
 
     Route::post('signup', 'App\Http\Controllers\Api\V2\AuthController@signup');
 
+    // OTP signup (email, 2-step: request code (creates nothing yet) / verify code (creates account + logs in))
+    Route::post('otp-signup/request-code', 'App\Http\Controllers\Api\V2\OtpSignupController@requestCode');
+
+    Route::post('otp-signup/verify-code', 'App\Http\Controllers\Api\V2\OtpSignupController@verifyCode');
+
+    Route::post('otp-signup/resend-code', 'App\Http\Controllers\Api\V2\OtpSignupController@resendCode');
+
     Route::post('social-login', 'App\Http\Controllers\Api\V2\AuthController@socialLogin');
 
     Route::post('password/forget_request', 'App\Http\Controllers\Api\V2\PasswordResetController@forgetRequest');

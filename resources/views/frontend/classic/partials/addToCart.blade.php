@@ -459,13 +459,24 @@
                 @endphp
 
                 <!-- Product Choice options form -->
-                <form id="option-choice-form" class="ec-cart-form">
+                <form id="option-choice-form" class="ec-cart-form" data-stock-map="{{ $product->stocks->pluck('qty', 'variant')->toJson() }}">
                     @csrf
                     <input type="hidden" name="id" value="{{ $product->id }}">
 
                     @if($product->digital !=1)
                         @php
                             $choice_options = json_decode($product->choice_options ?? '[]') ?: [];
+                            $stock_variants = $product->stocks->pluck('qty', 'variant');
+                            $value_has_stock = function ($value) use ($stock_variants) {
+                                $token = str_replace(' ', '', $value);
+                                foreach ($stock_variants as $variant => $qty) {
+                                    $segments = explode('-', $variant);
+                                    if (in_array($token, $segments, true) && $qty > 0) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            };
                         @endphp
                         <!-- Product Choice options -->
                         @if (count($choice_options) > 0)
@@ -477,13 +488,15 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="aiz-radio-inline">
+                                            @php $first_checked = false; @endphp
                                             @foreach ($choice->values as $key => $value)
+                                            @continue(!$value_has_stock($value))
                                             <label class="aiz-megabox pl-0 mr-2 mb-0">
                                                 <input
                                                     type="radio"
                                                     name="attribute_id_{{ $choice->attribute_id ?? $key }}"
                                                     value="{{ $value }}"
-                                                    @if($key == 0) checked @endif
+                                                    @if(!$first_checked) checked @php $first_checked = true; @endphp @endif
                                                 >
                                                 <span class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center py-1 px-3">
                                                     {{ $value }}
@@ -505,13 +518,16 @@
                                 </div>
                                 <div class="col-9">
                                     <div class="aiz-radio-inline">
+                                        @php $first_color_checked = false; @endphp
                                         @foreach (json_decode($product->colors) as $key => $color)
-                                        <label class="aiz-megabox pl-0 mr-2 mb-0" data-toggle="tooltip" data-title="{{ get_single_color_name($color) }}">
+                                        @php $color_name = get_single_color_name($color); @endphp
+                                        @continue(!$value_has_stock($color_name))
+                                        <label class="aiz-megabox pl-0 mr-2 mb-0" data-toggle="tooltip" data-title="{{ $color_name }}">
                                             <input
                                                 type="radio"
                                                 name="color"
-                                                value="{{ get_single_color_name($color) }}"
-                                                @if($key == 0) checked @endif
+                                                value="{{ $color_name }}"
+                                                @if(!$first_color_checked) checked @php $first_color_checked = true; @endphp @endif
                                             >
                                             <span class="aiz-megabox-elem rounded-0 d-flex align-items-center justify-content-center p-1">
                                                 <span class="size-25px d-inline-block rounded" style="background: {{ $color }};"></span>
