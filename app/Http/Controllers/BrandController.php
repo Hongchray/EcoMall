@@ -41,6 +41,7 @@ class BrandController extends Controller
      */
     public function create()
     {
+
     }
 
     /**

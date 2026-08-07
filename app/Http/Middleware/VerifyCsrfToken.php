@@ -33,6 +33,7 @@ class VerifyCsrfToken extends Middleware
         '/mock_payments',
         '/apple-callback',
         '/lnmo*',
+        'aba-payway/callback/*',
         '/rozer*'
     ];
 }

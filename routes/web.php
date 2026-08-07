@@ -48,6 +48,7 @@ use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Payment\AbaPaywayController;
 
 /*
   |--------------------------------------------------------------------------
@@ -72,15 +73,28 @@ Route::controller(DemoController::class)->group(function () {
     Route::get('/migrate_attribute_values', 'migrate_attribute_values');
 });
 
-Route::match(['get', 'post'], '/aba-payway/return',
-    [App\Http\Controllers\Payment\AbaPaywayController::class, 'paymentReturn']
-)->name('aba_payway.return');
+Route::get('/payment/aba/pay', [AbaPaywayController::class, 'pay'])
+    ->name('aba.payway.pay');
 
-// ABA PayWay cancel
-Route::get('/aba-payway/cancel',
-    [App\Http\Controllers\Payment\AbaPaywayController::class, 'paymentCancel']
-)->name('aba_payway.cancel');
+// Browser lands here after payment (UX only — order gets marked paid
+// again defensively, but the webhook below is the source of truth)
+Route::match(['get', 'post'], '/payment/aba/return', [AbaPaywayController::class, 'paymentReturn'])
+    ->name('aba.payway.return');
 
+Route::get('/payment/aba/cancel', [AbaPaywayController::class, 'paymentCancel'])
+    ->name('aba.payway.cancel');
+
+// Server-to-server webhook — PayWay hits this directly via return_url
+// Route::match(['get', 'post'], '/payment/aba/callback/{signature}', [AbaPaywayController::class, 'callback'])
+//     ->name('aba.payway.callback');
+
+// Route::post('aba-payway/callback/{signature}', [AbaPaywayController::class, 'callback'])->name('aba.payway.callback');
+Route::post('aba-payway/callback', [AbaPaywayController::class, 'checkStatus'])
+    ->name('aba.payway.callback');
+
+// New dedicated success page
+Route::get('/payment/aba/success/{tran_id}', [AbaPaywayController::class, 'paymentSuccess'])
+    ->name('aba.payway.success');
 
 Route::get('/refresh-csrf', function () {
     return csrf_token();
