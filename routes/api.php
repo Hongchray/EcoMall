@@ -493,6 +493,8 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
 
     Route::post('products/variant/price', 'App\Http\Controllers\Api\V2\ProductController@getPrice');
 
+    Route::get('products/{id}/stocks', 'App\Http\Controllers\Api\V2\ProductController@stocks');
+
     // Route::get('products/home', 'App\Http\Controllers\Api\V2\ProductController@home');
 
     Route::get('products/digital', 'App\Http\Controllers\Api\V2\ProductController@digital')->name('products.digital');

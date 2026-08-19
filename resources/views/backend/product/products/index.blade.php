@@ -154,9 +154,15 @@
                                 @php
                                     $qty = 0;
                                     if($product->variant_product) {
+                                        $stock_count = $product->stocks->count();
                                         foreach ($product->stocks as $key => $stock) {
                                             $qty += $stock->qty;
-                                            echo $stock->variant.' - '.$stock->qty.'<br>';
+                                            if ($key < 4) {
+                                                echo $stock->variant.' - '.$stock->qty.'<br>';
+                                            }
+                                        }
+                                        if ($stock_count > 4) {
+                                            echo '... <small>('.$stock_count.' '.translate('variants total').')</small>';
                                         }
                                     }
                                     else {

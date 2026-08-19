@@ -57,18 +57,31 @@ class ProductController extends Controller
         }
 
         if ($request->has('color') && $request->color != null) {
-            $str = Color::where('code', '#' . $request->color)->first()->name;
+            $color = Color::where('code', '#' . $request->color)->first();
+            $str = $color ? $color->name : '';
         }
 
-        $var_str = str_replace(',', '-', $request->variants);
-        $var_str = str_replace(' ', '', $var_str);
-
-        if ($var_str != "") {
-            $temp_str = $str == "" ? $var_str : '-' . $var_str;
-            $str .= $temp_str;
+        // $request->variants must be an array with one entry per choice-option,
+        // in the same order as $product->choice_options, so an option value that
+        // itself contains a comma (e.g. "DN75, DN90, DN110") isn't corrupted by a
+        // blind comma->hyphen replacement (see HomeController::variant_price()).
+        if (json_decode($product->choice_options) != null) {
+            $variants = is_array($request->variants) ? $request->variants : [];
+            foreach (json_decode($product->choice_options) as $key => $choice) {
+                $value = str_replace(' ', '', $variants[$key] ?? '');
+                $str .= ($str != '' ? '-' : '') . $value;
+            }
         }
 
         $product_stock = $product->stocks->where('variant', $str)->first();
+
+        if ($product_stock == null) {
+            return response()->json([
+                'result' => false,
+                'message' => translate('The selected variant is not available for this product.')
+            ], 404);
+        }
+
         $price = $product_stock->price;
 
 
@@ -147,6 +160,31 @@ class ProductController extends Controller
 
             ]
         );
+    }
+
+    public function stocks($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $data = $product->stocks->map(function ($stock) use ($product) {
+            $in_stock = ($stock->qty >= 1 && $product->min_qty <= $stock->qty) ? 1 : 0;
+
+            return [
+                'id' => $stock->id,
+                'variant' => $stock->variant,
+                'sku' => $stock->sku,
+                'price' => single_price($stock->price),
+                'qty' => $stock->qty,
+                'in_stock' => $in_stock,
+                'image' => $stock->image == null ? "" : uploaded_asset($stock->image)
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'success' => true,
+            'status' => 200
+        ]);
     }
 
     public function seller($id, Request $request)
