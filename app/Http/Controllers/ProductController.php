@@ -460,7 +460,7 @@ class ProductController extends Controller
         Artisan::call('view:clear');
         Artisan::call('cache:clear');
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('products.create');
     }
 
 
@@ -725,7 +725,15 @@ class ProductController extends Controller
 
     {
 
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if ($product == null) {
+
+            flash(translate('Product not found. It may have already been deleted.'))->error();
+
+            return redirect()->route('products.admin');
+
+        }
 
 
 

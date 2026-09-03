@@ -345,7 +345,12 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::find($id);
+
+        if ($product == null) {
+            flash(translate('Product not found. It may have already been deleted.'))->error();
+            return back();
+        }
 
         if (Auth::user()->id != $product->user_id) {
             flash(translate('This product is not yours.'))->warning();

@@ -118,7 +118,7 @@ class AttributeController extends Controller
         $attribute_translation->save();
 
         flash(translate('Attribute has been updated successfully'))->success();
-        return back();
+        return redirect()->route('attributes.index');
     }
 
     /**
