@@ -769,4 +769,17 @@
     margin-left: 8px !important;
 }
 
+/* Home slider banner: force uniform crop regardless of uploaded image size/ratio */
+.home-slider .carousel-box img.img-fit {
+    object-position: center;
+}
+
+@media (max-width: 767px) {
+    .home-slider .carousel-box img.img-fit.h-sm-auto {
+        height: 45vw !important;
+        max-height: 220px;
+        min-height: 140px;
+    }
+}
+
 

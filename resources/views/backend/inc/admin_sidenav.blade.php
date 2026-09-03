@@ -1182,6 +1182,11 @@
                                         <span class="aiz-side-nav-text">{{translate('Homepage Settings')}}</span>
                                     </a>
                                 </li>
+                                <li class="aiz-side-nav-item">
+                                    <a href="{{ route('banners.index') }}" class="aiz-side-nav-link {{ areActiveRoutes(['banners.index']) }}">
+                                        <span class="aiz-side-nav-text">{{translate('Home Banners')}}</span>
+                                    </a>
+                                </li>
                             @endcan
                             @can('header_setup')
                                 <li class="aiz-side-nav-item">

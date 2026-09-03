@@ -12,6 +12,8 @@ use App\Http\Controllers\AttributeController;
 
 use App\Http\Controllers\AttributeValueController;
 
+use App\Http\Controllers\BannerController;
+
 use App\Http\Controllers\BlogCategoryController;
 
 use App\Http\Controllers\BlogController;
@@ -367,6 +369,24 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'prevent-ba
 
 
     Route::resource('profile', ProfileController::class);
+
+
+
+    // Home Banners
+
+    Route::controller(BannerController::class)->prefix('banners')->name('banners.')->group(function () {
+
+        Route::get('/', 'index')->name('index');
+
+        Route::post('/', 'store')->name('store');
+
+        Route::put('/{id}', 'update')->name('update');
+
+        Route::post('/update-status', 'update_status')->name('update_status');
+
+        Route::get('/destroy/{id}', 'destroy')->name('destroy');
+
+    });
 
 
 

@@ -229,10 +229,12 @@
 
                             @forelse ($banners as $key => $banner)
                                 <div class="carousel-item h-100 {{ $key == 0 ? 'active' : '' }}">
-                                    <img src="{{ $banner->image }}"
-                                        class="d-block w-100 h-100"
-                                        style="object-fit: cover;"
-                                        alt="banner">
+                                    <a href="{{ $banner->link ?: '#' }}">
+                                        <img src="{{ uploaded_asset($banner->image) }}"
+                                            class="d-block w-100 h-100"
+                                            style="object-fit: cover;"
+                                            alt="banner">
+                                    </a>
                                 </div>
                             @empty
                                 <div class="carousel-item active h-100">
@@ -261,19 +263,17 @@
                 <!-- RIGHT -->
                 <div class="hero-right d-flex">
 
-                    <div class="hero-box bg-warning shadow-sm">
-                        <a href="#">
-                            <img src="https://media.istockphoto.com/id/2009037625/vector/best-seller-banner-template-on-the-abstract-pop-art-sunburst-background-vector-illustration.jpg"
-                                alt="image 1">
-                        </a>
-                    </div>
-
-                    <div class="hero-box bg-warning shadow-sm">
-                        <a href="#">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH2QSabe9ESh22w-_HPGk4j3KcnQWZO3Hc3Q&s"
-                                alt="image 2">
-                        </a>
-                    </div>
+                    @forelse ($side_banners as $side_banner)
+                        <div class="hero-box bg-warning shadow-sm">
+                            <a href="{{ $side_banner->link ?: '#' }}">
+                                <img src="{{ uploaded_asset($side_banner->image) }}"
+                                    alt="{{ $side_banner->title ?: 'banner' }}">
+                            </a>
+                        </div>
+                    @empty
+                        <div class="hero-box bg-light shadow-sm"></div>
+                        <div class="hero-box bg-light shadow-sm"></div>
+                    @endforelse
 
                 </div>
 

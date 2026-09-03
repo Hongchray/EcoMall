@@ -391,7 +391,7 @@ class BusinessSettingsController extends Controller
     }
 
     const SLIDER_MIN_WIDTH = 664;
-    const SLIDER_MIN_HEIGHT = 490;
+    const SLIDER_MIN_HEIGHT = 482;
 
     public function update(Request $request)
     {

@@ -105,6 +105,14 @@ class HomeController extends Controller
 
                 $banners = Cache::remember('home.banners', 3600, function () {
                     return Banner::where('status', 1)
+                        ->where('position', 'slider')
+                        ->orderBy('created_at', 'asc')
+                        ->get();
+                });
+
+                $side_banners = Cache::remember('home.side_banners', 3600, function () {
+                    return Banner::where('status', 1)
+                        ->where('position', 'side_box')
                         ->orderBy('created_at', 'asc')
                         ->get();
                 });
@@ -135,7 +143,7 @@ class HomeController extends Controller
 
                 return view(
                     'frontend.' . get_setting('homepage_select') . '.index',
-                    compact('featured_categories', 'banners', 'home_section_categories')
+                    compact('featured_categories', 'banners', 'side_banners', 'home_section_categories')
                 );
 
             } catch (\Exception $e) {
