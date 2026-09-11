@@ -580,6 +580,18 @@
 
 
 
+        $(window).on('load', function() {
+
+            $('.aiz-carousel.slick-initialized').each(function() {
+
+                $(this).slick('setPosition');
+
+            });
+
+        });
+
+
+
         $(document).ready(function() {
 
             $('.category-nav-element').each(function(i, el) {

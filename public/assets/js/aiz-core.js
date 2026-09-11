@@ -1386,6 +1386,12 @@ $.fn.toggleAttr = function (attr, attr1, attr2) {
                         },
                     ],
                 });
+
+                requestAnimationFrame(function () {
+                    if ($this.hasClass("slick-initialized")) {
+                        $this.slick("setPosition");
+                    }
+                });
             });
         },
         chart: function (selector, config) {

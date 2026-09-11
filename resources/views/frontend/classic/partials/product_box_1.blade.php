@@ -150,11 +150,8 @@
 }
 
 .ec-product-card__name {
-    min-height: 38px;
+    display: block;
     margin: 0 4px 5px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     overflow: hidden;
     color: #111;
     font-size: 15px;
@@ -162,6 +159,8 @@
     line-height: 1.35;
     text-decoration: none;
     text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .ec-product-card__name:hover,

@@ -54,7 +54,7 @@
     .ts-grid .ec-product-card__image-wrap { width: 90%; max-width: 70px; margin-bottom: 8px; border-radius: 8px; }
     .ts-grid .ec-product-card__image { padding: 2px; }
     .ts-grid .ec-product-card__content { margin: 0 -6px -6px; padding: 8px 6px 6px; border-radius: 0 0 8px 8px; }
-    .ts-grid .ec-product-card__name { min-height: 28px; margin: 0 2px 4px; font-size: 11px; -webkit-line-clamp: 2; }
+    .ts-grid .ec-product-card__name { margin: 0 2px 4px; font-size: 11px; }
     .ts-grid .ec-product-card__rating { min-height: 14px; margin: 0 2px 4px; font-size: 9px; gap: 3px; }
     .ts-grid .ec-product-card__price-row { min-height: auto; margin: 0 2px 6px; gap: 4px; }
     .ts-grid .ec-product-card__price-value { font-size: 12px; }
