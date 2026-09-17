@@ -209,11 +209,11 @@
                             </a>
                             @can('product_edit')
                                 @if ($type == 'Seller')
-                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.seller.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
+                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.seller.edit', ['id'=>$product->id, 'lang'=>request('lang', app()->getLocale())] )}}" title="{{ translate('Edit') }}">
                                         <i class="las la-edit"></i>
                                     </a>
                                 @else
-                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.admin.edit', ['id'=>$product->id, 'lang'=>env('DEFAULT_LANGUAGE')] )}}" title="{{ translate('Edit') }}">
+                                    <a class="btn btn-soft-primary btn-icon btn-circle btn-sm" href="{{route('products.admin.edit', ['id'=>$product->id, 'lang'=>request('lang', app()->getLocale())] )}}" title="{{ translate('Edit') }}">
                                         <i class="las la-edit"></i>
                                     </a>
                                 @endif
