@@ -125,10 +125,10 @@ class HomeController extends Controller
                     'Accessory',
                 ];
                 $home_section_categories = Cache::remember('home.section_categories', 3600, function () use ($home_section_category_names) {
-                    return Category::where(function ($query) {
-                            $query->whereIn('id', Product::select('category_id'))
-                                ->orWhereHas('products');
-                        })
+                    return Category::whereIn(
+                            'id',
+                            Product::whereNotNull('category_id')->select('category_id')
+                        )
                         ->get()
                         ->sortBy(function ($category) use ($home_section_category_names) {
                             $name = $category->getTranslation('name');

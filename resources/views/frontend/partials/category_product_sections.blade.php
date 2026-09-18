@@ -2,12 +2,7 @@
     @foreach ($home_section_categories as $section_category)
         @php
             $section_products = filter_products(
-                \App\Models\Product::where(function ($query) use ($section_category) {
-                    $query->where('category_id', $section_category->id)
-                        ->orWhereHas('categories', function ($category_query) use ($section_category) {
-                            $category_query->where('categories.id', $section_category->id);
-                        });
-                })->latest()
+                \App\Models\Product::where('category_id', $section_category->id)->latest()
             )->limit(12)->get();
             $section_id = 'section_category_' . $section_category->id;
             $section_name = $section_category->getTranslation('name');

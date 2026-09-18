@@ -620,7 +620,10 @@ class ProductController extends Controller
 
         //Product categories
 
-        $product->categories()->sync($request->category_ids);
+        $categoryId = $request->input('category_id')
+            ?: (is_array($request->input('category_ids')) ? $request->input('category_ids')[0] : null);
+
+        $product->categories()->sync($categoryId ? [$categoryId] : []);
 
 
 
