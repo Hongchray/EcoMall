@@ -196,6 +196,187 @@
         }
     }
 
+    /* Subcategory strip (category + subcategory banner block) */
+    .subcat-panel {
+        align-items: flex-start !important;
+    }
+
+    .subcat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+        align-content: start;
+        column-gap: 16px;
+        row-gap: 28px;
+    }
+
+    .subcat-item {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .subcat-thumb {
+        width: 96px;
+        height: 96px;
+        border-radius: 18px;
+        padding: 2px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .subcat-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+    }
+
+    .subcat-item:hover .subcat-thumb {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    .subcat-name {
+        display: -webkit-box;
+        min-height: 40px;
+        margin-top: 10px;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        line-height: 1.4;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    /* Mobile / tablet subcategory strip */
+    .subcat-mobile-card {
+        padding: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .subcat-mobile-header {
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .subcat-mobile-body {
+        column-gap: 16px;
+    }
+
+    .subcat-m-main {
+        width: 104px;
+        max-width: 28vw;
+        aspect-ratio: 1 / 1;
+        padding: 7px;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .subcat-m-scroll {
+        min-width: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .subcat-m-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    .subcat-m-grid {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 66px;
+        grid-template-rows: repeat(2, 84px);
+        column-gap: 10px;
+        row-gap: 12px;
+        width: max-content;
+    }
+
+    .subcat-m-item {
+        width: 66px;
+        min-width: 0;
+    }
+
+    .subcat-m-thumb {
+        width: 64px;
+        max-width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        padding: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+    }
+
+    .subcat-m-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 9px;
+    }
+
+    .subcat-m-name {
+        margin-top: 6px;
+        font-size: 11px;
+        line-height: 1.3;
+    }
+
+    @media (min-width: 576px) {
+        .subcat-m-main {
+            width: 112px;
+        }
+
+        .subcat-m-item {
+            width: 74px;
+        }
+
+        .subcat-m-thumb {
+            width: 72px;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+        .subcat-mobile-card {
+            padding: 22px;
+        }
+
+        .subcat-mobile-header {
+            margin-bottom: 18px;
+        }
+
+        .subcat-mobile-body {
+            column-gap: 24px;
+        }
+
+        .subcat-m-main {
+            width: 136px;
+            max-width: none;
+            padding: 9px;
+        }
+
+        .subcat-m-grid {
+            grid-auto-columns: 86px;
+            grid-template-rows: repeat(2, 106px);
+            column-gap: 16px;
+            row-gap: 16px;
+        }
+
+        .subcat-m-item {
+            width: 86px;
+        }
+
+        .subcat-m-thumb {
+            width: 82px;
+        }
+
+        .subcat-m-name {
+            font-size: 12px;
+        }
+    }
+
 </style>
 
     <!-- Sliders -->
@@ -393,29 +574,32 @@
             @foreach($featured_categories as $category)
 
                 <!-- ================= MOBILE ================= -->
-                <div class="d-block d-md-none bg-light rounded-4 p-3 mt-3 shadow-sm">
+                <div class="subcat-mobile-card d-block d-lg-none bg-light rounded-4 mt-3 shadow-sm">
 
-                    <!-- Title -->
-                    <p class="fw-bold mb-3" style="font-size: 15px">
-                        {{ $category->getTranslation('name') }}
-                    </p>
+                    <div class="subcat-mobile-header d-flex align-items-center justify-content-between">
+                        <p class="fw-bold mb-0" style="font-size: 15px">
+                            {{ $category->getTranslation('name') }}
+                        </p>
 
-                    <div class="d-flex gap-3 align-items-center">
+                        <a href="{{ url('/category/' . $category->slug) }}"
+                            class="small text-primary text-decoration-none flex-shrink-0">
+                            {{ translate('View All') }} →
+                        </a>
+                    </div>
 
-                        <!-- LEFT 30% -->
-                        <div style="width: 30%;" class="">
-                            <div class="position-relative">
-                                <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
-                                    class="rounded-3"
-                                    style="width: 90px; height: 90px; object-fit: cover;">
-                            </div>
+                    <div class="subcat-mobile-body d-flex align-items-start">
+
+                        <!-- LEFT -->
+                        <div class="subcat-m-main flex-shrink-0">
+                            <img src="{{ $category->icon ? uploaded_asset($category->icon) : static_asset('assets/img/placeholder.jpg') }}"
+                                class="rounded-3 w-100 h-100"
+                                style="object-fit: contain;">
                         </div>
 
-                        <!-- RIGHT 70% -->
-                        <div style="width: 70%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                        <!-- RIGHT -->
+                        <div class="subcat-m-scroll flex-grow-1">
 
-                            <div class="d-flex flex-column flex-wrap justify-content-start align-content-start"
-                                style="height: 170px; gap: 10px;">
+                            <div class="subcat-m-grid">
 
                                 @foreach($category->subcategories as $index => $sub)
 
@@ -429,25 +613,19 @@
                                             }
                                         @endphp
 
-                                        <div style="width: 90px; text-align: center;">
+                                        <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
+                                            class="text-decoration-none text-dark subcat-m-item flex-shrink-0">
 
-                                            <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
-                                            class="text-decoration-none text-dark d-block">
+                                            <div class="bg-white subcat-m-thumb d-flex align-items-center justify-content-center mx-auto mb-1">
+                                                <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
+                                                    alt="{{ $sub->getTranslation('name') }}">
+                                            </div>
 
-                                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1"
-                                                    style="width: 50px; height: 50px;">
+                                            <small class="subcat-m-name fw-semibold d-block text-truncate text-center" title="{{ $sub->getTranslation('name') }}">
+                                                {{ $sub->getTranslation('name') }}
+                                            </small>
 
-                                                    <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
-                                                        style="width: 30px; height: 30px; object-fit: contain;">
-                                                </div>
-
-                                                <small class="fw-semibold d-block text-truncate" style="font-size: 13px;" title="{{ $sub->getTranslation('name') }}">
-                                                    {{ $sub->getTranslation('name') }}
-                                                </small>
-
-                                            </a>
-
-                                        </div>
+                                        </a>
 
                                     @endif
 
@@ -459,19 +637,11 @@
 
                     </div>
 
-                    <!-- View all -->
-                    <div class="text-end mt-2">
-                        <a href="{{ url('/category/' . $category->slug) }}"
-                        class="small text-primary text-decoration-none">
-                            {{ translate('View All') }} →
-                        </a>
-                    </div>
-
                 </div>
 
 
                 <!-- ================= DESKTOP ================= -->
-                <div class="d-none d-md-block card mb-3 border-0 shadow-sm overflow-hidden mt-4 rounded-3">
+                <div class="d-none d-lg-block card mb-3 border-0 shadow-sm overflow-hidden mt-4 rounded-3">
 
                     <div class="row g-3">
 
@@ -502,10 +672,10 @@
                         </div>
 
                         <!-- RIGHT SIDE -->
-                        <div class="col-md-9 p-3"
+                        <div class="col-md-9 p-4 d-flex align-items-center subcat-panel"
                             style="background: linear-gradient(90deg, #3aa0d8, #4fb3e6);">
 
-                            <div class="d-flex flex-wrap gap-4">
+                            <div class="subcat-grid w-100">
 
                                 @forelse($category->subcategories as $sub)
                                     @php
@@ -516,27 +686,21 @@
                                                 : uploaded_asset($sub->image);
                                         }
                                     @endphp
-                                    <div class="text-center text-white" style="width: 120px;">
+                                    <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
+                                        class="text-decoration-none text-white text-center subcat-item">
 
-                                        <a href="{{ url('/category/' . $category->slug . '/' . $sub->slug) }}"
-                                        class="text-decoration-none text-white">
+                                        <div class="bg-white subcat-thumb d-flex align-items-center justify-content-center mx-auto mb-2">
+                                            <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
+                                                alt="{{ $sub->getTranslation('name') }}">
+                                        </div>
 
-                                            <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2"
-                                                style="width: 60px; height: 60px;">
+                                        <p class="subcat-name fw-semibold mb-0 text-white" style="font-size: 14px;">
+                                            {{ $sub->getTranslation('name') }}
+                                        </p>
 
-                                                <img src="{{ $sub_image ?? static_asset('assets/img/placeholder.jpg') }}"
-                                                    style="width: 35px; height: 35px; object-fit: contain;">
-                                            </div>
-
-                                            <p class="fw-semibold mb-0" style="font-size: 16px;">
-                                                {{ $sub->getTranslation('name') }}
-                                            </p>
-
-                                        </a>
-
-                                    </div>
+                                    </a>
                                 @empty
-                                    <p class="text-white">No subcategories found</p>
+                                    <p class="text-white mb-0">{{ translate('No subcategories found') }}</p>
                                 @endforelse
 
                             </div>
