@@ -662,14 +662,16 @@ class HomeController extends Controller
                 ->limit(6)
                 ->get();
 
-            $related_products_limit = 28;
+            $related_products_limit = 35;
+            $same_category_limit = 15;
 
             $related_products = filter_products(
                     Product::with('taxes', 'thumbnail')
                         ->where('id', '!=', $detailedProduct->id)
                         ->where('category_id', $detailedProduct->category_id)
                 )
-                ->limit($related_products_limit)
+                ->inRandomOrder()
+                ->limit($same_category_limit)
                 ->get();
 
             if ($related_products->count() < $related_products_limit) {
@@ -677,12 +679,30 @@ class HomeController extends Controller
                         Product::with('taxes', 'thumbnail')
                             ->where('id', '!=', $detailedProduct->id)
                             ->whereNotIn('id', $related_products->pluck('id'))
-                            ->orderBy('num_of_sale', 'desc')
+                            ->where(function ($query) use ($detailedProduct) {
+                                $query->whereNull('category_id')
+                                    ->orWhere('category_id', '!=', $detailedProduct->category_id);
+                            })
                     )
+                    ->inRandomOrder()
                     ->limit($related_products_limit - $related_products->count())
                     ->get();
 
                 $related_products = $related_products->concat($more_products);
+            }
+
+            if ($related_products->count() < $related_products_limit) {
+                $same_category_backfill = filter_products(
+                        Product::with('taxes', 'thumbnail')
+                            ->where('id', '!=', $detailedProduct->id)
+                            ->where('category_id', $detailedProduct->category_id)
+                            ->whereNotIn('id', $related_products->pluck('id'))
+                    )
+                    ->inRandomOrder()
+                    ->limit($related_products_limit - $related_products->count())
+                    ->get();
+
+                $related_products = $related_products->concat($same_category_backfill);
             }
 
 

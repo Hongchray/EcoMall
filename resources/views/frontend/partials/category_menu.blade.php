@@ -14,7 +14,7 @@
                 return is_numeric($image) ? uploaded_asset($image) : my_asset($image);
             };
         @endphp
-        @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $key => $category)
+        @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->where('is_home', 1)->orderBy('order_level', 'desc')->get() as $key => $category)
             @php
                 $category_name = $category->getTranslation('name');
                 $category_icon = $category_image_url($category->icon);

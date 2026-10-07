@@ -2633,7 +2633,7 @@ textarea,
                                             return is_numeric($image) ? uploaded_asset($image) : my_asset($image);
                                         };
                                     @endphp
-                                    @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->orderBy('order_level', 'desc')->get() as $category)
+                                    @foreach (\App\Models\Category::with('subcategories')->where('parent_id', 0)->where('is_home', 1)->orderBy('order_level', 'desc')->get() as $category)
                                         @php
                                             $category_icon = $mobile_category_image_url($category->icon);
                                         @endphp
