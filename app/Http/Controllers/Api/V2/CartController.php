@@ -10,13 +10,13 @@ use App\Utility\CartUtility;
 use App\Utility\NagadUtility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CartController extends Controller
 {
     public function summary()
     {
-        //$user = User::where('id', auth()->user()->id)->first();
-        $items = auth()->user()->carts;
+        $items = Cart::with('product')->where('user_id', auth()->id())->get();
         if ($items->isEmpty()) {
             return response()->json([
                 'sub_total' => format_price(0.00),
@@ -57,7 +57,7 @@ class CartController extends Controller
 
     public function count()
     {
-        $items = auth()->user()->carts;
+        $items = Cart::where('user_id', auth()->id())->get();
 
         return response()->json([
             'count' => sizeof($items),
@@ -67,7 +67,8 @@ class CartController extends Controller
 
     public function getList()
     {
-        $owner_ids = Cart::where('user_id', auth()->user()->id)->select('owner_id')->groupBy('owner_id')->pluck('owner_id')->toArray();
+        $items = Cart::with(['product.stocks'])->where('user_id', auth()->id())->get();
+        $owner_ids = $items->pluck('owner_id')->unique()->values()->all();
         $currency_symbol = currency_symbol();
         $shops = [];
         $sub_total = 0.00;
@@ -75,11 +76,12 @@ class CartController extends Controller
         if (!empty($owner_ids)) {
             foreach ($owner_ids as $owner_id) {
                 $shop = array();
-                $shop_items_raw_data = Cart::where('user_id', auth()->user()->id)->where('owner_id', $owner_id)->get()->toArray();
+                $shop_items_raw_data = $items->where('owner_id', $owner_id)->values()->toArray();
                 $shop_items_data = array();
                 if (!empty($shop_items_raw_data)) {
                     foreach ($shop_items_raw_data as $shop_items_raw_data_item) {
-                        $product = Product::where('id', $shop_items_raw_data_item["product_id"])->first();
+                        $product = Product::with('stocks')->where('id', $shop_items_raw_data_item["product_id"])->first();
+                        if (!$product) continue;
                         $price = cart_product_price($shop_items_raw_data_item, $product, false, false) * intval($shop_items_raw_data_item["quantity"]);
                         $tax = cart_product_tax($shop_items_raw_data_item, $product, false);
                         $shop_items_data_item["id"] = intval($shop_items_raw_data_item["id"]);
@@ -100,7 +102,8 @@ class CartController extends Controller
                         $shop_items_data_item["shipping_cost"] = (float) $shop_items_raw_data_item["shipping_cost"];
                         $shop_items_data_item["quantity"] = intval($shop_items_raw_data_item["quantity"]);
                         $shop_items_data_item["lower_limit"] = intval($product->min_qty);
-                        $shop_items_data_item["upper_limit"] = intval($product->stocks->where('variant', $shop_items_raw_data_item['variation'])->first()->qty);
+                        $stock = $product->stocks->where('variant', $shop_items_raw_data_item['variation'])->first();
+                        $shop_items_data_item["upper_limit"] = $stock ? (int) $stock->qty : 0;
 
                         $sub_total += $price + $tax;
                         $shop_items_data[] = $shop_items_data_item;
@@ -136,9 +139,16 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
-        $carts = Cart::where('user_id', auth()->user()->id)->get();
+        $request->validate([
+            'id' => 'required|integer|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'variant' => 'nullable|string',
+            'cost_matrix' => 'nullable|string',
+        ]);
+
+        $carts = Cart::where('user_id', auth()->id())->with('product')->get();
         $check_auction_in_cart = CartUtility::check_auction_in_cart($carts);
-        $product = Product::findOrFail($request->id);
+        $product = Product::with('stocks')->findOrFail($request->id);
 
         if ($check_auction_in_cart && $product->auction_product == 0) {
             return response()->json([
@@ -160,16 +170,32 @@ class CartController extends Controller
             ], 200);
         }
 
-        $variant = $request->variant;
+        $variant = $request->input('variant', '');
         $tax = 0;
         $quantity = $request->quantity;
 
-        $product_stock = $product->stocks->where('variant', $variant)->first();
+        $product_stock = $product->stocks->firstWhere('variant', $variant);
 
-        if (!$product_stock) {
+        // Mobile clients may send null or omit variant for a simple product.
+        // Such products normally have one stock row with an empty variant.
+        if (!$product_stock && ($variant === null || $variant === '') && $product->stocks->count() === 1) {
+            $product_stock = $product->stocks->first();
+            $variant = (string) $product_stock->variant;
+        }
+
+        if (!$product_stock && $product->digital != 1) {
             return response()->json([
                 'result' => false,
                 'message' => translate("The selected variant is not available for this product.")
+            ], 422);
+        }
+
+        if ($product->digital != 1 && $product_stock->qty < $request->quantity) {
+            return response()->json([
+                'result' => false,
+                'message' => $product_stock->qty > 0
+                    ? translate('Only') . " {$product_stock->qty} " . translate('item(s) are available')
+                    : translate('Stock out'),
             ], 422);
         }
 
@@ -210,29 +236,35 @@ class CartController extends Controller
             $quantity = $cart->quantity + $request['quantity'];
         }
 
-        $price = CartUtility::get_price($product, $product_stock, $request->quantity);
+        $price = $product_stock ? CartUtility::get_price($product, $product_stock, $quantity) : 0;
         $tax = CartUtility::tax_calculation($product, $price);
         CartUtility::save_cart_data($cart, $product, $price, $tax, $quantity);
 
-        if (NagadUtility::create_balance_reference($request->cost_matrix) == false) {
+        if ($request->filled('cost_matrix') && NagadUtility::create_balance_reference($request->cost_matrix) == false) {
             return response()->json(['result' => false, 'message' => 'Cost matrix error']);
         }
 
         return response()->json([
             'result' => true,
-            'message' => translate('Product added to cart successfully')
+            'message' => translate('Product added to cart successfully'),
+            'cart_item' => $cart->fresh(['product']),
+            'cart_count' => Cart::where('user_id', auth()->id())->count(),
         ]);
     }
 
     public function changeQuantity(Request $request)
     {
-        $cart = Cart::find($request->id);
+        $request->validate(['id' => 'required|integer', 'quantity' => 'required|integer|min:1']);
+        $cart = Cart::where('user_id', auth()->id())->find($request->id);
         if ($cart != null) {
             $product = Product::find($cart->product_id);
+            if (!$product) return response()->json(['result' => false, 'message' => translate('Product is unavailable')], 404);
+            if ($request->quantity < $product->min_qty) return response()->json(['result' => false, 'message' => translate('Minimum quantity not met')], 422);
             if ($product->auction_product == 1) {
                 return response()->json(['result' => false, 'message' => translate('Maximum available quantity reached')], 200);
             }
-            if ($cart->product->stocks->where('variant', $cart->variation)->first()->qty >= $request->quantity) {
+            $stock = $cart->product->stocks->where('variant', $cart->variation)->first();
+            if ($product->digital == 1 || ($stock && $stock->qty >= $request->quantity)) {
                 $cart->update([
                     'quantity' => $request->quantity
                 ]);
@@ -248,20 +280,30 @@ class CartController extends Controller
 
     public function process(Request $request)
     {
+        $request->validate(['cart_ids' => 'required|string', 'cart_quantities' => 'required|string']);
         $cart_ids = explode(",", $request->cart_ids);
         $cart_quantities = explode(",", $request->cart_quantities);
+
+        if (count($cart_ids) !== count($cart_quantities)) {
+            return response()->json(['result' => false, 'message' => translate('Cart IDs and quantities must match')], 422);
+        }
 
         if (!empty($cart_ids)) {
             $i = 0;
             foreach ($cart_ids as $cart_id) {
-                $cart_item = Cart::where('id', $cart_id)->first();
+                $cart_item = Cart::where('user_id', auth()->id())->where('id', $cart_id)->first();
+                if (!$cart_item || !ctype_digit((string) $cart_quantities[$i]) || (int) $cart_quantities[$i] < 1) {
+                    return response()->json(['result' => false, 'message' => translate('Invalid cart item or quantity')], 422);
+                }
                 $product = Product::where('id', $cart_item->product_id)->first();
+                if (!$product) return response()->json(['result' => false, 'message' => translate('Product is unavailable')], 422);
 
                 if ($product->min_qty > $cart_quantities[$i]) {
                     return response()->json(['result' => false, 'message' => translate("Minimum") . " {$product->min_qty} " . translate("item(s) should be ordered for") . " {$product->name}"], 200);
                 }
 
-                $stock = $cart_item->product->stocks->where('variant', $cart_item->variation)->first()->qty;
+                $product_stock = $cart_item->product->stocks->where('variant', $cart_item->variation)->first();
+                $stock = $product_stock ? $product_stock->qty : 0;
                 $variant_string = $cart_item->variation != null && $cart_item->variation != "" ? " ($cart_item->variation)" : "";
                 if ($stock >= $cart_quantities[$i] || $product->digital == 1) {
                     $cart_item->update([
@@ -286,7 +328,14 @@ class CartController extends Controller
 
     public function destroy($id)
     {
-        Cart::destroy($id);
+        $deleted = Cart::where('user_id', auth()->id())->where('id', $id)->delete();
+        if (!$deleted) return response()->json(['result' => false, 'message' => translate('Cart item not found')], 404);
         return response()->json(['result' => true, 'message' => translate('Product is successfully removed from your cart')], 200);
+    }
+
+    public function clear()
+    {
+        Cart::where('user_id', auth()->id())->delete();
+        return response()->json(['result' => true, 'message' => translate('Cart cleared successfully')]);
     }
 }

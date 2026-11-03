@@ -1,44 +1,103 @@
 <?php
 
-namespace App\Http\Resources\V2;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Utility\CategoryUtility;
 
-class CategoryCollection extends ResourceCollection
+namespace App\Http\Controllers\Api\V2;
+
+
+
+use App\Http\Resources\V2\CategoryCollection;
+
+use App\Models\BusinessSetting;
+
+use App\Models\Category;
+
+use Cache;
+
+use App;
+
+
+
+class CategoryController extends Controller
+
 {
-    public function toArray($request)
+
+
+
+    public function index($parent_id = 0)
+
     {
-        return [
-            'data' => $this->collection->map(function($data) {
-                $banner ='';
-                if(uploaded_asset($data->banner)) {
-                    $banner = uploaded_asset($data->banner);
-                }
-                $icon ='';
-                if(uploaded_asset(uploaded_asset($data->icon))) {
-                    $icon = uploaded_asset($data->icon);
-                }
-                return [
-                    'id' => $data->id,
-                    'name' => $data->getTranslation('name'),
-                    'banner' => $banner,
-                    'icon' => $icon,
-                    'number_of_children' => CategoryUtility::get_immediate_children_count($data->id),
-                    'links' => [
-                        'products' => route('api.products.category', $data->id),
-                        'sub_categories' => route('api.categories.index', ['parent_id' => $data->id])
-                    ]
-                ];
-            })
-        ];
+
+        if(request()->has('parent_id') && is_numeric (request()->get('parent_id'))){
+
+          $parent_id = request()->get('parent_id');
+
+        }
+
+        
+
+        $locale = App::getLocale();
+
+        return Cache::remember("app.categories-$parent_id-$locale", 86400, function() use ($parent_id){
+
+            return new CategoryCollection(Category::where('parent_id', $parent_id)->get());
+
+        });
+
     }
 
-    public function with($request)
+
+
+    public function featured()
+
     {
-        return [
-            'success' => true,
-            'status' => 200
-        ];
+
+        $locale = App::getLocale();
+
+        return Cache::remember("app.featured_categories-$locale", 86400, function(){
+
+            return new CategoryCollection(Category::where('featured', 1)->get());
+
+        });
+
     }
+
+
+
+    public function home()
+
+    {
+
+        $locale = App::getLocale();
+
+        return Cache::remember("app.home_categories-$locale", 86400, function(){
+
+            return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->get());
+
+        });
+
+    }
+
+
+
+    public function top()
+
+    {
+
+        $locale = App::getLocale();
+
+        return Cache::remember("app.top_categories-$locale", 86400, function(){
+
+            return new CategoryCollection(Category::whereIn('id', json_decode(get_setting('home_categories')))->limit(20)->get());
+
+        });
+
+    }
+
+    public function homeCategories()
+    {   
+        return new CategoryCollection(Category::where('is_home', 1)->limit(20)->get());
+    }
+
 }
+

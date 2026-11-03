@@ -18,13 +18,6 @@ Route::group(['prefix' => 'v2/auth', 'middleware' => ['app_language']], function
 
     Route::post('signup', 'App\Http\Controllers\Api\V2\AuthController@signup');
 
-    // OTP signup (email, 2-step: request code (creates nothing yet) / verify code (creates account + logs in))
-    Route::post('otp-signup/request-code', 'App\Http\Controllers\Api\V2\OtpSignupController@requestCode');
-
-    Route::post('otp-signup/verify-code', 'App\Http\Controllers\Api\V2\OtpSignupController@verifyCode');
-
-    Route::post('otp-signup/resend-code', 'App\Http\Controllers\Api\V2\OtpSignupController@resendCode');
-
     Route::post('social-login', 'App\Http\Controllers\Api\V2\AuthController@socialLogin');
 
     Route::post('password/forget_request', 'App\Http\Controllers\Api\V2\PasswordResetController@forgetRequest');
@@ -185,6 +178,8 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
         Route::post('carts/add', 'App\Http\Controllers\Api\V2\CartController@add')->middleware('auth:sanctum');
 
         Route::post('carts/change-quantity', 'App\Http\Controllers\Api\V2\CartController@changeQuantity')->middleware('auth:sanctum');
+      
+        Route::delete('carts', 'App\Http\Controllers\Api\V2\CartController@clear')->middleware('auth:sanctum');
 
         Route::apiResource('carts', 'App\Http\Controllers\Api\V2\CartController')->only('destroy')->middleware('auth:sanctum');
 
@@ -493,14 +488,15 @@ Route::group(['prefix' => 'v2', 'middleware' => ['app_language']], function () {
 
     Route::post('products/variant/price', 'App\Http\Controllers\Api\V2\ProductController@getPrice');
 
-    Route::get('products/{id}/stocks', 'App\Http\Controllers\Api\V2\ProductController@stocks');
-
     // Route::get('products/home', 'App\Http\Controllers\Api\V2\ProductController@home');
 
     Route::get('products/digital', 'App\Http\Controllers\Api\V2\ProductController@digital')->name('products.digital');
 
     Route::apiResource('products', 'App\Http\Controllers\Api\V2\ProductController')->except(['store', 'update', 'destroy']);
+  
+	Route::post('products/variant/price', 'App\Http\Controllers\Api\V2\ProductController@getPrice');
 
+    Route::get('products/{id}/stocks', 'App\Http\Controllers\Api\V2\ProductController@stocks');
 
 
 
