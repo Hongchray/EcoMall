@@ -590,11 +590,18 @@ class OrderController extends Controller
 
 
 
-        foreach($combined_order->orders as $order){
-
-            NotificationUtility::sendOrderPlacedNotification($order);
-
-        }
+        // Send order emails/SMS AFTER the page is sent to the customer,
+        // so a slow or blocked mail server never delays checkout.
+        $placedOrders = $combined_order->orders;
+        app()->terminating(function () use ($placedOrders) {
+            foreach ($placedOrders as $order) {
+                try {
+                    NotificationUtility::sendOrderPlacedNotification($order);
+                } catch (\Throwable $e) {
+                    \Log::warning('Order placed notification failed: ' . $e->getMessage());
+                }
+            }
+        });
 
 
 
